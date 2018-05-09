@@ -3,7 +3,9 @@
     <h4>Details</h4>
     <p>Current owner: {{ codexTitle.ownerAddress }}</p>
     <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
-    <p>Last updated: {{ this.formatDate(codexTitle.updatedAt) }}</p>
+    <!-- @FIXME: Hiding until we bring back Modify option
+      <p>Last updated: {{ this.formatDate(codexTitle.updatedAt) }}</p>
+    -->
     <h5>Metadata</h5>
     <p>Name hash: {{ codexTitle.nameHash }}</p>
     <p>Description hash: {{ codexTitle.descriptionHash }}</p>
@@ -19,7 +21,7 @@ export default {
   props: ['codexTitle'],
   methods: {
     formatDate(date) {
-      formatDate(date)
+      return formatDate(date)
     },
   },
 }

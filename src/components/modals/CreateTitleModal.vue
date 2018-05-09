@@ -161,8 +161,8 @@ export default {
       })
     },
     createTitle(transactionData) {
-      const sha3 = this.web3.instance().sha3
-      const account = this.web3.account
+      const { sha3 } = this.web3.instance()
+      const { account } = this.web3
       const input = [
         account,
         sha3(transactionData.name),

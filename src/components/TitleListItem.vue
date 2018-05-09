@@ -13,7 +13,6 @@
       </p>
       <small>#{{ codexTitle.tokenId }}</small>
     </b-card>
-
   </div>
 </template>
 
@@ -41,7 +40,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 @import "../assets/variables.styl"
 
 .title-card

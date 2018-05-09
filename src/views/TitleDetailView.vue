@@ -11,7 +11,7 @@
         <div class="top vertical">
           <div v-if="codexTitle.metadata">
             <h1>{{ codexTitle.metadata.name }}</h1>
-            <div>{{ codexTitle.metadata.description }}</div>
+            <div class="description">{{ codexTitle.metadata.description }}</div>
           </div>
           <div v-else>
             <h1>Codex Title #{{ codexTitle.tokenId }}</h1>
@@ -19,9 +19,11 @@
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
           <title-blockchain-details v-if="showDetails" :codexTitle="codexTitle" />
           <div class="mt-3" v-if="isOwner">
+            <!-- @FIXME: Not wired up yet
             <b-button class="mr-3" variant="primary">
               Modify
             </b-button>
+            -->
 
             <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
               Transfer
@@ -175,13 +177,17 @@ export default {
 
 .title-image
   height: 50vh
+  min-width: 25%
   max-width: 50%
   margin: 0 2rem 2rem 0
 
   img
-    max-width: 100%
+    width: 100%
     max-height: 100%
     object-fit: contain
+
+.description
+  white-space: pre-wrap
 
 .private-img
   width: 320px

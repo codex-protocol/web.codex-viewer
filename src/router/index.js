@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import store from '../store'
 
 import LoginView from '../views/LoginView'
-import OfferListView from '../views/OfferListView'
+import FeatureListView from '../views/FeatureListView'
 import TransferIncomingListView from '../views/TransferIncomingListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
@@ -27,7 +27,7 @@ const router = new Router({
     { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
     { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferIncomingListView, meta: { requiresAuth: true } },
-    { name: 'offers', path: '/offers', component: OfferListView, meta: { requiresAuth: true } },
+    { name: 'coming-soon', path: '/coming-soon', component: FeatureListView, meta: { requiresAuth: true } },
     { name: 'settings', path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
     { name: 'collection', path: '/collection', component: TitleListView, meta: { requiresAuth: true } },
     { name: 'title-detail', path: '/title/:titleId', component: TitleDetailView },

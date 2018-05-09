@@ -9,11 +9,11 @@
     <b-link to="/transfers">
       <img src="../assets/icons/transfers.svg">Transfers
     </b-link>
-    <b-link to="/my-offers">
-      <img src="../assets/icons/offers.svg">Offers
-    </b-link>
     <b-link to="/settings">
       <img src="../assets/icons/settings.svg">Settings
+    </b-link>
+    <b-link to="/coming-soon">
+      <img src="../assets/icons/star.svg">Coming Soon
     </b-link>
     <span class="spacer"></span>
     <b-link @click.prevent="logout">

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div class="header">
-      <h1>Transfers</h1>
-      <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
-    </div>
+    <app-header title="Transfers" />
     <div class="sub-heading">
       <span class="active">Incoming</span>
       <!--
@@ -27,11 +24,13 @@
 <script>
 import axios from 'axios'
 
+import AppHeader from '../components/AppHeader'
 import TitleTransferListItem from '../components/TitleTransferListItem'
 
 export default {
   name: 'title-list',
   components: {
+    AppHeader,
     TitleTransferListItem,
   },
   data() {

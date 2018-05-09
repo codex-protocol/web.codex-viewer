@@ -2,9 +2,9 @@
 
 const apiUrl = (() => {
 
-  switch (process.env.NODE_ENV) {
+  switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'http://codex-title-api.codexprotocol-staging.com' // change this when staging config is done
+      return 'https://codex-title-api.codexprotocol.com'
 
     case 'staging':
       return 'http://codex-title-api.codexprotocol-staging.com'

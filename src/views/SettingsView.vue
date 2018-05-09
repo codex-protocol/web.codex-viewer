@@ -1,16 +1,12 @@
 <template>
   <div>
-    <div class="header">
-      <h1>Settings &amp; Privacy</h1>
-      <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
-      <div class="spacer"></div>
-    </div>
+    <app-header title="Settings &amp; Privacy" />
     <div class="title-list" v-if="titles.length">
       <b-container class="title-settings-row">
         <b-row>
-            <b-col class="image">Image</b-col>
-            <b-col class="name">Asset Name</b-col>
-            <b-col class="toggle">Details Public</b-col>
+          <b-col class="image">Image</b-col>
+          <b-col class="name">Asset Name</b-col>
+          <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
       <title-privacy-settings-row-item v-for="title in titles"
@@ -28,11 +24,13 @@
 <script>
 import axios from 'axios'
 
+import AppHeader from '../components/AppHeader'
 import TitlePrivacySettingsRowItem from '../components/TitlePrivacySettingsRowItem'
 
 export default {
   name: 'title-list',
   components: {
+    AppHeader,
     TitlePrivacySettingsRowItem,
   },
   data() {

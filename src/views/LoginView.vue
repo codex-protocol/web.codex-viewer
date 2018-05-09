@@ -20,7 +20,7 @@ export default {
   name: 'login-view',
   methods: {
     metamaskLogin() {
-      const account = this.web3.account
+      const { account } = this.web3
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Title Registry.'
 
       this.web3.instance().currentProvider.sendAsync({

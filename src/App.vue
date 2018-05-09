@@ -52,7 +52,7 @@ export default {
       //  to the /login endpoint
       axios.interceptors.response.use(
         authErrorHandler,
-        authErrorHandler,
+        authErrorHandler
       )
     },
   },
