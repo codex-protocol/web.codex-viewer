@@ -167,7 +167,7 @@ export default {
         account,
         sha3(transactionData.name),
         sha3(transactionData.description),
-        sha3(transactionData.imageUri),
+        sha3(transactionData.imageUri), // TODO: calculate hash of binary data here instead
         '1', // providerId
         transactionData.id,
       ]

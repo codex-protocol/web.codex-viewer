@@ -177,7 +177,7 @@ export default {
 
 .title-image
   height: 50vh
-  min-width: 25%
+  min-width: 40%
   max-width: 50%
   margin: 0 2rem 2rem 0
 

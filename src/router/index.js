@@ -5,7 +5,7 @@ import store from '../store'
 
 import LoginView from '../views/LoginView'
 import FeatureListView from '../views/FeatureListView'
-import TransferIncomingListView from '../views/TransferIncomingListView'
+import TransferListView from '../views/TransferListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
 import SettingsView from '../views/SettingsView'
@@ -26,7 +26,8 @@ const router = new Router({
   routes: [
     { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
-    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferIncomingListView, meta: { requiresAuth: true } },
+    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' }, meta: { requiresAuth: true } },
+    { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' }, meta: { requiresAuth: true } },
     { name: 'coming-soon', path: '/coming-soon', component: FeatureListView, meta: { requiresAuth: true } },
     { name: 'settings', path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
     { name: 'collection', path: '/collection', component: TitleListView, meta: { requiresAuth: true } },

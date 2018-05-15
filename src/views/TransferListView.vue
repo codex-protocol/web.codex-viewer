@@ -1,22 +1,26 @@
 <template>
   <div>
     <app-header title="Transfers" />
-    <div class="sub-heading">
-      <span class="active">Incoming</span>
-      <!--
-        // @TODO: Add at a later point.
-        <span><b-link to="/transfers/outgoing">Outgoing</b-link></span>
-        <span><b-link to="/transfers/completed">Completed</b-link></span>
-      -->
-    </div>
+    <app-sub-header
+      v-bind:transferDirection="transferDirection"
+      v-bind:fetchData="this.fetchData"
+    />
     <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-list-item v-for="title in titles"
+      <title-transfer-incoming-list-item
+        v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
+        v-if="transferDirection === 'incoming'"
+      />
+      <title-transfer-outgoing-list-item
+        v-for="title in titles"
+        :codex-title="title"
+        :key="title.tokenId"
+        v-if="transferDirection === 'outgoing'"
       />
     </b-card-group>
     <div v-else>
-      You have no incoming transfers.
+      You have no {{ transferDirection }} transfers.
     </div>
   </div>
 </template>
@@ -25,22 +29,26 @@
 import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
-import TitleTransferListItem from '../components/TitleTransferListItem'
+import AppSubHeader from '../components/AppSubHeader'
+import TitleTransferIncomingListItem from '../components/TitleTransferIncomingListItem'
+import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
 
 export default {
   name: 'title-list',
+  props: ['transferDirection'],
   components: {
     AppHeader,
-    TitleTransferListItem,
+    AppSubHeader,
+    TitleTransferIncomingListItem,
+    TitleTransferOutgoingListItem,
   },
   data() {
     return {
       titles: [],
-      columnNames: ['Preview', 'Piece title', 'Created at'],
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData(this.transferDirection)
   },
   computed: {
     web3() {
@@ -48,16 +56,18 @@ export default {
     },
   },
   methods: {
-    fetchData() {
-      axios.get('/user/transfers/incoming?include=metadata').then((response) => {
+    fetchData(transferDirection) {
+      const url = `/user/transfers/${transferDirection}?include=metadata`
+      const errorMsg = `there was an error fetching ${transferDirection} transfers`
+      axios.get(url).then((response) => {
         const { result, error } = response.data
         if (error) {
-          console.log('there was an error fetching incoming transfers', error)
+          console.error(errorMsg, error)
         } else {
           this.titles = result
         }
       }).catch((error) => {
-        console.log('there was an error fetching incoming transfers', error)
+        console.error(errorMsg, error)
       })
     },
   },
@@ -89,19 +99,6 @@ export default {
   .network-details
     font-size: .4em
     word-break: break-word
-
-.sub-heading
-  font-weight: 300
-  margin-bottom: 1rem
-
-  span
-    display: inline-block
-    padding: 0 .25rem
-
-  .active
-    color: $color-secondary-accent
-    font-weight: 600
-    border-bottom: 3px solid $color-secondary-accent
 
 h1, h2
   display: inline
