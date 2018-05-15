@@ -15,6 +15,17 @@ const apiUrl = (() => {
 
 })()
 
+// this is the message that will be signed by MetaMask and checked against when
+//  authenticating users
+const typedDataToSign = [
+  {
+    type: 'string',
+    name: 'Sign In',
+    value: 'Sign in to Codex Title Viewer',
+  },
+]
+
 export default {
   apiUrl,
+  typedDataToSign,
 }

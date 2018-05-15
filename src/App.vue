@@ -35,7 +35,8 @@ export default {
   },
   methods: {
     initializeApi() {
-      axios.defaults.baseURL = config.apiUrl
+      const { apiUrl } = config
+      axios.defaults.baseURL = apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
       // TODO: Need to test this by expiring the auth token on the server

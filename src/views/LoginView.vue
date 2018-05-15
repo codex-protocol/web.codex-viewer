@@ -16,25 +16,19 @@
 </template>
 
 <script>
+
+import config from '../util/config'
+
 export default {
   name: 'login-view',
   methods: {
     metamaskLogin() {
       const { account } = this.web3
-      const msgParams = [
-        {
-          type: 'string',
-          name: 'Sign In',
-          value: 'Sign in to Codex Title Viewer',
-        },
-      ]
+      const { typedDataToSign } = config
 
       this.web3.instance().currentProvider.sendAsync({
         method: 'eth_signTypedData',
-        params: [
-          this.web3.instance().toHex(msgParams),
-          account,
-        ],
+        params: [typedDataToSign, account],
         from: account,
       }, (error, result) => {
         if (error) {
@@ -46,14 +40,9 @@ export default {
             return
           }
 
-          console.log('leeeroy', {
-            userAddress: account,
-            signedData: result.result.substr(2)
-          })
-
           this.$store.dispatch('sendAuthRequest', {
             userAddress: account,
-            signedData: result.result.substr(2),
+            signedData: result.result,
           }).then(() => {
             this.$router.replace('collection')
           })
