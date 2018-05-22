@@ -7,7 +7,7 @@
     size="lg"
     v-model="modalVisible"
     v-on:shown="focusModal"
-    v-on:ok="fetchTransactionData"
+    v-on:ok="createMetaData"
   >
     <div class="flex-container">
       <div>
@@ -20,6 +20,7 @@
           label="Piece title" label-for="name" label-size="sm"
         >
           <b-form-input
+            required
             id="name"
             type="text"
             class="mb-4"
@@ -32,6 +33,7 @@
           label="Digital image" label-for="imageFile" label-size="sm"
         >
           <b-form-file
+            required
             id="imageFile"
             accept="image/*"
             placeholder="Upload an image of the piece"
@@ -132,18 +134,18 @@ export default {
         console.log('there was an error uploading the file', error)
       })
     },
-    fetchTransactionData(event) {
+    createMetaData(event) {
       event.preventDefault()
 
-      // TODO: Show some better error handling fi these aren't filled in
-      if (!this.name || !this.uploadedFile || !this.description) {
+      // TODO: Show some better error handling if these aren't filled in
+      if (!this.name || !this.uploadedFile) {
         return
       }
 
-      axios.post('/users/titles/metadata', {
+      axios.post('/users/title-metadata', {
         name: this.name,
         files: this.uploadedFile,
-        description: this.description,
+        description: this.description || null,
       }).then((response) => {
         const { result, error } = response.data
         if (error) {
@@ -167,7 +169,7 @@ export default {
         account,
         sha3(transactionData.name),
         sha3(transactionData.description),
-        sha3(transactionData.imageUri),
+        sha3(transactionData.imageUri), // TODO: calculate hash of binary data here instead
         '1', // providerId
         transactionData.id,
       ]

@@ -16,15 +16,30 @@
       <img src="../assets/icons/star.svg">Coming Soon
     </b-link>
     <span class="spacer"></span>
+    <b-link v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
+      <img src="../assets/icons/codx-token.svg">Get Tokens
+    </b-link>
     <b-link @click.prevent="logout">
       <img src="../assets/icons/logout.svg">Logout
     </b-link>
+    <faucet-modal/>
   </nav>
 </template>
 
 <script>
+
+import FaucetModal from './modals/FaucetModal'
+
 export default {
   name: 'app-side-bar',
+  components: {
+    FaucetModal,
+  },
+  data: () => {
+    return {
+      shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
+    }
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout', this.$router)

@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm">
+      <div class="col-sm-7">
         <div class="logo"><img src="../assets/logos/codex/gold.svg" /></div>
-        <h1>Codex Title Viewer</h1>
-        <div class="lead">Decentralized application for viewing Codex Titles</div>
+        <h1>Codex Viewer</h1>
+        <div class="lead">Decentralized application for viewing The Codex Registry</div>
         <b-button variant="primary" @click="metamaskLogin">Login</b-button>
         <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
       </div>
-      <div class="col-sm secondary">
+      <div class="col-sm-5 secondary">
         <div class="bust"><img src="../assets/images/bust.png" /></div>
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
   methods: {
     metamaskLogin() {
       const { account } = this.web3
-      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Title Registry.'
+      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
       this.web3.instance().currentProvider.sendAsync({
         method: 'personal_sign',

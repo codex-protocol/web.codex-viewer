@@ -1,8 +1,7 @@
 <template>
-  <div class="title-card">
+  <div class="title-card" v-if="codexTitle.metadata">
     <b-card
       @click.prevent="viewTitle"
-      v-if="codexTitle.metadata"
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
@@ -24,7 +23,7 @@ export default {
 
     // TODO: Need a way to render titles in collection w/ no metadata (e.g., one was created in a different Provider)
     if (!this.codexTitle.metadata) {
-      console.log(JSON.stringify(this.codexTitle))
+      console.log('found title with no metadata', this.codexTitle)
     }
 
     return {

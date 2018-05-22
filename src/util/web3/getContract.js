@@ -1,18 +1,18 @@
 import contract from 'truffle-contract'
 
 let codexTitleJson
-let tokenProxyJson
+let codexTitleProxyJson
 
 /* eslint-disable global-require */
 if (process.env.TARGET_ENV === 'production') {
   // codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexTitle.json') // eslint-disable-line import/no-unresolved
-  // tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/TokenProxy.json') // eslint-disable-line import/no-unresolved
+  // codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexTitleProxy.json') // eslint-disable-line import/no-unresolved
 } else if (process.env.TARGET_ENV === 'staging') {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
-  tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/TokenProxy.json')
+  codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitleProxy.json')
 } else {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitle.json')
-  tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/TokenProxy.json')
+  codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitleProxy.json')
 }
 /* eslint-enable */
 
@@ -23,7 +23,7 @@ const getContract = (web3) => {
 
     codexTitle.setProvider(web3.currentProvider)
 
-    resolve(codexTitle.at(tokenProxyJson.address))
+    resolve(codexTitle.at(codexTitleProxyJson.address))
   })
 }
 

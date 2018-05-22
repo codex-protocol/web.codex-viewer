@@ -4,17 +4,14 @@
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
-      <div class="approved-overlay" v-if="this.transferApproved">
-        <p>Transfer Accepted</p>
+      <div class="approved-overlay" v-if="this.cancelApproved">
+        <p>Transfer Cancelled</p>
         <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
       </div>
       <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="owner-address">Sent from {{ codexTitle.ownerAddress }}</p>
+      <p class="address">Sent to {{ codexTitle.approvedAddress }}</p>
       <p class="action-buttons">
-        <b-button variant="secondary" @click.prevent="acceptTransfer">Accept</b-button>
-        <!-- @TODO: implement ignore once API allows it
-        <b-button variant="secondary" @click.prevent="ignoreTransfer">Ignore</b-button>
-        -->
+        <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
       </p>
     </b-card>
   </div>
@@ -24,12 +21,12 @@
 import callContract from '../util/web3/callContract'
 
 export default {
-  name: 'title-transfer-list-item',
+  name: 'title-transfer-outgoing-list-item',
   props: ['codexTitle'],
   data() {
     return {
       route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
-      transferApproved: false,
+      cancelApproved: false,
     }
   },
   computed: {
@@ -44,24 +41,16 @@ export default {
     viewTitle() {
       this.$router.push(this.route)
     },
-    acceptTransfer() {
-      const input = [
-        this.codexTitle.ownerAddress,
-        this.web3.account,
-        this.codexTitle.tokenId,
-      ]
+    cancelTransfer() {
+      const input = ['0x0000000000000000000000000000000000000000', this.codexTitle.tokenId]
 
-      callContract(this.contract.safeTransferFrom, input, this.web3)
+      callContract(this.contract.approve, input, this.web3)
         .then(() => {
-          this.transferApproved = true
+          this.cancelApproved = true
         })
         .catch((error) => {
-          console.log('There was an error approving the transfer', error)
+          console.log('There was an error cancelling the transfer', error)
         })
-    },
-    ignoreTransfer() {
-      // @TODO: Implement ignoring transfer
-      console.log('ignore transfer')
     },
   },
 }
@@ -114,11 +103,14 @@ export default {
     &.name
       font-weight: 600
 
-    &.owner-address
+    &.address
       font-weight: 300
 
   .action-buttons
-    display: flex
-    justify-content: space-between
+    button
+      width: 100%
+
+      &+button
+        margin-top: 1rem
 
 </style>
