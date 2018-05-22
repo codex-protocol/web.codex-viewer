@@ -4,10 +4,10 @@ const apiUrl = (() => {
 
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'https://codex-title-api.codexprotocol.com'
+      return 'https://codex-registry-api.codexprotocol.com'
 
     case 'staging':
-      return 'http://codex-title-api.codexprotocol-staging.com'
+      return 'http://codex-registry-api.codexprotocol-staging.com'
 
     default:
       return 'http://localhost:3001'
