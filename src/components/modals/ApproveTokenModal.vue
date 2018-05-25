@@ -34,7 +34,7 @@ export default {
     approveTokens(event) {
       event.preventDefault()
 
-      const amount = new this.web3.BigNumber(2).pow(255).toFixed()
+      const amount = new (this.web3.instance()).BigNumber(2).pow(255).toFixed()
       const input = [this.titleContract.address, amount]
       callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
