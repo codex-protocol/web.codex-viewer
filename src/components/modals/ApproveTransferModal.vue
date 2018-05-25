@@ -65,7 +65,7 @@ export default {
       event.preventDefault()
 
       const input = [this.toEthAddress, this.titleId]
-      callContract(this.contract.approve, input, this.web3)
+      callContract(this.titleContract.approve, input, this.web3)
         .then(() => {
           this.modalVisible = false
         })
@@ -78,8 +78,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    contract() {
-      return this.web3.contractInstance()
+    titleContract() {
+      return this.web3.titleContractInstance()
     },
   },
   watch: {

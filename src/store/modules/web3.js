@@ -3,14 +3,15 @@
 import { Networks, Web3Errors } from '../../util/constants/web3'
 import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
-import getContract from '../../util/web3/getContract'
+import { getCodexTitleContract, getCodexTokenContract } from '../../util/web3/getContract'
 
 const state = {
   instance: null,
   network: null,
   account: null,
   error: Web3Errors.None,
-  contractInstance: null,
+  titleContractInstance: null,
+  tokenContractInstance: null,
 }
 
 const getters = {
@@ -23,7 +24,8 @@ const actions = {
     registerWeb3().then((result) => {
       commit('registerWeb3Instance', { result, router })
 
-      dispatch('getContract', result.web3())
+      dispatch('getCodexTitleContract', result.web3())
+      dispatch('getCodexTokenContract', result.web3())
     }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register web3', error })
     })
@@ -32,11 +34,20 @@ const actions = {
     console.log('pollWeb3 action being executed')
     commit('pollWeb3Instance', payload)
   },
-  getContract({ commit }, web3) {
-    console.log('getContract action being executed')
+  getCodexTitleContract({ commit }, web3) {
+    console.log('getCodexTitleContract action being executed')
 
-    getContract(web3).then((result) => {
-      commit('getContractInstance', result)
+    getCodexTitleContract(web3).then((result) => {
+      commit('getCodexTitleContractInstance', result)
+    }).catch((e) => {
+      commit('setWeb3Error', { message: 'Unable to register the contract', error })
+    })
+  },
+  getCodexTokenContract({ commit }, web3) {
+    console.log('getCodexTokenContract action being executed')
+
+    getCodexTokenContract(web3).then((result) => {
+      commit('getCodexTokenContractInstance', result)
     }).catch((e) => {
       commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
@@ -72,9 +83,16 @@ const mutations = {
     currentState.account = payload.account
   },
 
-  getContractInstance(currentState, payload) {
-    console.log('getContractInstance mutation being executed', payload)
-    currentState.contractInstance = () => {
+  getCodexTitleContractInstance(currentState, payload) {
+    console.log('getCodexTitleContractInstance mutation being executed', payload)
+    currentState.titleContractInstance = () => {
+      return payload
+    }
+  },
+
+  getCodexTokenContractInstance(currentState, payload) {
+    console.log('getCodexTokenContractInstance mutation being executed', payload)
+    currentState.tokenContractInstance = () => {
       return payload
     }
   },

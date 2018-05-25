@@ -4,7 +4,7 @@
       <b-row v-if="codexTitle.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewTitle">
-            <img :src="codexTitle.metadata.files[0].uri"/>
+            <img :src="codexTitle.metadata.mainImage.uri"/>
           </a>
         </b-col>
         <b-col class="name">

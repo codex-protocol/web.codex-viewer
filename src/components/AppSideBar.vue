@@ -19,21 +19,27 @@
     <b-link v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
       <img src="../assets/icons/codx-token.svg">Get Tokens
     </b-link>
+    <b-link v-b-modal.approveTokenModal v-if="shouldShowFaucetButton" v-once>
+      <img src="../assets/icons/codx-token.svg">Approve Tokens
+    </b-link>
     <b-link @click.prevent="logout">
       <img src="../assets/icons/logout.svg">Logout
     </b-link>
     <faucet-modal/>
+    <approve-token-modal/>
   </nav>
 </template>
 
 <script>
 
 import FaucetModal from './modals/FaucetModal'
+import ApproveTokenModal from './modals/ApproveTokenModal'
 
 export default {
   name: 'app-side-bar',
   components: {
     FaucetModal,
+    ApproveTokenModal,
   },
   data: () => {
     return {

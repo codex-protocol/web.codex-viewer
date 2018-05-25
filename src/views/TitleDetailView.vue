@@ -3,7 +3,7 @@
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div class="title-image">
-          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
+          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.mainImage.uri" />
           <div class="private-img" v-else>
             <p>This Codex Title is private</p>
           </div>
@@ -40,7 +40,11 @@
             -->
 
             <approve-transfer-modal :titleId="titleId" />
-            <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
+            <privacy-settings-modal
+              :titleId="titleId"
+              :isPrivate="isPrivate"
+              :whitelistedAddresses="whitelistedAddresses"
+            />
           </div>
           <div class="mt-3" v-if="isApproved">
             <b-button @click="acceptTransfer">
@@ -105,11 +109,14 @@ export default {
     titleId() {
       return this.$route.params.titleId
     },
-    contract() {
-      return this.web3.contractInstance()
+    titleContract() {
+      return this.web3.titleContractInstance()
     },
     isPrivate() {
       return this.codexTitle.isPrivate
+    },
+    whitelistedAddresses() {
+      return this.codexTitle.whitelistedAddresses
     },
     isAwaitingApproval() {
       return this.codexTitle.approvedAddress !== null &&
@@ -146,7 +153,7 @@ export default {
         this.titleId,
       ]
 
-      callContract(this.contract.safeTransferFrom, input, this.web3)
+      callContract(this.titleContract.safeTransferFrom, input, this.web3)
         .then(() => {
         })
         .catch((error) => {

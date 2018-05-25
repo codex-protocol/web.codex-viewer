@@ -2,7 +2,7 @@
   <div class="title-card" v-if="codexTitle.metadata">
     <b-card
       @click.prevent="viewTitle"
-      :img-src="codexTitle.metadata.files[0].uri"
+      :img-src="codexTitle.metadata.mainImage.uri"
       img-top
     >
       <p>
