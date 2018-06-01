@@ -37,7 +37,6 @@ export default {
           this.$store.commit('updateApprovalStatus', {
             allowance: amount,
             stateProperty: this.stateProperty,
-            BigNumber: this.web3.instance().BigNumber,
           })
           this.modalVisible = false
         })

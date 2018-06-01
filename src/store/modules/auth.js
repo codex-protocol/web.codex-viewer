@@ -1,4 +1,5 @@
 import axios from 'axios'
+import BigNumber from 'bignumber.js'
 
 // If a token is present on page load, then add it to all future API requests
 let token = window.localStorage.getItem('authToken')
@@ -9,9 +10,9 @@ if (token) {
 const initialState = () => {
   return {
     token: token || null,
-    balance: 0,
-    totalStakedFor: 0,
-    personalStakeAmount: 0,
+    balance: new BigNumber(0),
+    totalStakedFor: new BigNumber(0),
+    personalStakeAmount: new BigNumber(0),
     personalStakeFor: null,
     registryContractApproved: false,
     stakeContractApproved: false,
@@ -66,7 +67,6 @@ const actions = {
       tokenContract,
       registryContractAddress: registryContract.address,
       stakeContractAddress: stakeContract.address,
-      BigNumber: web3.instance().BigNumber,
     })
 
     if (authToken) {
@@ -110,14 +110,12 @@ const actions = {
       tokenContract,
       registryContractAddress,
       stakeContractAddress,
-      BigNumber,
     } = payload
 
     tokenContract.allowance(account, registryContractAddress).then((allowance) => {
       commit('updateApprovalStatus', {
         allowance,
         stateProperty: 'registryContractApproved',
-        BigNumber,
       })
     })
 
@@ -125,7 +123,6 @@ const actions = {
       commit('updateApprovalStatus', {
         allowance,
         stateProperty: 'stakeContractApproved',
-        BigNumber,
       })
     })
   },
@@ -193,7 +190,6 @@ const mutations = {
   updateApprovalStatus(currentState, payload) {
     const {
       allowance,
-      BigNumber,
       stateProperty,
     } = payload
 
