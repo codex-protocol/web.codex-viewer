@@ -9,6 +9,7 @@ import TransferListView from '../views/TransferListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
 import SettingsView from '../views/SettingsView'
+import ManageTokensView from '../views/ManageTokensView'
 
 Vue.use(Router)
 
@@ -24,20 +25,21 @@ const ifNotAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
-    { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
-    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' }, meta: { requiresAuth: true } },
-    { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' }, meta: { requiresAuth: true } },
-    { name: 'coming-soon', path: '/coming-soon', component: FeatureListView, meta: { requiresAuth: true } },
-    { name: 'settings', path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
-    { name: 'collection', path: '/collection', component: TitleListView, meta: { requiresAuth: true } },
-    { name: 'title-detail', path: '/title/:titleId', component: TitleDetailView },
+    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming' },
+    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' } },
+    { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },
+    { name: 'coming-soon', path: '/coming-soon', component: FeatureListView },
+    { name: 'settings', path: '/settings', component: SettingsView },
+    { name: 'collection', path: '/collection', component: TitleListView },
+    { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
+    { name: 'title-detail', path: '/title/:titleId', component: TitleDetailView, meta: { allowUnauthenticatedUsers: true } },
     { path: '/', redirect: '/collection' },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => { return record.meta.requiresAuth })) {
+  if (to.matched.some((route) => { return !route.meta.allowUnauthenticatedUsers })) {
     if (!store.getters.isAuthenticated) {
       next('/login')
     } else {

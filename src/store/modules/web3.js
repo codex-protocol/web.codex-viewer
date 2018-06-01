@@ -1,9 +1,11 @@
-/* eslint-disable */
-
 import { Networks, Web3Errors } from '../../util/constants/web3'
 import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
-import { getCodexTitleContract, getCodexTokenContract } from '../../util/web3/getContract'
+import {
+  getCodexTitleContract,
+  getCodexCoinContract,
+  getStakeContainerContract,
+} from '../../util/web3/getContract'
 
 const state = {
   instance: null,
@@ -12,6 +14,7 @@ const state = {
   error: Web3Errors.None,
   titleContractInstance: null,
   tokenContractInstance: null,
+  stakeContainerContractInstance: null,
 }
 
 const getters = {
@@ -21,34 +24,54 @@ const actions = {
   registerWeb3({ commit, dispatch }, router) {
     console.log('registerWeb3 action being executed')
 
-    registerWeb3().then((result) => {
+    return registerWeb3().then((result) => {
       commit('registerWeb3Instance', { result, router })
 
-      dispatch('getCodexTitleContract', result.web3())
-      dispatch('getCodexTokenContract', result.web3())
+      const web3 = result.web3()
+
+      return Promise.all([
+        dispatch('registerContract', {
+          web3,
+          registrationFunction: getCodexTitleContract,
+          propertyName: 'titleContractInstance',
+        }),
+        dispatch('registerContract', {
+          web3,
+          registrationFunction: getCodexCoinContract,
+          propertyName: 'tokenContractInstance',
+        }),
+        dispatch('registerContract', {
+          web3,
+          registrationFunction: getStakeContainerContract,
+          propertyName: 'stakeContainerContractInstance',
+        }),
+      ])
+
     }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register web3', error })
     })
   },
+
   pollWeb3({ commit }, payload) {
     console.log('pollWeb3 action being executed')
     commit('pollWeb3Instance', payload)
   },
-  getCodexTitleContract({ commit }, web3) {
-    console.log('getCodexTitleContract action being executed')
 
-    getCodexTitleContract(web3).then((result) => {
-      commit('getCodexTitleContractInstance', result)
-    }).catch((e) => {
-      commit('setWeb3Error', { message: 'Unable to register the contract', error })
-    })
-  },
-  getCodexTokenContract({ commit }, web3) {
-    console.log('getCodexTokenContract action being executed')
+  registerContract({ commit }, payload) {
+    const {
+      web3,
+      registrationFunction,
+      propertyName,
+    } = payload
 
-    getCodexTokenContract(web3).then((result) => {
-      commit('getCodexTokenContractInstance', result)
-    }).catch((e) => {
+    console.log('registerContract action being executed for contract', registrationFunction.name)
+
+    return registrationFunction(web3).then((result) => {
+      commit('registerContractInstance', {
+        propertyName,
+        contractInstance: result,
+      })
+    }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
   },
@@ -83,17 +106,16 @@ const mutations = {
     currentState.account = payload.account
   },
 
-  getCodexTitleContractInstance(currentState, payload) {
-    console.log('getCodexTitleContractInstance mutation being executed', payload)
-    currentState.titleContractInstance = () => {
-      return payload
-    }
-  },
+  registerContractInstance(currentState, payload) {
+    const {
+      propertyName,
+      contractInstance,
+    } = payload
 
-  getCodexTokenContractInstance(currentState, payload) {
-    console.log('getCodexTokenContractInstance mutation being executed', payload)
-    currentState.tokenContractInstance = () => {
-      return payload
+    console.log('registerContractInstance mutation being executed for contract', propertyName)
+
+    currentState[propertyName] = () => {
+      return contractInstance
     }
   },
 

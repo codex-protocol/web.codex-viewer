@@ -1,7 +1,7 @@
 <template>
   <b-modal
     id="titlePrivacySettings"
-    title="Title Privacy Settings"
+    title="Title privacy settings"
     ok-title="Save"
     cancel-variant="outline-primary"
     v-model="modalVisible"

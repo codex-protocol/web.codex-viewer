@@ -1,8 +1,8 @@
 <template>
   <b-modal
     id="createTitleModal"
-    title="Create title"
-    ok-title="Create with MetaMask"
+    title="Create record"
+    ok-title="Create"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     size="lg"
@@ -195,7 +195,7 @@ export default {
         account,
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
-        this.uploadedFileHash,
+        [this.uploadedFileHash],
         '1', // providerId
         metadata.id,
       ]

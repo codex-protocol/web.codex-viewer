@@ -1,8 +1,8 @@
 <template>
   <b-modal
     id="faucetModal"
-    title="Get CODX Tokens"
-    ok-title="Request Tokens"
+    title="Get CODX tokens"
+    ok-title="Request tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="requestTokens"
@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     requestTokens(event) {
-
       event.preventDefault()
 
       axios.get('/user/faucet')
@@ -44,9 +43,6 @@ export default {
           if (error) {
             throw error
           }
-
-          // TODO: update their local token count and / or show notification here?
-
         })
         .catch((error) => {
           console.error('there was an error requesting tokens', error)

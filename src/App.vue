@@ -23,6 +23,12 @@ export default {
   },
   created() {
     this.$store.dispatch('registerWeb3', this.$router)
+      .then(() => {
+        if (this.authToken) {
+          this.$store.dispatch('updateUserState')
+        }
+      })
+
     this.initializeApi()
   },
   computed: {
@@ -31,6 +37,9 @@ export default {
     },
     titleId() {
       return this.$route.params.titleId
+    },
+    web3() {
+      return this.$store.state.web3
     },
   },
   methods: {
@@ -42,7 +51,7 @@ export default {
       const authErrorHandler = (response) => {
         if ((response.error && response.error.status === 401) ||
         response.status === 401) {
-          this.$store.commit('clearAuthToken')
+          this.$store.commit('clearUserState')
         }
 
         return response
