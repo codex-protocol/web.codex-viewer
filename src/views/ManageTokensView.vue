@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     web3() {
-      return this.$store.state.web3.instance()
+      return this.$store.state.web3
     },
     userState() {
       return this.$store.state.auth
@@ -90,10 +90,10 @@ export default {
       return this.userState.stakeContractApproved
     },
     stakeContract() {
-      return this.$store.state.web3.stakeContainerContractInstance()
+      return this.web3.stakeContainerContractInstance()
     },
     titleContract() {
-      return this.$store.state.web3.titleContractInstance()
+      return this.web3.titleContractInstance()
     },
   },
   methods: {
@@ -101,7 +101,9 @@ export default {
       this.$store.dispatch('logout', this.$router)
     },
     formatTokenAmount(rawAmount) {
-      return this.web3.fromWei(rawAmount, 'ether').toFixed(3)
+      return this.web3.instance
+        ? this.web3.instance().fromWei(rawAmount, 'ether').toFixed(3)
+        : 0
     },
   },
 }

@@ -17,7 +17,6 @@
   "dependencies": {
     "@codex-protocol/ethereum-service": "latest",
     "axios": "^0.18.0",
-    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "bootstrap": "^4.1.1",
     "bootstrap-vue": "^2.0.0-rc.9",
     "truffle-contract": "^3.0.5",
