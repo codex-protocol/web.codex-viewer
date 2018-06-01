@@ -14,7 +14,7 @@ if (process.env.TARGET_ENV === 'production') {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
   codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitleProxy.json')
   codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexCoin.json')
-  // stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/4/ERC900BasicStakeContainer.json')
+  stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/4/ERC900BasicStakeContainer.json')
 } else {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitle.json')
   codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitleProxy.json')
