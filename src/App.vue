@@ -15,7 +15,7 @@ import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
 import MetaMaskModal from './components/modals/MetaMaskModal'
 
-import analytics from './util/analytics' // eslint-disable-line no-unused-vars
+import './util/analytics'
 
 export default {
   name: 'App',

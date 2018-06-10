@@ -25,6 +25,10 @@
             </b-button>
             -->
 
+            <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
+              Manage
+            </b-button>
+
             <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
               Transfer
             </b-button>
@@ -44,6 +48,9 @@
               :recordId="recordId"
               :isPrivate="isPrivate"
               :whitelistedAddresses="whitelistedAddresses"
+            />
+            <record-manage-modal
+              :codexRecord="codexRecord"
             />
           </div>
           <div class="mt-3" v-if="isApproved">
@@ -75,6 +82,7 @@ import EventBus from '../util/eventBus'
 
 import missingImage from '../assets/images/missing-image.png'
 import RecordProvenance from '../components/RecordProvenance'
+import RecordManageModal from '../components/modals/RecordManageModal'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
@@ -86,6 +94,7 @@ export default {
     PrivacySettingsModal,
     RecordProvenance,
     RecordBlockchainDetails,
+    RecordManageModal,
   },
   data() {
     return {
