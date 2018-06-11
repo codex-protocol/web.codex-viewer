@@ -58,6 +58,7 @@
         id="dropzone"
         :options="dropzoneOptions"
         v-on:vdropzone-success="fileAdded"
+        v-on:vdropzone-removed-file="fileRemoved"
       />
     </b-form-group>
   </meta-mask-notification-modal>
@@ -95,25 +96,37 @@ export default {
         paramName: 'files',
         thumbnailWidth: 150,
         maxFilesize: 5,
+        addRemoveLinks: true,
         headers: { Authorization: this.$store.state.auth.authToken },
       },
     }
   },
   methods: {
-    addImage(id) {
-      this.images.push({ id })
+    addImage(id, uuid) {
+      this.images.push({ id, uuid })
     },
-    removeImage(id) {
+    removeImage(uuid) {
       for (let i = 0; i < this.images.length; i++) {
-        if (this.images[i].id === id) {
+        if (this.images[i].uuid === uuid) {
           this.images.splice(i, 1)
         }
       }
     },
+    getImages() {
+      const images = this.images.map((image) => {
+        return { id: image.id }
+      })
+      return images
+    },
     fileAdded(file, response) {
       const result = response.result[0]
+      const { uuid } = file.upload
       const { id } = result
-      this.addImage(id)
+      this.addImage(id, uuid)
+    },
+    fileRemoved(file, error, xhr) {
+      const { uuid } = file.upload
+      this.removeImage(uuid)
     },
     focusModal() {
       this.$refs.defaultModalFocus.focus()
@@ -126,7 +139,7 @@ export default {
       return axios.put(url, {
         name: this.name,
         description: this.description,
-        images: this.images,
+        images: this.getImages(),
       }).then((response) => {
         const { result, error } = response.data
         if (error) {
