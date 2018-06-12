@@ -4,7 +4,7 @@ let ExpectedNetworkId
 // @NOTE: if you change the ExpectedNetworkId values here, be sure to update
 //  src/util/web3/getContract.js as well
 if (process.env.TARGET_ENV === 'production') {
-  ExpectedNetworkId = '1'
+  ExpectedNetworkId = '4' // @TODO: change back to '1' when out of beta and on mainnet
 } else if (process.env.TARGET_ENV === 'staging') {
   ExpectedNetworkId = '4'
 } else {
