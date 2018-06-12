@@ -40,13 +40,16 @@
       />
     </b-form-group>
     <b-form-group
+      v-if="images.length"
       label="Other Images"
     >
       <b-img
+        v-for="image in images"
+        v-bind:key="image.id"
         class="main-image"
         thumbnail
         fluid
-        :src="mainImage"
+        :src="image.uri"
         alt="Main Image"
       />
     </b-form-group>
@@ -86,7 +89,12 @@ export default {
   data() {
     const images = []
     for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
-      images.push({ id: this.codexRecord.metadata.images[i] })
+      images.push(this.codexRecord.metadata.images[i])
+    }
+
+    const imageIds = []
+    for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
+      imageIds.push({ id: this.codexRecord.metadata.images[i].id })
     }
 
     const filesUrl = `${apiUrl}/users/files`
@@ -95,6 +103,7 @@ export default {
       description: this.codexRecord.metadata.description,
       mainImage: this.codexRecord.metadata.mainImage.uri,
       images,
+      imageIds,
       dropzoneOptions: {
         url: filesUrl,
         paramName: 'files',
@@ -106,16 +115,27 @@ export default {
     }
   },
   methods: {
+    addImage(id, uuid) {
+      this.imageIds.push({ id, uuid })
+    },
     removeImage(uuid) {
-      for (let i = 0; i < this.images.length; i++) {
-        if (this.images[i].uuid === uuid) {
-          this.images.splice(i, 1)
+      for (let i = 0; i < this.imageIds.length; i++) {
+        if (this.imageIds[i].uuid === uuid) {
+          this.imageIds.splice(i, 1)
         }
       }
     },
+    getImageIds() {
+      const imageIds = this.imageIds.map((imageId) => {
+        return { id: imageId.id }
+      })
+      return imageIds
+    },
     fileAdded(file, response) {
       const result = response.result[0]
-      this.images.push(result)
+      const { uuid } = file.upload
+      const { id } = result
+      this.addImage(id, uuid)
     },
     fileRemoved(file, error, xhr) {
       const { uuid } = file.upload
@@ -130,14 +150,10 @@ export default {
     updateMetadata() {
       const url = `/users/records/${this.tokenId}/metadata`
 
-      const imageIds = this.images.map((image) => {
-        return { id: image.id }
-      })
-
       return axios.put(url, {
         name: this.name,
         description: this.description,
-        images: imageIds,
+        images: this.getImageIds(),
       }).then((response) => {
         const { result, error } = response.data
         if (error) {
