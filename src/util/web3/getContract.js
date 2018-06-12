@@ -7,7 +7,7 @@ import contract from 'truffle-contract'
 //  ordering the imports or something), so we'll just duplicate that logic here
 const expectedNetworkId = (() => {
   switch (process.env.TARGET_ENV) {
-    case 'production': return '1'
+    case 'production': return '4' // @TODO: change back to '1' when out of beta and on mainnet
     case 'staging': return '4'
     default: return '5777'
   }

@@ -21,7 +21,7 @@ const apiUrl = (() => {
 const etherScanUrl = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'https://etherscan.io/'
+      return 'https://rinkeby.etherscan.io/' // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
 
     case 'staging':
       return 'https://rinkeby.etherscan.io/'

@@ -74,7 +74,9 @@ export default {
   },
   data: () => {
     return {
-      shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
+      // @TODO: change back when out of beta and on mainnet
+      // shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
+      shouldShowFaucetButton: true,
     }
   },
   created() {
