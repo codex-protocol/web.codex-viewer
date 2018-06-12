@@ -1,9 +1,9 @@
 const dotenv = require('dotenv')
 
 const dotenvResult = dotenv.config({ path: `${__dirname}/../.env` })
-if (dotenvResult.error) {
-  throw dotenvResult.error
-}
+// if (dotenvResult.error) {
+//   throw dotenvResult.error
+// }
 
 module.exports = {
   NODE_ENV: '"production"',
