@@ -57,6 +57,7 @@
         ref="dropzone"
         id="dropzone"
         :options="dropzoneOptions"
+        :destroyDropzone="false"
         v-on:vdropzone-success="fileAdded"
         v-on:vdropzone-removed-file="fileRemoved"
       />
@@ -83,14 +84,17 @@ export default {
     MetaMaskNotificationModal,
   },
   data() {
+    const images = []
+    for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
+      images.push({ id: this.codexRecord.metadata.images[i] })
+    }
+
     const filesUrl = `${apiUrl}/users/files`
     return {
       name: this.codexRecord.metadata.name,
       description: this.codexRecord.metadata.description,
       mainImage: this.codexRecord.metadata.mainImage.uri,
-      nameHash: null,
-      descriptionHash: null,
-      fileHashes: null,
+      images,
       dropzoneOptions: {
         url: filesUrl,
         paramName: 'files',
@@ -102,9 +106,6 @@ export default {
     }
   },
   methods: {
-    addImage(id, uuid) {
-      this.images.push({ id, uuid })
-    },
     removeImage(uuid) {
       for (let i = 0; i < this.images.length; i++) {
         if (this.images[i].uuid === uuid) {
@@ -112,17 +113,9 @@ export default {
         }
       }
     },
-    getImages() {
-      const images = this.images.map((image) => {
-        return { id: image.id }
-      })
-      return images
-    },
     fileAdded(file, response) {
       const result = response.result[0]
-      const { uuid } = file.upload
-      const { id } = result
-      this.addImage(id, uuid)
+      this.images.push(result)
     },
     fileRemoved(file, error, xhr) {
       const { uuid } = file.upload
@@ -136,32 +129,34 @@ export default {
     },
     updateMetadata() {
       const url = `/users/records/${this.tokenId}/metadata`
+
+      const imageIds = this.images.map((image) => {
+        return { id: image.id }
+      })
+
       return axios.put(url, {
         name: this.name,
         description: this.description,
-        images: this.getImages(),
+        images: imageIds,
       }).then((response) => {
         const { result, error } = response.data
         if (error) {
           throw error
         } else {
           const { nameHash, descriptionHash, fileHashes } = result.pendingUpdates[0]
-          this.nameHash = nameHash
-          this.descriptionHash = descriptionHash
-          this.fileHashes = fileHashes
-          return this.modifyRecord()
+          return this.modifyRecord(nameHash, descriptionHash, fileHashes)
         }
       }).catch((error) => {
         throw error
       })
     },
-    modifyRecord() {
+    modifyRecord(nameHash, descriptionHash, fileHashes) {
       const input = [
         this.tokenId,
-        this.nameHash,
-        this.descriptionHash,
-        this.fileHashes,
-        1,
+        nameHash,
+        descriptionHash,
+        fileHashes,
+        '1',
         this.providerMetadataId,
       ]
       return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
@@ -186,13 +181,6 @@ export default {
     },
     providerMetadataId() {
       return this.codexRecord.metadata.id
-    },
-    images() {
-      const images = []
-      for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
-        images.push({ id: this.codexRecord.metadata.images[i] })
-      }
-      return images
     },
   },
 }
