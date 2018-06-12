@@ -2,6 +2,7 @@ import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
 import EventBus from '../../util/eventBus'
+import SocketService from '../../util/socket'
 
 // If an auth token is present on page load, then add it to all future API requests
 let cachedAuthToken = window.localStorage.getItem('authToken')
@@ -166,6 +167,8 @@ const mutations = {
 
     currentState.authToken = newAuthToken
     axios.defaults.headers.common.Authorization = newAuthToken
+
+    SocketService.updateSocket(newAuthToken)
 
     window.localStorage.setItem('authToken', newAuthToken)
   },

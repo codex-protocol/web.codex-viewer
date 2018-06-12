@@ -2,19 +2,21 @@
   <div class="toast-container">
     <div
       v-for="(toast, index) in toasts" :key="index"
+      @click="typeof toast.clickHandler === 'function' ? toast.clickHandler.call(toast, toast) : undefined"
       :class="[
         'toast',
         'alert',
         'alert-dismissible',
         `alert-${types[toast.type] || 'info'}`,
+        typeof toast.clickHandler === 'function' ? 'clickable' : undefined
       ]"
     >
-      {{toast.text}}
+      <span class="toast-text">{{toast.text}}</span>
       <button
         type="button"
         class="close"
         aria-label="Close"
-        @click="removeToast(toast)"
+        @click.stop="removeToast(toast)"
       >
         ×
       </button>
@@ -42,9 +44,17 @@ export default {
     }
   },
   methods: {
-    addToast({ text, type = 'info', timeout }) {
+    addToast({ text, type = 'info', timeout, clickHandler }) {
 
-      const newToast = { text, type, timeout }
+      const newToast = {
+        text,
+        type,
+        timeout,
+        clickHandler,
+        close: () => {
+          this.removeToast(newToast)
+        },
+      }
 
       this.toasts.push(newToast)
 
@@ -67,8 +77,12 @@ export default {
     })
 
     Object.keys(this.types).forEach((type) => {
-      EventBus.$on(`toast:${type}`, (text, timeout) => {
-        this.addToast({ text, type, timeout })
+      EventBus.$on(`toast:${type}`, (text, timeout, clickHandler) => {
+        if (typeof text === 'string') {
+          this.addToast({ text, type, timeout, clickHandler })
+        } else {
+          this.addToast(Object.assign({ type }, text))
+        }
       })
     })
   },
@@ -103,6 +117,13 @@ export default {
     border-radius: .25rem
     animation: .25s ease-out 0s slide-in
     box-shadow: 0 1rem 1rem -1rem rgba(black, .5)
+
+    &.clickable
+      cursor: pointer
+
+    .toast-text
+      word-wrap: break-word
+      white-space: pre-wrap
 
 @keyframes slide-in
   from

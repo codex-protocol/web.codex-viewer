@@ -1,10 +1,15 @@
 import Mixpanel from 'mixpanel'
 
-const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN, {
-  protocol: 'https',
-})
+let mixpanel
 
-const mixpanelTrack = (event, params) => {
+if (process.env.MIXPANEL_TOKEN) {
+  mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN, {
+    protocol: 'https',
+  })
+}
+
+// if there's no MIXPANEL_TOKEN, just return a noop
+const mixpanelTrack = !process.env.MIXPANEL_TOKEN ? Function.prototype : (event, params) => {
   if (params) {
     mixpanel.track(event, params)
   } else {

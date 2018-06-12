@@ -48,6 +48,16 @@ export default {
       records: [],
     }
   },
+  mounted() {
+    EventBus.$on('socket:address-approved:owner', this.addApprovedRecordHandler)
+    EventBus.$on('socket:address-approved:approved', this.addApprovedRecordHandler)
+    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:address-approved:owner', this.addApprovedRecordHandler)
+    EventBus.$off('socket:address-approved:approved', this.addApprovedRecordHandler)
+    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+  },
   created() {
     EventBus.$emit('events:view-transfers-page')
     this.fetchData(this.transferDirection)
@@ -58,6 +68,20 @@ export default {
     },
   },
   methods: {
+    // add the record to the incoming list if it was just approved
+    addApprovedRecordHandler(codexRecordToAdd) {
+      // make sure we don't introduce duplicates...
+      const alreadyExists = this.records.some((codexRecord) => {
+        return codexRecord.tokenId === codexRecordToAdd.tokenId
+      })
+      if (!alreadyExists) this.records.push(codexRecordToAdd)
+    },
+    // remove the record from the outgoing list if it was just transferred
+    removeTransferredRecordHandler(codexRecordToRemove) {
+      this.records = this.records.filter((codexRecord) => {
+        return codexRecord.tokenId !== codexRecordToRemove.tokenId
+      })
+    },
     fetchData(transferDirection) {
 
       const requestOptions = {

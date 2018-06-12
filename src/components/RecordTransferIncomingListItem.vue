@@ -15,8 +15,8 @@
       <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
       <p class="address">Sent from {{ codexRecord.ownerAddress }}</p>
       <p class="action-buttons">
-        <b-button variant="secondary" @click.prevent="acceptTransfer">Accept</b-button>
-        <b-button variant="outline-primary" @click.prevent="ignoreTransfer">Ignore</b-button>
+        <b-button variant="secondary" @click.prevent="acceptTransfer" :disabled="this.isLoading">Accept</b-button>
+        <b-button variant="outline-primary" @click.prevent="ignoreTransfer" :disabled="this.isLoading">Ignore</b-button>
       </p>
     </b-card>
   </div>
@@ -41,6 +41,12 @@ export default {
       missingImage,
     }
   },
+  mounted() {
+    EventBus.$on('socket:record-transferred:new-owner', this.recordTransferredHandler)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:record-transferred:new-owner', this.recordTransferredHandler)
+  },
   computed: {
     web3() {
       return this.$store.state.web3
@@ -53,19 +59,39 @@ export default {
     viewRecord() {
       this.$router.push(this.route)
     },
+    // show the "transfer accepted" overlay when the transfer event comes in
+    recordTransferredHandler(codexRecord) {
+      if (this.codexRecord.tokenId !== codexRecord.tokenId) {
+        return
+      }
+      this.transferAccepted = true
+      this.isLoading = false
+    },
     acceptTransfer() {
-      EventBus.$emit('events:click-accept-transfer')
+
       const input = [
         this.codexRecord.ownerAddress,
         this.web3.account,
         this.codexRecord.tokenId,
       ]
 
+      this.isLoading = true
+      EventBus.$emit('events:click-accept-transfer')
+
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer')
-          this.transferAccepted = true
+
+          // @NOTE: leave the in the loading state so that they can't click the
+          //  buttons while the transaction is waiting to be mined
+          //
+          // @TODO: figure out a way to persit this across route changes (local
+          //  storage?)
+          //
+          // this.isLoading = false
+
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)

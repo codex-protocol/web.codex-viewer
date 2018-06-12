@@ -131,10 +131,19 @@ export default {
     EventBus.$emit('events:view-record-page')
     this.getRecord()
   },
+  mounted() {
+    EventBus.$on('socket:record-modified', this.recordModifiedHandler)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:record-modified', this.recordModifiedHandler)
+  },
   watch: {
     $route: 'getRecord',
   },
   methods: {
+    recordModifiedHandler(updatedCodexRecord) {
+      this.codexRecord = updatedCodexRecord
+    },
     getRecord() {
       axios.get(`/record/${this.recordId}`)
         .then((response) => {

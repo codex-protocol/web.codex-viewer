@@ -36,11 +36,34 @@ export default {
       records: [],
     }
   },
+  mounted() {
+    // @NOTE: incoming transfers and newly minted Records both have the same
+    //  effect of pushing the new record onto this.records, so we use the same
+    //  handler for both
+    EventBus.$on('socket:mint-confirmed', this.addTransferredRecordHandler)
+    EventBus.$on('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:mint-confirmed', this.addTransferredRecordHandler)
+    EventBus.$off('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+  },
   created() {
     this.getRecords()
     EventBus.$emit('events:view-collection-page')
   },
   methods: {
+    // add the record to the collection if it was just transferred
+    addTransferredRecordHandler(codexRecordToAdd) {
+      this.records.push(codexRecordToAdd)
+    },
+    // add the record from the collection if it was just transferred
+    removeTransferredRecordHandler(codexRecordToRemove) {
+      this.records = this.records.filter((codexRecord) => {
+        return codexRecord.tokenId !== codexRecordToRemove.tokenId
+      })
+    },
     getRecords() {
       axios.get('/user/records')
         .then((response) => {
