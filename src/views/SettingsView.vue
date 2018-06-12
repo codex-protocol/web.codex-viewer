@@ -1,47 +1,46 @@
 <template>
   <div>
-    <div class="header">
-      <h1>Settings &amp; Privacy</h1>
-      <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
-      <div class="spacer"></div>
-    </div>
-    <div class="title-list" v-if="titles.length">
-      <b-container class="title-settings-row">
+    <app-header title="Settings &amp; Privacy" />
+    <div class="record-list" v-if="records.length">
+      <b-container class="record-settings-row">
         <b-row>
-            <b-col class="image">Image</b-col>
-            <b-col class="name">Asset Name</b-col>
-            <b-col class="toggle">Details Public</b-col>
+          <b-col class="image">Image</b-col>
+          <b-col class="name">Asset Name</b-col>
+          <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
-      <title-privacy-settings-row-item v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
-        :isPrivate="title.isPrivate"
+      <record-privacy-settings-row-item v-for="record in records"
+        :codex-record="record"
+        :key="record.tokenId"
+        :isPrivate="record.isPrivate"
       />
     </div>
     <div v-else>
-      You have no items in your collection!
+      You have no Records in your collection!
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
-import TitlePrivacySettingsRowItem from '../components/TitlePrivacySettingsRowItem'
+import EventBus from '../util/eventBus'
+import AppHeader from '../components/AppHeader'
+import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
 export default {
-  name: 'title-list',
+  name: 'record-list',
   components: {
-    TitlePrivacySettingsRowItem,
+    AppHeader,
+    RecordPrivacySettingsRowItem,
   },
   data() {
     return {
-      titles: [],
+      records: [],
     }
   },
   created() {
-    this.fetchData()
+    EventBus.$emit('events:view-settings-page')
+    this.getRecords()
   },
   computed: {
     web3() {
@@ -49,17 +48,15 @@ export default {
     },
   },
   methods: {
-    fetchData() {
-      axios.get('/user/titles?include=metadata').then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.log('there was an error calling getTitles', error)
-        } else {
-          this.titles = result
-        }
-      }).catch((error) => {
-        console.log('there was an error calling getTitles', error)
-      })
+    getRecords() {
+      axios.get('/user/records')
+        .then((response) => {
+          this.records = response.data.result
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
+          console.error('Could not get collection:', error)
+        })
     },
   },
 }
@@ -89,12 +86,12 @@ export default {
 
   .network-details
     font-size: .4em
-    word-break: break-word
+    word-wrap: break-word
 
   .spacer
     flex-grow: 1
 
-.title-list
+.record-list
   display: flex
   flex-wrap: wrap
   flex-direction: row
@@ -103,7 +100,7 @@ export default {
 
   background-color: white
 
-.title-settings-row
+.record-settings-row
   height: 3.5rem
   max-width: 100%
   font-weight: 600

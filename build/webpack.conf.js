@@ -11,7 +11,18 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+let env
+switch (process.env.TARGET_ENV) {
+  case 'production':
+    env = require('../config/prod.env')
+    break
+  case 'staging':
+    env = require('../config/staging.env')
+    break
+  default:
+    // just gracefully exit if a development TARGET_ENV is specified on codeship
+    process.exit(0)
+}
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {

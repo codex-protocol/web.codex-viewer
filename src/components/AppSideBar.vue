@@ -9,11 +9,14 @@
     <b-link to="/transfers">
       <img src="../assets/icons/transfers.svg">Transfers
     </b-link>
-    <b-link to="/my-offers">
-      <img src="../assets/icons/offers.svg">Offers
-    </b-link>
     <b-link to="/settings">
       <img src="../assets/icons/settings.svg">Settings
+    </b-link>
+    <b-link v-if="showManageTokensPage" to="/manage-tokens">
+      <img src="../assets/icons/codx-token.svg">Manage Tokens
+    </b-link>
+    <b-link to="/coming-soon">
+      <img src="../assets/icons/star.svg">Coming Soon
     </b-link>
     <span class="spacer"></span>
     <b-link @click.prevent="logout">
@@ -23,10 +26,19 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+import { showManageTokensPage } from '../util/config'
+
 export default {
   name: 'app-side-bar',
+  data() {
+    return {
+      showManageTokensPage,
+    }
+  },
   methods: {
     logout() {
+      EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
     },
   },
@@ -34,11 +46,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 @import "../assets/variables.styl"
 
 nav
-  width: 12rem
+  width: 14rem
   height: 100%
   min-width: @width
   max-width: @width

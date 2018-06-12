@@ -5,54 +5,71 @@
       <router-view />
     </div>
     <meta-mask-modal />
+    <toast-container />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 
-import config from './util/config'
+import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
+import ToastContainer from './components/ToastContainer'
 import MetaMaskModal from './components/modals/MetaMaskModal'
+
+import analytics from './util/analytics' // eslint-disable-line no-unused-vars
 
 export default {
   name: 'App',
   components: {
     AppSideBar,
     MetaMaskModal,
+    ToastContainer,
   },
   created() {
-    this.$store.dispatch('registerWeb3', this.$router)
     this.initializeApi()
+
+    this.$store.dispatch('registerWeb3', this.$router)
+      .then(() => {
+        if (this.authToken) {
+          this.$store.dispatch('updateUserState', this.authToken)
+        }
+      })
   },
   computed: {
-    authToken() {
-      return this.$store.state.auth.token
+    user() {
+      return this.$store.state.auth.user
     },
-    titleId() {
-      return this.$route.params.titleId
+    authToken() {
+      return this.$store.state.auth.authToken
+    },
+    recordId() {
+      return this.$route.params.recordId
+    },
+    web3() {
+      return this.$store.state.web3
     },
   },
   methods: {
     initializeApi() {
-      axios.defaults.baseURL = config.apiUrl
+      axios.defaults.baseURL = apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
-      // TODO: Need to test this by expiring the auth token on the server
-      const authErrorHandler = (response) => {
-        if ((response.error && response.error.status === 401) ||
-        response.status === 401) {
-          this.$store.commit('clearAuthToken')
+      const authErrorHandler = (error) => {
+        if (error.response && error.response.status === 401) {
+          this.$store.dispatch('logout', this.$router)
         }
 
-        return response
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          throw new Error(error.response.data.error.message)
+        }
+
+        throw error
       }
 
-      // TODO: If this route is authenticated we'll want to send the user
-      //  to the /login endpoint
       axios.interceptors.response.use(
-        authErrorHandler,
-        authErrorHandler,
+        (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
+        authErrorHandler
       )
     },
   },

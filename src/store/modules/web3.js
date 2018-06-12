@@ -1,16 +1,20 @@
-/* eslint-disable */
-
 import { Networks, Web3Errors } from '../../util/constants/web3'
 import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
-import getContract from '../../util/web3/getContract'
+import {
+  getCodexRecordContract,
+  getCodexCoinContract,
+  getStakeContainerContract,
+} from '../../util/web3/getContract'
 
 const state = {
   instance: null,
   network: null,
   account: null,
   error: Web3Errors.None,
-  contractInstance: null,
+  recordContractInstance: null,
+  tokenContractInstance: null,
+  stakeContainerContractInstance: null,
 }
 
 const getters = {
@@ -18,35 +22,69 @@ const getters = {
 
 const actions = {
   registerWeb3({ commit, dispatch }, router) {
-    console.log('registerWeb3 action being executed')
+    console.info('registerWeb3 action being executed')
 
-    registerWeb3().then((result) => {
-      commit('registerWeb3Instance', { result, router })
+    return registerWeb3()
+      .then((result) => {
+        commit('registerWeb3Instance', { result, router })
 
-      dispatch('getContract', result.web3())
-    }).catch((error) => {
-      commit('setWeb3Error', { message: 'Unable to register web3', error })
-    })
+        const web3 = result.web3()
+
+        return Promise.all([
+          dispatch('registerContract', {
+            web3,
+            registrationFunction: getCodexRecordContract,
+            propertyName: 'recordContractInstance',
+          }),
+          dispatch('registerContract', {
+            web3,
+            registrationFunction: getCodexCoinContract,
+            propertyName: 'tokenContractInstance',
+          }),
+          dispatch('registerContract', {
+            web3,
+            registrationFunction: getStakeContainerContract,
+            propertyName: 'stakeContainerContractInstance',
+          }),
+        ])
+
+      })
+      .catch((error) => {
+        commit('setWeb3Error', { message: 'Unable to register web3', error })
+      })
   },
+
   pollWeb3({ commit }, payload) {
-    console.log('pollWeb3 action being executed')
+    console.info('pollWeb3 action being executed')
     commit('pollWeb3Instance', payload)
   },
-  getContract({ commit }, web3) {
-    console.log('getContract action being executed')
 
-    getContract(web3).then((result) => {
-      commit('getContractInstance', result)
-    }).catch((e) => {
-      commit('setWeb3Error', { message: 'Unable to register the contract', error })
-    })
+  registerContract({ commit }, payload) {
+    const {
+      web3,
+      registrationFunction,
+      propertyName,
+    } = payload
+
+    console.info('registerContract action being executed for contract', registrationFunction.name)
+
+    return registrationFunction(web3)
+      .then((result) => {
+        commit('registerContractInstance', {
+          propertyName,
+          contractInstance: result,
+        })
+      })
+      .catch((error) => {
+        commit('setWeb3Error', { message: 'Unable to register the contract', error })
+      })
   },
 }
 
 const mutations = {
   registerWeb3Instance(currentState, payload) {
     const { result, router } = payload
-    console.log('registerWeb3instance mutation being executed', result)
+    console.info('registerWeb3instance mutation being executed', result)
 
     currentState.network = Networks[result.networkId]
     currentState.instance = result.web3
@@ -62,7 +100,7 @@ const mutations = {
   },
 
   pollWeb3Instance(currentState, payload) {
-    console.log('pollWeb3Instance mutation being executed', payload)
+    console.info('pollWeb3Instance mutation being executed', payload)
 
     // NOTE: We don't change the network here because changing the network
     //  in MetaMask triggers a full page reload so registerWeb3Instance will
@@ -72,17 +110,23 @@ const mutations = {
     currentState.account = payload.account
   },
 
-  getContractInstance(currentState, payload) {
-    console.log('getContractInstance mutation being executed', payload)
-    currentState.contractInstance = () => {
-      return payload
+  registerContractInstance(currentState, payload) {
+    const {
+      propertyName,
+      contractInstance,
+    } = payload
+
+    console.info('registerContractInstance mutation being executed for contract', propertyName)
+
+    currentState[propertyName] = () => {
+      return contractInstance
     }
   },
 
   setWeb3Error(currentState, payload) {
     const { message, error } = payload
 
-    console.log(message, error)
+    console.error(message, error)
 
     currentState.error = error
     currentState.account = null
