@@ -7,7 +7,7 @@
   >
     <div class="text-center">
       <img class="icon" src="../../assets/images/metamask.png" />
-      <p>{{ errorContent.description }}</p>
+      <p v-html="errorContent.description" />
     </div>
     <div slot="modal-footer"></div>
   </b-modal>
@@ -30,17 +30,17 @@ export default {
     },
     errorContent() {
       let title = 'MetaMask is missing or locked'
-      let description = 'To continue, install or unlock MetaMask'
+      let description = 'To continue, please install or unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
 
       switch (this.web3Error) {
         case Web3Errors.Missing:
           title = 'MetaMask is missing'
-          description = 'To continue, install MetaMask'
+          description = 'To continue, please install the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
           break
 
         case Web3Errors.Locked:
           title = 'MetaMask is locked'
-          description = 'To continue, unlock MetaMask'
+          description = 'To continue, please unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension.'
           break
 
         case Web3Errors.WrongNetwork:

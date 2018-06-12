@@ -34,7 +34,13 @@
       <div v-else>
         <div v-if="currentStep === 1">
           <p class="text-center">
-            You are about to use Metamask.
+            When you click "{{ okTitle }}" we will pop up a Metamask dialog.
+          </p>
+          <p class="text-center">
+            This dialog will ask you to confirm the transaction, including a small ETH cost.
+          </p>
+          <p class="text-center">
+            The transaction is set with a default gas limit and price. It&rsquo;s fine to keep these defaults.
           </p>
         </div>
 
