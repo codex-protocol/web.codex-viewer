@@ -20,6 +20,8 @@
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "bootstrap": "^4.1.1",
     "bootstrap-vue": "^2.0.0-rc.9",
+    "dotenv": "^6.0.0",
+    "mixpanel": "^0.9.2",
     "truffle-contract": "^3.0.5",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

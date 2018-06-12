@@ -5,17 +5,17 @@
       v-bind:transferDirection="transferDirection"
       v-bind:fetchData="this.fetchData"
     />
-    <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-incoming-list-item
-        v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
+    <b-card-group deck class="record-list" v-if="records.length">
+      <record-transfer-incoming-list-item
+        v-for="record in records"
+        :codex-record="record"
+        :key="record.tokenId"
         v-if="transferDirection === 'incoming'"
       />
-      <title-transfer-outgoing-list-item
-        v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
+      <record-transfer-outgoing-list-item
+        v-for="record in records"
+        :codex-record="record"
+        :key="record.tokenId"
         v-if="transferDirection === 'outgoing'"
       />
       <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
@@ -28,27 +28,28 @@
 
 <script>
 import axios from 'axios'
-
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
-import TitleTransferIncomingListItem from '../components/TitleTransferIncomingListItem'
-import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
+import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
+import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
 export default {
-  name: 'title-list',
+  name: 'record-list',
   props: ['transferDirection'],
   components: {
     AppHeader,
     AppSubHeader,
-    TitleTransferIncomingListItem,
-    TitleTransferOutgoingListItem,
+    RecordTransferIncomingListItem,
+    RecordTransferOutgoingListItem,
   },
   data() {
     return {
-      titles: [],
+      records: [],
     }
   },
   created() {
+    EventBus.$emit('events:view-transfers-page')
     this.fetchData(this.transferDirection)
   },
   computed: {
@@ -66,9 +67,6 @@ export default {
 
         params: {
           filters: {},
-          include: [
-            'metadata',
-          ],
         },
       }
 
@@ -78,18 +76,12 @@ export default {
 
       axios(requestOptions)
         .then((response) => {
-
-          const { error, result } = response.data
-
-          if (error) {
-            throw error
-          }
-
-          this.titles = result
-
+          const { result } = response.data
+          this.records = result
         })
         .catch((error) => {
-          console.error(`there was an error fetching ${transferDirection} transfers`, error)
+          EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
+          console.error(`could not fetch ${transferDirection} transfers`, error)
         })
     },
   },
@@ -120,12 +112,12 @@ export default {
 
   .network-details
     font-size: .4em
-    word-break: break-word
+    word-wrap: break-word
 
 h1, h2
   display: inline
 
-.title-list
+.record-list
   display: flex
   flex-wrap: wrap
 

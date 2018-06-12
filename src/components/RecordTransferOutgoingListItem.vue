@@ -1,15 +1,15 @@
 <template>
-  <div class="title-card">
+  <div class="record-card">
     <b-card
-      :img-src="codexTitle.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
       img-top
     >
       <div class="approved-overlay" v-if="this.cancelApproved">
         <p>Transfer Cancelled</p>
-        <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
+        <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
       </div>
-      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="address">Sent to {{ codexTitle.approvedAddress }}</p>
+      <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
+      <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
       <p class="action-buttons">
         <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
       </p>
@@ -18,38 +18,46 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
+import missingImage from '../assets/images/missing-image.png'
 
 export default {
-  name: 'title-transfer-outgoing-list-item',
-  props: ['codexTitle'],
+  name: 'record-transfer-outgoing-list-item',
+  props: ['codexRecord'],
   data() {
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       cancelApproved: false,
+      missingImage,
     }
   },
   computed: {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
+    recordContract() {
+      return this.web3.recordContractInstance()
     },
   },
   methods: {
-    viewTitle() {
+    viewRecord() {
       this.$router.push(this.route)
     },
     cancelTransfer() {
-      const input = ['0x0000000000000000000000000000000000000000', this.codexTitle.tokenId]
+      EventBus.$emit('events:click-cancel-transfer')
+      const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      callContract(this.titleContract.approve, input, this.web3)
+      callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
+          EventBus.$emit('events:cancel-transfer')
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           this.cancelApproved = true
         })
         .catch((error) => {
-          console.log('There was an error cancelling the transfer', error)
+          EventBus.$emit('toast:error', `Could not cancel transfer: ${error.message}`)
+          console.error('Could not cancel transfer:', error)
         })
     },
   },
@@ -60,7 +68,7 @@ export default {
 
 @import "../assets/variables.styl"
 
-.title-card
+.record-card
   width: 25%
   max-width: 32rem
   margin-bottom: 2em

@@ -26,22 +26,21 @@
 
     <div class="item">
       <p v-if="!stakeContractApproved">Before you can stake CODX, you have to approve the contract above</p>
-      <p>Personal stake: {{ formatTokenAmount(userState.personalStakeAmount) }} CODX</p>
-      <p v-if="userState.personalStake">Staked for: {{ userState.personalStakeFor }}</p>
-      <p>Total tokens staked for you (including your own): {{ formatTokenAmount(userState.totalStakedFor) }} CODX</p>
 
-      <!-- NOTE: Right now the smart contract only allows you to have a single stake at a time -->
-      <b-button variant="primary" v-b-modal.stakeTokensModal :disabled="!stakeContractApproved">
+      <personal-stakes-table :personal-stakes="userState.personalStakes" />
+
+      <b-button class="mr-3" variant="primary" v-b-modal.stakeTokensModal :disabled="!stakeContractApproved">
         Stake more CODX
       </b-button>
-      <b-button variant="outline-primary" v-b-modal.unstakeTokensModal :disabled="!stakeContractApproved">
+      <b-button class="mr-3" variant="outline-primary" v-b-modal.unstakeTokensModal :disabled="!stakeContractApproved">
         Unstake CODX
       </b-button>
+      <b-button variant="outline-primary">Collect interest</b-button>
     </div>
 
     <faucet-modal />
 
-    <approve-contract-modal id="approveRegistryModal" :contractInstance="titleContract" stateProperty="registryContractApproved">
+    <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
       This will grant the Codex Viewer permission to spend CODX on your behalf.
     </approve-contract-modal>
 
@@ -50,13 +49,14 @@
     </approve-contract-modal>
 
     <stake-tokens-modal />
-
-    <unstake-tokens-modal :unstake="true" :currentStake="formatTokenAmount(userState.personalStakeAmount)" />
+    <unstake-tokens-modal :unstake="true" />
   </div>
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
+import PersonalStakesTable from '../components/PersonalStakesTable'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 import FaucetModal from '../components/modals/FaucetModal'
 import StakeTokensModal from '../components/modals/StakeTokensModal'
@@ -66,6 +66,7 @@ export default {
   name: 'manage-tokens-view',
   components: {
     AppHeader,
+    PersonalStakesTable,
     ApproveContractModal,
     FaucetModal,
     StakeTokensModal,
@@ -75,6 +76,9 @@ export default {
     return {
       shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
     }
+  },
+  created() {
+    EventBus.$emit('events:view-tokens-page')
   },
   computed: {
     web3() {
@@ -92,8 +96,8 @@ export default {
     stakeContract() {
       return this.$store.state.web3.stakeContainerContractInstance()
     },
-    titleContract() {
-      return this.$store.state.web3.titleContractInstance()
+    recordContract() {
+      return this.$store.state.web3.recordContractInstance()
     },
   },
   methods: {

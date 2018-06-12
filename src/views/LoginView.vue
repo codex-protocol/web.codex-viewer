@@ -16,39 +16,51 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 export default {
   name: 'login-view',
   methods: {
     metamaskLogin() {
+
       const { account } = this.web3
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
-      this.web3.instance().currentProvider.sendAsync({
+      EventBus.$emit('events:click-login-button')
+
+      const sendAsyncOptions = {
         method: 'personal_sign',
         params: [
           account,
           this.web3.instance().toHex(personalMessageToSign),
         ],
-      }, (error, result) => {
-        if (error) {
-          console.log(error)
-        } else {
-          // This will be populated if the user rejects the signature prompt
-          if (result.error) {
-            console.log(result.error)
-            return
-          }
+      }
 
-          this.$store.dispatch('sendAuthRequest', {
-            userAddress: account,
-            signedData: result.result.substr(2),
-          }).then(() => {
+      this.web3.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+
+        // result.error will be populated if the user rejects the signature
+        //  prompt
+        if (error || result.error) {
+          console.error(error || result.error)
+          return
+        }
+
+        EventBus.$emit('events:login')
+
+        const sendAuthRequestOptions = {
+          userAddress: account,
+          signedData: result.result.substr(2),
+        }
+
+        this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions)
+          .then(() => {
             this.$router.replace('collection')
           })
-        }
+
       })
     },
     aboutCodex() {
+      EventBus.$emit('events:click-about-codex')
       window.location = 'https://www.codexprotocol.com'
     },
   },
@@ -56,6 +68,9 @@ export default {
     web3() {
       return this.$store.state.web3
     },
+  },
+  created() {
+    EventBus.$emit('events:viewer:view-login-page')
   },
 }
 </script>

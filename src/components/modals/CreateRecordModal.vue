@@ -1,14 +1,14 @@
 <template>
-  <b-modal
-    id="createTitleModal"
-    title="Create record"
+  <meta-mask-notification-modal
+    id="createRecordModal"
+    title="Create Record"
     ok-title="Create"
-    :ok-disabled="!canSubmit()"
+    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     size="lg"
-    v-model="modalVisible"
-    v-on:shown="focusModal"
-    v-on:ok="createMetaData"
+    :on-shown="focusModal"
+    :ok-method="createMetaData"
+    :on-clear="clearModal"
   >
     <div class="flex-container">
       <div>
@@ -18,7 +18,7 @@
       </div>
       <div>
         <b-form-group
-          label="Piece title" label-for="name" label-size="sm"
+          label="Name" label-for="name" label-size="sm"
         >
           <b-form-input
             required
@@ -31,7 +31,7 @@
           />
         </b-form-group>
         <b-form-group
-          label="Digital image" label-for="imageFile" label-size="sm"
+          label="Image" label-for="imageFile" label-size="sm"
         >
           <b-form-file
             required
@@ -65,15 +65,21 @@
         </b-form-group>
       </div>
     </div>
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import axios from 'axios'
+
+import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'create-title-modal',
+  name: 'create-record-modal',
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       name: null,
@@ -81,7 +87,6 @@ export default {
       uploadedFile: null,
       uploadedFileHash: null,
       imageStreamUri: null,
-      modalVisible: false,
       progressVisible: false,
       uploadComplete: false,
       uploadSuccess: false,
@@ -91,8 +96,14 @@ export default {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
-    canSubmit() {
-      return this.name && this.uploadedFileHash && this.uploadedFile
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
+
+      // @TODO: explain why this is necessary (only exists when slot is filled
+      //  in MMNM)
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.reset()
+      }
     },
     displayAndUploadFile(file) {
       if (!file) {
@@ -121,6 +132,7 @@ export default {
 
     },
     uploadFile(file) {
+
       this.progressVisible = true
       this.uploadSuccess = false
       this.uploadComplete = false
@@ -128,49 +140,56 @@ export default {
       const formData = new FormData()
       formData.append('files', file)
 
-      axios.post('/users/files', formData, { headers: {
-        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-      } }).then((response) => {
-        const { result, error } = response.data
-        this.uploadComplete = true
+      const requestOptions = {
 
-        if (error) {
-        // TODO: display an error
-          console.log('there was an error uploading the file', error)
-        } else {
-          console.log('file uploaded', result[0])
+        method: 'post',
+        url: '/users/files',
 
-          this.uploadSuccess = true
-          this.uploadedFile = result[0]
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
 
-        }
-      }).catch((error) => {
-        this.uploadComplete = true
-
-        // TODO: display an error
-        console.log('there was an error uploading the file', error)
-      })
-    },
-    createMetaData(event) {
-      event.preventDefault()
-
-      // TODO: Show some better error handling if these aren't filled in
-      if (!this.name || !this.uploadedFile || !this.uploadedFileHash) {
-        return
+        data: formData,
       }
 
-      axios.post('/users/title-metadata', {
-        name: this.name,
-        mainImage: this.uploadedFile,
-        description: this.description || null,
-      }).then((response) => {
-        const { result: metadata, error } = response.data
-        if (error) {
-          console.log('there was an error calling getTitle', error)
-          this.codexTitle = null
-          this.error = error
-        } else {
-          console.log('metadata', metadata)
+      axios(requestOptions)
+        .then((response) => {
+
+          const { result } = response.data
+
+          this.uploadedFile = result[0]
+          this.uploadSuccess = true
+
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          console.error('Could not upload file:', error)
+        })
+        .finally(() => {
+          this.uploadComplete = true
+        })
+    },
+    createMetaData() {
+
+      // TODO: Show some better error handling if these aren't filled in
+      if (!this.canSubmit) {
+        return Promise.reject(new Error('Could not create Record: Missing required fields.'))
+      }
+
+      const requestOptions = {
+        method: 'post',
+        url: '/users/record-metadata',
+        data: {
+          name: this.name,
+          mainImage: this.uploadedFile,
+          description: this.description || null,
+        },
+      }
+
+      return axios(requestOptions)
+        .then((response) => {
+
+          const { result: metadata } = response.data
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
@@ -180,15 +199,21 @@ export default {
           // metadata.mainImage.hash === this.uploadedFileHash
           // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
 
-          this.createTitle(metadata)
-        }
-      }).catch((error) => {
-        console.log('there was an error calling getTitle', error)
-        this.codexTitle = null
-        this.error = error
-      })
+          return this.createRecord(metadata)
+
+        })
+        .catch((error) => {
+          console.error('Could not create Record:', error)
+
+          this.codexRecord = null
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
-    createTitle(metadata) {
+    createRecord(metadata) {
+
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
@@ -200,21 +225,21 @@ export default {
         metadata.id,
       ]
 
-      callContract(this.titleContract.mint, input, this.web3)
-        .then(() => {
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error creating the title', error)
-        })
+      // @NOTE: no need to catch() here since rejections will bubble up to the
+      //  catch() in createMetaData() above
+      return callContract(this.recordContract.mint, input, this.web3)
+
     },
   },
   computed: {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.$store.state.web3.titleContractInstance()
+    canSubmit() {
+      return this.name && this.uploadedFileHash && this.uploadedFile
+    },
+    recordContract() {
+      return this.$store.state.web3.recordContractInstance()
     },
     progressVariant() {
       if (!this.uploadComplete) {
@@ -226,15 +251,6 @@ export default {
       }
 
       return 'danger'
-    },
-  },
-  watch: {
-    // When the modal dialog is closed, we reset the component data
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        Object.assign(this.$data, this.$options.data.apply(this))
-        this.$refs.fileInput.reset()
-      }
     },
   },
 }

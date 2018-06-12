@@ -1,19 +1,22 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-// If a token is present on page load, then add it to all future API requests
-let token = window.localStorage.getItem('authToken')
-if (token) {
-  axios.defaults.headers.common.Authorization = token
+import EventBus from '../../util/eventBus'
+
+// If an auth token is present on page load, then add it to all future API requests
+let cachedAuthToken = window.localStorage.getItem('authToken')
+
+if (cachedAuthToken) {
+  axios.defaults.headers.common.Authorization = cachedAuthToken
 }
 
 const initialState = () => {
   return {
-    token: token || null,
+    user: null,
     balance: new BigNumber(0),
+    authToken: cachedAuthToken,
     totalStakedFor: new BigNumber(0),
-    personalStakeAmount: new BigNumber(0),
-    personalStakeFor: null,
+    personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
   }
@@ -21,36 +24,43 @@ const initialState = () => {
 
 const getters = {
   isAuthenticated: (currentState) => {
-    return !!currentState.token
+    return !!currentState.authToken
   },
 }
 
 const actions = {
-  sendAuthRequest({ commit, dispatch }, payload) {
-    return axios.post('auth-token', payload).then((response) => {
-      const { result, error } = response.data
-      if (response.data.error) {
-        throw new Error(error)
-      }
+  sendAuthRequest({ commit, dispatch }, data) {
 
-      dispatch('updateUserState', result.token)
-    }).catch((error) => {
-      console.log(error)
-      commit('clearUserState')
-    })
+    const requestOptions = {
+      method: 'post',
+      url: '/auth-token',
+      data,
+    }
+
+    return axios(requestOptions)
+      .then((response) => {
+        const { result } = response.data
+        dispatch('updateUserState', result.token, result.user)
+      })
+      .catch((error) => {
+        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+        console.error('Could not log in:', error)
+        commit('clearUserState')
+      })
   },
 
-  updateUserState({ commit, dispatch, rootState }, authToken) {
+  updateUserState({ commit, dispatch, rootState }, newAuthToken, newUser) {
+
     const { web3 } = rootState
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
-    const registryContract = web3.titleContractInstance()
+    const registryContract = web3.recordContractInstance()
     const stakeContract = web3.stakeContainerContractInstance()
 
 
-    // @TODO: Need to watch the CodexCoin contract and the ERC900BasicStakeContainer contract
-    //  to get events on when balances/stakes change. (We can update it on the UI optimistically
-    //  but that has its own set of challenges)
+    // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
+    //  contract to get events on when balances/stakes change. (We can update it
+    //  on the UI optimistically but that has its own set of challenges)
 
     dispatch('getTokenBalance', {
       account,
@@ -69,8 +79,23 @@ const actions = {
       stakeContractAddress: stakeContract.address,
     })
 
-    if (authToken) {
-      commit('setAuthToken', authToken)
+    if (newAuthToken) {
+      commit('setAuthToken', newAuthToken)
+
+      if (newUser) {
+        commit('setUser', newUser)
+
+      } else {
+        axios.get('user')
+          .then((response) => {
+            commit('setUser', response.data.result)
+          })
+          .catch((error) => {
+            console.error('Could not get user:', error)
+            commit('clearUserState')
+          })
+      }
+
     }
   },
 
@@ -91,12 +116,8 @@ const actions = {
       stakeContract,
     } = payload
 
-    stakeContract.getPersonalStakeAmount(account).then((amount) => {
-      commit('updatePersonalStakeAmount', amount)
-    })
-
-    stakeContract.getPersonalStakeFor(account).then((stakeFor) => {
-      commit('updatePersonalStakeFor', stakeFor)
+    stakeContract.getPersonalStakes(account).then((personalStakes) => {
+      commit('updatePersonalStakes', personalStakes)
     })
 
     stakeContract.totalStakedFor(account).then((stake) => {
@@ -136,31 +157,33 @@ const actions = {
 
 // @TODO: Only log for debug mode
 const logMutation = (mutationName, payload) => {
-  console.log(`${mutationName} mutation being executed`, payload)
+  console.info(`${mutationName} mutation being executed`, payload)
 }
 
 const mutations = {
-  setAuthToken(currentState, authToken) {
-    logMutation('setAuthToken', authToken)
+  setAuthToken(currentState, newAuthToken) {
+    logMutation('setAuthToken', newAuthToken)
 
-    currentState.token = authToken
-    axios.defaults.headers.common.Authorization = authToken
+    currentState.authToken = newAuthToken
+    axios.defaults.headers.common.Authorization = newAuthToken
 
-    window.localStorage.setItem('authToken', authToken)
+    window.localStorage.setItem('authToken', newAuthToken)
+  },
+
+  setUser(currentState, newUser) {
+    logMutation('setUser', newUser)
+    currentState.user = newUser
   },
 
   clearUserState(currentState) {
     logMutation('clearUserState')
 
-    token = null
-    delete axios.defaults.headers.common.Authorization
+    cachedAuthToken = null
     window.localStorage.removeItem('authToken')
+    delete axios.defaults.headers.common.Authorization
 
     // Reset state to its initial values
-    const originalState = initialState()
-    Object.keys(originalState).forEach((key) => {
-      currentState[key] = originalState[key]
-    })
+    Object.assign(currentState, initialState())
   },
 
   updateTokenBalance(currentState, newBalance) {
@@ -169,16 +192,10 @@ const mutations = {
     currentState.balance = newBalance
   },
 
-  updatePersonalStakeAmount(currentState, newAmount) {
-    logMutation('updatePersonalStakeAmount', newAmount)
+  updatePersonalStakes(currentState, newPersonalStakes) {
+    logMutation('updatePersonalStakes', newPersonalStakes)
 
-    currentState.personalStakeAmount = newAmount
-  },
-
-  updatePersonalStakeFor(currentState, newStakeFor) {
-    logMutation('updatePersonalStakeFor', newStakeFor)
-
-    currentState.personalStakeFor = newStakeFor
+    currentState.personalStakes = newPersonalStakes
   },
 
   updateTotalStakedFor(currentState, newStake) {

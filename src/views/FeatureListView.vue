@@ -4,7 +4,11 @@
     <h5 class="mb-5">Upcoming partnerships and features</h5>
     <b-card-group deck>
       <div class="feature-card" v-for="feature in features" :key="feature.description">
-        <a :href="feature.url" target="_blank">
+        <a
+          :href="feature.url"
+          target="_blank"
+          @click="clickPartner(feature.url)"
+        >
           <b-card
           >
             <img :src="feature.image" />
@@ -17,8 +21,8 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
-
 import laLogo from '../assets/images/features/la-logo.png'
 import amLogo from '../assets/images/features/am-logo.png'
 import vmsLogo from '../assets/images/features/vms-logo.png'
@@ -30,6 +34,14 @@ export default {
   name: 'features-view',
   components: {
     AppHeader,
+  },
+  created() {
+    EventBus.$emit('events:view-coming-soon-page')
+  },
+  methods: {
+    clickPartner(url) {
+      EventBus.$emit('events:click-partner-link', { url })
+    },
   },
   data() {
     return {

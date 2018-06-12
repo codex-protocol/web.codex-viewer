@@ -6,7 +6,7 @@
     @hide="preventHide"
   >
     <div class="text-center">
-      <img class="mt-3 mb-3" src="../../assets/metamask.png" />
+      <img class="icon" src="../../assets/images/metamask.png" />
       <p>{{ errorContent.description }}</p>
     </div>
     <div slot="modal-footer"></div>
@@ -58,7 +58,6 @@ export default {
   },
   watch: {
     web3Error(newValue) {
-      console.log('modalVisible: ', !!newValue)
       this.modalVisible = !!newValue
     },
   },
@@ -71,3 +70,10 @@ export default {
   },
 }
 </script>
+
+<style lang="stylus" scoped>
+.icon
+  width: 8rem
+  margin-bottom: 2rem
+
+</style>

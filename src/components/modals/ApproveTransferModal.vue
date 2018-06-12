@@ -1,11 +1,12 @@
 <template>
-  <b-modal id="approveTransferModal"
-    title="Start title transfer"
+  <meta-mask-notification-modal
+    id="approveTransferModal"
+    title="Start Record transfer"
     ok-title="Start transfer"
     cancel-variant="outline-primary"
-    v-model="modalVisible"
-    v-on:shown="focusModal"
-    v-on:ok="approveTransfer"
+    :ok-method="approveTransfer"
+    :on-shown="focusModal"
+    :on-clear="clearModal"
   >
     <b-form-group
       label="Type or paste wallet address"
@@ -20,8 +21,8 @@
         spellcheck="false"
       />
       <b-form-text>
-        After approving a transfer, the owner of the Ethereum address will have to accept the title.
-        This is the recommended way of transferring titles.
+        After approving a transfer, the owner of the Ethereum address will have to accept the Record.
+        This is the recommended way of transferring Records.
       </b-form-text>
     </b-form-group>
     <!--
@@ -37,40 +38,50 @@
       />
       <b-form-text>
         If you know the email address of the person you are approving,
-        we will send them an email once they've been approved to accept the title.
+        we will send them an email once they've been approved to accept the Record.
       </b-form-text>
     </b-form-group>
     -->
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import callContract from '../../util/web3/callContract'
+import EventBus from '../../util/eventBus'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'approve-transfer-modal',
-  props: ['titleId'],
+  props: ['recordId'],
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       toEthAddress: null,
       toEmailAddress: null,
-      modalVisible: false,
     }
   },
   methods: {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
-    approveTransfer(event) {
-      event.preventDefault()
-
-      const input = [this.toEthAddress, this.titleId]
-      callContract(this.titleContract.approve, input, this.web3)
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
+    },
+    approveTransfer() {
+      EventBus.$emit('events:record-click-transfer')
+      const input = [this.toEthAddress, this.recordId]
+      return callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
-          this.modalVisible = false
+          EventBus.$emit('events:record-transfer')
         })
         .catch((error) => {
-          console.log('There was an error approving the transfer', error)
+          console.error('Could not approve transfer:', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
         })
     },
   },
@@ -78,16 +89,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
-    },
-  },
-  watch: {
-    // When the modal dialog is closed, we reset the component data
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        Object.assign(this.$data, this.$options.data.apply(this))
-      }
+    recordContract() {
+      return this.web3.recordContractInstance()
     },
   },
 }

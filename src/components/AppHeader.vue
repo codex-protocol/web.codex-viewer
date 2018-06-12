@@ -43,7 +43,7 @@ export default {
 
   .network-details
     font-size: .4em
-    word-break: break-word
+    word-wrap: break-word
 
   .spacer
     flex-grow: 1

@@ -1,19 +1,19 @@
 <template>
   <div
-    class="title-card"
-    v-if="!codexTitle.isIgnored"
+    class="record-card"
+    v-if="!codexRecord.isIgnored"
     :class="{ 'is-loading': this.isLoading }"
   >
     <b-card
-      :img-src="codexTitle.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
       img-top
     >
       <div class="accepted-overlay" v-if="this.transferAccepted">
         <p>Transfer Accepted</p>
-        <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
+        <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
       </div>
-      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="address">Sent from {{ codexTitle.ownerAddress }}</p>
+      <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
+      <p class="address">Sent from {{ codexRecord.ownerAddress }}</p>
       <p class="action-buttons">
         <b-button variant="secondary" @click.prevent="acceptTransfer">Accept</b-button>
         <b-button variant="outline-primary" @click.prevent="ignoreTransfer">Ignore</b-button>
@@ -25,43 +25,51 @@
 <script>
 
 import axios from 'axios'
+
+import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
+import missingImage from '../assets/images/missing-image.png'
 
 export default {
-  name: 'title-transfer-incoming-list-item',
-  props: ['codexTitle'],
+  name: 'record-transfer-incoming-list-item',
+  props: ['codexRecord'],
   data() {
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
+      missingImage,
     }
   },
   computed: {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
+    recordContract() {
+      return this.web3.recordContractInstance()
     },
   },
   methods: {
-    viewTitle() {
+    viewRecord() {
       this.$router.push(this.route)
     },
     acceptTransfer() {
+      EventBus.$emit('events:click-accept-transfer')
       const input = [
-        this.codexTitle.ownerAddress,
+        this.codexRecord.ownerAddress,
         this.web3.account,
-        this.codexTitle.tokenId,
+        this.codexRecord.tokenId,
       ]
 
-      callContract(this.titleContract.safeTransferFrom, input, this.web3)
+      callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
+          EventBus.$emit('events:accept-transfer')
           this.transferAccepted = true
         })
         .catch((error) => {
-          console.log('There was an error accepting the transfer', error)
+          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          console.error('Could not accept transfer:', error)
         })
     },
     ignoreTransfer() {
@@ -69,7 +77,7 @@ export default {
       const requestOptions = {
 
         method: 'put',
-        url: `/user/transfers/incoming/${this.codexTitle.tokenId}`,
+        url: `/user/transfers/incoming/${this.codexRecord.tokenId}`,
 
         data: {
           isIgnored: true,
@@ -80,22 +88,13 @@ export default {
 
       axios(requestOptions)
         .then((response) => {
-
-          if (response instanceof Error) {
-            throw response
-          }
-
-          const { error, result } = response.data
-
-          if (error) {
-            throw error
-          }
-
-          this.codexTitle.isIgnored = result.isIgnored
-
+          const { result } = response.data
+          this.codexRecord.isIgnored = result.isIgnored
+          EventBus.$emit('toast:success', 'Transfer ignored successfully!', 5000)
         })
         .catch((error) => {
-          console.error('there was an error ignoring this transfer', error)
+          EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
+          console.error('Could not ignore transfer:', error)
         })
         .finally(() => {
           this.isLoading = false
@@ -109,7 +108,7 @@ export default {
 
 @import "../assets/variables.styl"
 
-.title-card
+.record-card
   width: 25%
   max-width: 32rem
   margin-bottom: 2em

@@ -1,4 +1,4 @@
-// Adding some buffer, because the estimation is not perfect when using CodexTitleProxy
+// Adding some buffer, because the estimation is not perfect when using CodexRecordProxy
 // @TODO: This needs to be more finely tuned. For some actions only 10k buffer is needed, and for others 50k+ is needed
 const gasBuffer = 100000
 

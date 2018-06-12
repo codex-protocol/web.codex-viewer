@@ -1,23 +1,23 @@
 <template>
   <div>
-    <div v-if="codexTitle">
+    <div v-if="codexRecord">
       <div class="flex mb-5">
-        <div class="title-image">
-          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.mainImage.uri" />
+        <div class="record-image">
+          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
           <div class="private-img" v-else>
-            <p>This Codex Title is private</p>
+            <p>This Codex Record is private</p>
           </div>
         </div>
         <div class="top vertical">
-          <div v-if="codexTitle.metadata">
-            <h1>{{ codexTitle.metadata.name }}</h1>
-            <div class="description">{{ codexTitle.metadata.description }}</div>
+          <div v-if="codexRecord.metadata">
+            <h1>{{ codexRecord.metadata.name }}</h1>
+            <div class="description">{{ codexRecord.metadata.description }}</div>
           </div>
           <div v-else>
-            <h1>Codex Title #{{ codexTitle.tokenId }}</h1>
+            <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
           </div>
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
-          <title-blockchain-details v-if="showDetails" :codexTitle="codexTitle" />
+          <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
           <div class="mt-3" v-if="isOwner">
             <!-- @FIXME: Not wired up yet
             <b-button class="mr-3" variant="primary">
@@ -29,7 +29,7 @@
               Transfer
             </b-button>
 
-            <b-button class="mr-3" variant="primary" v-b-modal.titlePrivacySettings>
+            <b-button class="mr-3" variant="primary" v-b-modal.recordPrivacySettings>
               Settings
             </b-button>
 
@@ -39,26 +39,26 @@
             </b-button>
             -->
 
-            <approve-transfer-modal :titleId="titleId" />
+            <approve-transfer-modal :recordId="recordId" />
             <privacy-settings-modal
-              :titleId="titleId"
+              :recordId="recordId"
               :isPrivate="isPrivate"
               :whitelistedAddresses="whitelistedAddresses"
             />
           </div>
           <div class="mt-3" v-if="isApproved">
             <b-button @click="acceptTransfer">
-              Accept title transfer
+              Accept Record transfer
             </b-button>
           </div>
         </div>
       </div>
-      <title-provenance :provenance="codexTitle.provenance" />
+      <record-provenance :provenance="codexRecord.provenance" />
     </div>
 
     <div v-else>
       <div v-if="error">
-        <p>There was an error loading title with id {{ this.titleId }}</p>
+        <p>There was an error loading Record with id {{ this.recordId }}</p>
         <p>{{ this.error }}</p>
       </div>
       <div v-else>Loading...</div>
@@ -69,26 +69,30 @@
 <script>
 import axios from 'axios'
 
+import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
+import EventBus from '../util/eventBus'
 
+import missingImage from '../assets/images/missing-image.png'
+import RecordProvenance from '../components/RecordProvenance'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
-import TitleProvenance from '../components/TitleProvenance'
-import TitleBlockchainDetails from '../components/TitleBlockchainDetails'
+import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
-  name: 'title-detail',
+  name: 'record-detail',
   components: {
     ApproveTransferModal,
     PrivacySettingsModal,
-    TitleProvenance,
-    TitleBlockchainDetails,
+    RecordProvenance,
+    RecordBlockchainDetails,
   },
   data() {
     return {
-      codexTitle: null,
-      error: null,
       showDetails: false,
+      codexRecord: null,
+      error: null,
+      missingImage,
     }
   },
   computed: {
@@ -100,64 +104,64 @@ export default {
     },
     isOwner() {
       return this.account &&
-        this.account === this.codexTitle.ownerAddress
+        this.account === this.codexRecord.ownerAddress
     },
     isApproved() {
       return this.account &&
-        this.account === this.codexTitle.approvedAddress
+        this.account === this.codexRecord.approvedAddress
     },
-    titleId() {
-      return this.$route.params.titleId
+    recordId() {
+      return this.$route.params.recordId
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
+    recordContract() {
+      return this.web3.recordContractInstance()
     },
     isPrivate() {
-      return this.codexTitle.isPrivate
+      return this.codexRecord.isPrivate
     },
     whitelistedAddresses() {
-      return this.codexTitle.whitelistedAddresses
+      return this.codexRecord.whitelistedAddresses
     },
     isAwaitingApproval() {
-      return this.codexTitle.approvedAddress !== null &&
-        this.codexTitle.approvedAddress !== '0x0000000000000000000000000000000000000000' // @TODO: store this in config or similar
+      return this.codexRecord.approvedAddress !== null &&
+        this.codexRecord.approvedAddress !== ZeroAddress
     },
   },
   created() {
-    this.fetchData()
+    EventBus.$emit('events:view-record-page')
+    this.getRecord()
   },
   watch: {
-    $route: 'fetchData',
+    $route: 'getRecord',
   },
   methods: {
-    fetchData() {
-      axios.get(`/title/${this.titleId}?include=metadata&include=provenance`).then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.log('there was an error calling getTitle', error)
-          this.codexTitle = null
+    getRecord() {
+      axios.get(`/record/${this.recordId}`)
+        .then((response) => {
+          this.codexRecord = response.data.result
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get Record: ${error.message}`)
+          console.error('Could not get Record:', error)
+          this.codexRecord = null
           this.error = error
-        } else {
-          this.codexTitle = result
-        }
-      }).catch((error) => {
-        console.log('there was an error calling getTitle', error)
-        this.codexTitle = null
-        this.error = error
-      })
+        })
     },
     acceptTransfer() {
       const input = [
-        this.codexTitle.ownerAddress,
+        this.codexRecord.ownerAddress,
         this.account,
-        this.titleId,
+        this.recordId,
       ]
 
-      callContract(this.titleContract.safeTransferFrom, input, this.web3)
+      callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
+          EventBus.$emit('events:accept-transfer')
         })
         .catch((error) => {
-          console.log('There was an error accepting the transfer', error)
+          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          console.error('Could not accept transfer:', error)
         })
     },
     toggleShowDetails() {
@@ -182,7 +186,7 @@ export default {
   flex-direction: column
   align-items: baseline
 
-.title-image
+.record-image
   height: 50vh
   min-width: 40%
   max-width: 50%

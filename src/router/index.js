@@ -6,8 +6,8 @@ import store from '../store'
 import LoginView from '../views/LoginView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
-import TitleListView from '../views/TitleListView'
-import TitleDetailView from '../views/TitleDetailView'
+import RecordListView from '../views/RecordListView'
+import RecordDetailView from '../views/RecordDetailView'
 import SettingsView from '../views/SettingsView'
 import ManageTokensView from '../views/ManageTokensView'
 
@@ -31,9 +31,9 @@ const router = new Router({
     { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },
     { name: 'coming-soon', path: '/coming-soon', component: FeatureListView },
     { name: 'settings', path: '/settings', component: SettingsView },
-    { name: 'collection', path: '/collection', component: TitleListView },
+    { name: 'collection', path: '/collection', component: RecordListView },
     { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
-    { name: 'title-detail', path: '/title/:titleId', component: TitleDetailView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'record-detail', path: '/record/:recordId', component: RecordDetailView, meta: { allowUnauthenticatedUsers: true } },
     { path: '/', redirect: '/collection' },
   ],
 })

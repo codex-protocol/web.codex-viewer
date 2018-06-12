@@ -1,6 +1,8 @@
 // eslint-disable-next-line import/no-mutable-exports
 let ExpectedNetworkId
 
+// @NOTE: if you change the ExpectedNetworkId values here, be sure to update
+//  src/util/web3/getContract.js as well
 if (process.env.TARGET_ENV === 'production') {
   ExpectedNetworkId = '1'
 } else if (process.env.TARGET_ENV === 'staging') {
@@ -27,8 +29,11 @@ const Web3Errors = {
   WrongNetwork: 4,
 }
 
+const ZeroAddress = '0x0000000000000000000000000000000000000000'
+
 export {
   ExpectedNetworkId,
   Networks,
   Web3Errors,
+  ZeroAddress,
 }
