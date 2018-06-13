@@ -1,10 +1,9 @@
 <template>
   <div id="app">
     <app-side-bar v-if="authToken" />
-    <div class="main-content" :class="{ 'with-background': this.$route.name === 'login' }">
+    <div class="main-content" :class="{ 'with-background': this.useBackground() }">
       <router-view />
     </div>
-    <meta-mask-modal />
     <toast-container />
   </div>
 </template>
@@ -15,7 +14,6 @@ import axios from 'axios'
 import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
 import ToastContainer from './components/ToastContainer'
-import MetaMaskModal from './components/modals/MetaMaskModal'
 
 import analytics from './util/analytics' // eslint-disable-line no-unused-vars
 
@@ -23,7 +21,6 @@ export default {
   name: 'App',
   components: {
     AppSideBar,
-    MetaMaskModal,
     ToastContainer,
   },
   created() {
@@ -49,6 +46,9 @@ export default {
     web3() {
       return this.$store.state.web3
     },
+    web3Error() {
+      return this.$store.state.web3.error
+    },
   },
   methods: {
     initializeApi() {
@@ -71,6 +71,22 @@ export default {
         (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
+    },
+    useBackground() {
+      switch (this.$route.name) {
+        case 'login':
+        case 'home':
+          return true
+        default:
+          return false
+      }
+    },
+  },
+  watch: {
+    web3Error(error) {
+      if (error) {
+        this.$store.dispatch('logout', this.$router)
+      }
     },
   },
 }

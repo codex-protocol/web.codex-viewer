@@ -2,11 +2,16 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-7">
-        <div class="logo"><img src="../assets/logos/codex/gold.svg" /></div>
-        <h1>Codex Viewer</h1>
-        <div class="lead">Decentralized application for viewing The Codex Registry</div>
-        <b-button variant="primary" @click="metamaskLogin">Login</b-button>
-        <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
+        <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
+        <h1 v-html="pageContent.title"></h1>
+        <div class="lead" v-html="pageContent.description"></div>
+        <b-button
+          v-if="buttonTitle"
+          variant="primary"
+          @click="buttonMethod"
+        >
+          {{ buttonTitle }}
+        </b-button>
       </div>
       <div class="col-sm-5 secondary">
         <div class="bust"><img src="../assets/images/bust.png" /></div>
@@ -17,10 +22,21 @@
 
 <script>
 import EventBus from '../util/eventBus'
+import { Web3Errors } from '../store/modules/web3'
+import { ExpectedNetworkId, Networks } from '../util/constants/web3'
 
 export default {
   name: 'login-view',
   methods: {
+    installMetamask() {
+      window.open('https://www.metamask.io', '_blank')
+      this.setButton('MetaMask has been installed', this.checkMetamask)
+      EventBus.$emit('events:click-install-metamask')
+    },
+    checkMetamask() {
+      EventBus.$emit('events:click-check-metamask')
+      window.location.reload(true)
+    },
     metamaskLogin() {
 
       const { account } = this.web3
@@ -59,14 +75,64 @@ export default {
 
       })
     },
-    aboutCodex() {
-      EventBus.$emit('events:click-about-codex')
-      window.location = 'https://www.codexprotocol.com'
+    setButton(title, method) {
+      this.buttonTitle = title
+      this.buttonMethod = method
     },
   },
+  data() {
+    return {
+      buttonTitle: 'Login',
+      buttonMethod: this.metamaskLogin,
+    }
+  },
   computed: {
+    pageContent() {
+      let title
+      let description
+
+      switch (this.web3Error) {
+        case Web3Errors.Missing:
+          title = 'Let&rsquo;s get started'
+          description = '<p>To continue, please install the MetaMask browser extension.</p>'
+          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+          this.setButton('Install MetaMask', this.installMetamask)
+          break
+
+        case Web3Errors.Locked:
+          title = 'Your MetaMask is locked'
+          description = 'Please open your MetaMask browser extension and follow the instructions to unlock it'
+          this.setButton(false)
+          break
+
+        case Web3Errors.Unknown:
+          title = 'Let&rsquo;s get started'
+          description = '<p>To continue, please install the MetaMask browser extension.</p>'
+          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+          this.setButton('Install MetaMask', this.installMetamask)
+          break
+
+        case Web3Errors.WrongNetwork:
+          title = 'Wrong MetaMask network'
+          description = `You're on the wrong MetaMask network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
+          this.setButton(false)
+          break
+
+        case Web3Errors.None:
+        default:
+          title = 'Login'
+          description = 'Login with your MetaMask account to create, view, &amp; transfer Codex Records'
+          this.setButton('Login', this.metamaskLogin)
+          break
+      }
+
+      return { title, description }
+    },
     web3() {
       return this.$store.state.web3
+    },
+    web3Error() {
+      return this.$store.state.web3.error
     },
   },
   created() {
