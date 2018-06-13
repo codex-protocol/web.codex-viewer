@@ -14,11 +14,11 @@ import ManageTokensView from '../views/ManageTokensView'
 
 Vue.use(Router)
 
-const ifNotAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
-    next()
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    next('/collection')
   } else {
-    next('/')
+    next()
   }
 }
 
@@ -26,8 +26,8 @@ const ifNotAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    { name: 'home', path: '/', component: HomeView, beforeEnter: ifNotAuthenticated, meta: { allowUnauthenticatedUsers: true } },
-    { name: 'login', path: '/login', component: LoginView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'home', path: '/', component: HomeView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifAuthenticated, meta: { allowUnauthenticatedUsers: true } },
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming' },
     { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' } },
     { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },

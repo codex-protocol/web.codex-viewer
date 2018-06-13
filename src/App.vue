@@ -13,6 +13,7 @@ import axios from 'axios'
 
 import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
+import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
 import analytics from './util/analytics' // eslint-disable-line no-unused-vars
@@ -84,8 +85,11 @@ export default {
   },
   watch: {
     web3Error(error) {
-      if (error) {
-        this.$store.dispatch('logout', this.$router)
+      // MetaMask has been locked while logged in
+      //  Clear user data and reload to hit router auth rules
+      if (Web3Errors.Locked && this.authToken) {
+        this.$store.dispatch('logoutInPlace', this.$router)
+        window.location.reload(true)
       }
     },
   },

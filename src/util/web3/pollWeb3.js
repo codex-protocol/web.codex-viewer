@@ -18,7 +18,7 @@ const pollWeb3 = (router) => {
             error: Web3Errors.Locked,
           })
         } else if (store.state.web3.account !== accounts[0]) {
-          store.dispatch('logout', router, {
+          store.dispatch('logoutInPlace', router, {
             root: true,
           })
 

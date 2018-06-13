@@ -103,9 +103,6 @@ export default {
     },
   },
   methods: {
-    logout() {
-      this.$store.dispatch('logout', this.$router)
-    },
     formatTokenAmount(rawAmount) {
       return rawAmount.div('1e18').toFixed(3)
     },
