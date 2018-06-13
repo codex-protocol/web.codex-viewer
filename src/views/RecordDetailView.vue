@@ -140,25 +140,30 @@ export default {
     EventBus.$emit('events:view-record-page')
     this.getRecord()
   },
+  mounted() {
+    EventBus.$on('socket:record-modified', this.recordModifiedHandler)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:record-modified', this.recordModifiedHandler)
+  },
   watch: {
     $route: 'getRecord',
   },
   methods: {
+    recordModifiedHandler(updatedCodexRecord) {
+      this.codexRecord = updatedCodexRecord
+    },
     getRecord() {
-      axios.get(`/record/${this.recordId}?include=metadata&include=provenance`).then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.log('there was an error calling getRecord', error)
+      axios.get(`/record/${this.recordId}`)
+        .then((response) => {
+          this.codexRecord = response.data.result
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get Record: ${error.message}`)
+          console.error('Could not get Record:', error)
           this.codexRecord = null
           this.error = error
-        } else {
-          this.codexRecord = result
-        }
-      }).catch((error) => {
-        console.log('there was an error calling getRecord', error)
-        this.codexRecord = null
-        this.error = error
-      })
+        })
     },
     acceptTransfer() {
       const input = [
@@ -169,10 +174,12 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer')
         })
         .catch((error) => {
-          console.log('There was an error accepting the transfer', error)
+          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          console.error('Could not accept transfer:', error)
         })
     },
     toggleShowDetails() {

@@ -1,0 +1,72 @@
+<template>
+  <div class="mb-5" v-if="personalStakes[0]">
+    <p>Your stakes</p>
+
+    <div class="table">
+      <div class="table-header">Actual amount</div>
+      <div
+        v-for="(property, index) in personalStakes[1]"
+        :style="{ order: index }"
+        :key="'actualAmount' + index"
+      >
+        {{ formatTokenAmount(property) }} CODX
+      </div>
+
+      <div class="table-header">Perceived amount</div>
+      <div
+        v-for="(property, index) in personalStakes[2]"
+        :style="{ order: index }"
+        :key="'perceivedAmount' + index"
+      >
+        {{ formatTokenAmount(property) }} CODX
+      </div>
+
+      <div class="table-header addresses">Staked for</div>
+      <div
+        class="addresses"
+        v-for="(property, index) in personalStakes[3]"
+        :style="{ order: index }"
+        :key="'stakedFor' + index"
+      >
+        {{ property }}
+      </div>
+
+      <div class="table-header">Unlock date</div>
+      <div
+        v-for="(property, index) in personalStakes[0]"
+        :style="{ order: index }"
+        :key="'unlockDate' + index"
+      >
+        {{ (new Date(parseInt(property) * 1000)).toLocaleDateString() }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'personal-stakes-table',
+  props: ['personalStakes'],
+  methods: {
+    formatTokenAmount(rawAmount) {
+      return rawAmount.div('1e18').toFixed(3)
+    },
+  },
+}
+</script>
+
+<style lang="stylus" scoped>
+.table
+  display: flex
+  flex-wrap: wrap
+  text-align: center
+
+  div
+    width: 20%
+
+  .addresses
+    width: 40%
+
+.table-header
+  order: -1
+</style>

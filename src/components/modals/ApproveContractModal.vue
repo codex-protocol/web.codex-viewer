@@ -39,7 +39,7 @@ export default {
           })
         })
         .catch((error) => {
-          console.log('there was an error calling approveTokens', error)
+          console.error('Could not approve tokens:', error)
 
           // @NOTE: we must throw the error here so the MetaMaskNotificationModal
           //  can catch() it too

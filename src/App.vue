@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <app-side-bar v-if="authToken" />
-    <div class="main-content" :class="{ 'with-background': this.$route.name === 'login' }">
+    <div class="main-content" :class="{ 'with-background': this.useBackground() }">
       <router-view />
     </div>
-    <meta-mask-modal />
+    <toast-container />
   </div>
 </template>
 
@@ -13,7 +13,8 @@ import axios from 'axios'
 
 import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
-import MetaMaskModal from './components/modals/MetaMaskModal'
+import { Web3Errors } from './store/modules/web3'
+import ToastContainer from './components/ToastContainer'
 
 import './util/analytics'
 
@@ -21,7 +22,7 @@ export default {
   name: 'App',
   components: {
     AppSideBar,
-    MetaMaskModal,
+    ToastContainer,
   },
   created() {
     this.initializeApi()
@@ -46,6 +47,9 @@ export default {
     web3() {
       return this.$store.state.web3
     },
+    web3Error() {
+      return this.$store.state.web3.error
+    },
   },
   methods: {
     initializeApi() {
@@ -57,13 +61,35 @@ export default {
           this.$store.dispatch('logout', this.$router)
         }
 
-        return Promise.reject(error)
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          throw new Error(error.response.data.error.message)
+        }
+
+        throw error
       }
 
       axios.interceptors.response.use(
         (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
+    },
+    useBackground() {
+      switch (this.$route.name) {
+        case 'login':
+        case 'home':
+          return true
+        default:
+          return false
+      }
+    },
+  },
+  watch: {
+    web3Error(error) {
+      // MetaMask has been locked while logged in
+      //  Logout the user
+      if (Web3Errors.Locked && this.authToken) {
+        this.$store.dispatch('logout', this.$router)
+      }
     },
   },
 }

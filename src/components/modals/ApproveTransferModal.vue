@@ -77,7 +77,7 @@ export default {
           EventBus.$emit('events:record-transfer')
         })
         .catch((error) => {
-          console.log('there was an error calling approveTransfer', error)
+          console.error('Could not approve transfer:', error)
 
           // @NOTE: we must throw the error here so the MetaMaskNotificationModal
           //  can catch() it too

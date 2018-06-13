@@ -1,6 +1,9 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
+import EventBus from '../../util/eventBus'
+import SocketService from '../../util/socket'
+
 // If an auth token is present on page load, then add it to all future API requests
 let cachedAuthToken = window.localStorage.getItem('authToken')
 
@@ -14,8 +17,7 @@ const initialState = () => {
     balance: new BigNumber(0),
     authToken: cachedAuthToken,
     totalStakedFor: new BigNumber(0),
-    personalStakeAmount: new BigNumber(0),
-    personalStakeFor: null,
+    personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
   }
@@ -28,19 +30,24 @@ const getters = {
 }
 
 const actions = {
-  sendAuthRequest({ commit, dispatch }, payload) {
-    return axios.post('auth-token', payload).then((response) => {
-      const { result, error } = response.data
-      if (response.data.error) {
-        throw new Error(error)
-      }
+  sendAuthRequest({ commit, dispatch }, data) {
 
-      dispatch('updateUserState', result.token, result.user)
+    const requestOptions = {
+      method: 'post',
+      url: '/auth-token',
+      data,
+    }
 
-    }).catch((error) => {
-      console.log(error)
-      commit('clearUserState')
-    })
+    return axios(requestOptions)
+      .then((response) => {
+        const { result } = response.data
+        dispatch('updateUserState', result.token, result.user)
+      })
+      .catch((error) => {
+        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+        console.error('Could not log in:', error)
+        commit('clearUserState')
+      })
   },
 
   updateUserState({ commit, dispatch, rootState }, newAuthToken, newUser) {
@@ -82,18 +89,10 @@ const actions = {
       } else {
         axios.get('user')
           .then((response) => {
-
-            const { result, error } = response.data
-
-            if (response.data.error) {
-              throw new Error(error)
-            }
-
-            commit('setUser', result)
-
+            commit('setUser', response.data.result)
           })
           .catch((error) => {
-            console.log(error)
+            console.error('Could not get user:', error)
             commit('clearUserState')
           })
       }
@@ -113,22 +112,18 @@ const actions = {
   },
 
   getStakeBalances({ commit }, payload) {
-    // const {
-    //   account,
-    //   stakeContract,
-    // } = payload
-    //
-    // stakeContract.getPersonalStakeAmounts(account).then((amount) => {
-    //   commit('updatePersonalStakeAmount', amount)
-    // })
-    //
-    // stakeContract.getPersonalStakeForAddress(account).then((stakeFor) => {
-    //   commit('updatePersonalStakeFor', stakeFor)
-    // })
-    //
-    // stakeContract.totalStakedFor(account).then((stake) => {
-    //   commit('updateTotalStakedFor', stake)
-    // })
+    const {
+      account,
+      stakeContract,
+    } = payload
+
+    stakeContract.getPersonalStakes(account).then((personalStakes) => {
+      commit('updatePersonalStakes', personalStakes)
+    })
+
+    stakeContract.totalStakedFor(account).then((stake) => {
+      commit('updateTotalStakedFor', stake)
+    })
   },
 
   getApprovalStatus({ commit }, payload) {
@@ -154,6 +149,9 @@ const actions = {
     })
   },
 
+  // This is currently used for handling some Metamask state changes
+  //  Changing the route this navigates to will require updating how we handle
+  //  the state changes.
   logout({ commit }, router) {
     commit('clearUserState')
 
@@ -163,7 +161,7 @@ const actions = {
 
 // @TODO: Only log for debug mode
 const logMutation = (mutationName, payload) => {
-  console.log(`${mutationName} mutation being executed`, payload)
+  console.info(`${mutationName} mutation being executed`, payload)
 }
 
 const mutations = {
@@ -172,6 +170,8 @@ const mutations = {
 
     currentState.authToken = newAuthToken
     axios.defaults.headers.common.Authorization = newAuthToken
+
+    SocketService.updateSocket(newAuthToken)
 
     window.localStorage.setItem('authToken', newAuthToken)
   },
@@ -198,16 +198,10 @@ const mutations = {
     currentState.balance = newBalance
   },
 
-  updatePersonalStakeAmount(currentState, newAmount) {
-    logMutation('updatePersonalStakeAmount', newAmount)
+  updatePersonalStakes(currentState, newPersonalStakes) {
+    logMutation('updatePersonalStakes', newPersonalStakes)
 
-    currentState.personalStakeAmount = newAmount
-  },
-
-  updatePersonalStakeFor(currentState, newStakeFor) {
-    logMutation('updatePersonalStakeFor', newStakeFor)
-
-    currentState.personalStakeFor = newStakeFor
+    currentState.personalStakes = newPersonalStakes
   },
 
   updateTotalStakedFor(currentState, newStake) {

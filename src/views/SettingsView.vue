@@ -49,16 +49,14 @@ export default {
   },
   methods: {
     getRecords() {
-      axios.get('/user/records?include=metadata').then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.log('there was an error calling getRecords', error)
-        } else {
-          this.records = result
-        }
-      }).catch((error) => {
-        console.log('there was an error calling getRecords', error)
-      })
+      axios.get('/user/records')
+        .then((response) => {
+          this.records = response.data.result
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
+          console.error('Could not get collection:', error)
+        })
     },
   },
 }
@@ -88,7 +86,7 @@ export default {
 
   .network-details
     font-size: .4em
-    word-break: break-word
+    word-wrap: break-word
 
   .spacer
     flex-grow: 1

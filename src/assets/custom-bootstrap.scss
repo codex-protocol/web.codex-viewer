@@ -76,3 +76,8 @@ $grid-gutter-width:                 2rem;
   color: $color-secondary;
   background-color: rgba(white, .5);
 }
+
+.alert .close:hover,
+.alert .close:focus {
+  color: inherit;
+}

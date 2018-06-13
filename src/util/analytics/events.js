@@ -17,11 +17,17 @@ const events = (analytics) => {
     })
   }
 
+  // Home
+  registerEvent('events:viewer:view-home-page')
+  registerEvent('events:click-home-login')
+  registerEvent('events:click-about-codex')
+
   // Login
   registerEvent('events:viewer:view-login-page')
   registerEvent('events:click-login-button')
+  registerEvent('events:click-install-metamask')
+  registerEvent('events:click-check-metamask')
   registerEvent('events:login')
-  registerEvent('events:click-about-codex')
   registerEvent('events:click-logout-button')
 
   // Collection

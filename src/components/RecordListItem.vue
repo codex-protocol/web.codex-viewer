@@ -26,7 +26,7 @@ export default {
 
     // TODO: Need a way to render records in collection w/ no metadata (e.g., one was created in a different Provider)
     if (!this.codexRecord.metadata) {
-      console.log('found Record with no metadata', this.codexRecord)
+      console.warn('found Record with no metadata', this.codexRecord)
     }
 
     return {

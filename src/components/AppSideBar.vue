@@ -12,7 +12,7 @@
     <b-link to="/settings">
       <img src="../assets/icons/settings.svg">Settings
     </b-link>
-    <b-link to="/manage-tokens">
+    <b-link v-if="showManageTokensPage" to="/manage-tokens">
       <img src="../assets/icons/codx-token.svg">Manage Tokens
     </b-link>
     <b-link to="/coming-soon">
@@ -27,9 +27,15 @@
 
 <script>
 import EventBus from '../util/eventBus'
+import { showManageTokensPage } from '../util/config'
 
 export default {
   name: 'app-side-bar',
+  data() {
+    return {
+      showManageTokensPage,
+    }
+  },
   methods: {
     logout() {
       EventBus.$emit('events:click-logout-button')

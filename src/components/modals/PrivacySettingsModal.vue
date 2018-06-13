@@ -54,7 +54,9 @@
 </template>
 
 <script>
+
 import axios from 'axios'
+import EventBus from '../../util/eventBus'
 
 export default {
   name: 'privacy-settings-modal',
@@ -74,26 +76,29 @@ export default {
   },
   methods: {
     removeWhitelistedAddress(address) {
+
       const sharedAddresses = this.sharedAddresses.filter((sharedAddress) => {
         return sharedAddress !== address
       })
 
-      const url = `/users/records/${this.recordId}`
-      axios.put(url, {
-        whitelistedAddresses: sharedAddresses,
-      }).then((response) => {
-        const { error } = response.data
-        if (error) {
-          console.log('there was an error removing whitelisted address', error)
-          // @TODO: better error messaging
-        } else {
+      const requestOptions = {
+        method: 'put',
+        url: `/users/records/${this.recordId}`,
+        data: {
+          whitelistedAddresses: sharedAddresses,
+        },
+      }
+
+      axios(requestOptions)
+        .then((response) => {
+          const { result } = response.data
           this.newWhitelistedAddress = null
-          this.sharedAddresses = sharedAddresses
-        }
-      }).catch((error) => {
-        console.log('there was an error removing whitelisted address', error)
-        // @TODO: better error messaging
-      })
+          this.sharedAddresses = result.whitelistedAddresses
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not remove whitelisted address: ${error.message}`)
+          console.error('Could not remove whitelisted address:', error)
+        })
     },
     saveSettings(event) {
 
@@ -107,29 +112,47 @@ export default {
         this.sharedAddresses.push(this.newWhitelistedAddress)
       }
 
-      const url = `/users/records/${this.recordId}`
-      axios.put(url, {
-        isPrivate: !this.recordIsPublic,
-        whitelistedAddresses: this.sharedAddresses,
-      }).then((response) => {
-        const { error } = response.data
-        if (error) {
-          console.log('there was an error setting Record privacy', error)
-          // @TODO: better error messaging
-          // Reset toggle on error
-          this.recordIsPublic = !this.recordIsPublic
-          this.newWhitelistedAddress = null
-        } else {
+      const requestOptions = {
+        method: 'put',
+        url: `/users/records/${this.recordId}`,
+        data: {
+          isPrivate: !this.recordIsPublic,
+          whitelistedAddresses: this.sharedAddresses,
+        },
+      }
+
+      axios(requestOptions)
+        .then((response) => {
+
+          const { result } = response.data
+
           this.modalVisible = false
           this.newWhitelistedAddress = null
-        }
-      }).catch((error) => {
-        console.log('there was an error setting Record privacy', error)
-        // @TODO: better error messaging
-        // Reset toggle on error
-        this.recordIsPublic = !this.recordIsPublic
-        this.newWhitelistedAddress = null
-      })
+          this.sharedAddresses = result.whitelistedAddresses
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
+          console.error('Could not update record:', error)
+
+          // Reset toggle on error
+          this.recordIsPublic = !this.isPrivate
+          this.newWhitelistedAddress = null
+        })
+    },
+  },
+  watch: {
+    modalVisible(newVisibility) {
+      if (!newVisibility) {
+        // @BUG: there's a bug here related to resetting this.sharedAddresses
+        //  to the this.whitelistedAddresses prop since the prop cannot be
+        //  updated to the updated value returned from the API from inside this
+        //  component
+        //
+        // to reproduce: remove an address, close the modal, reopen the modal
+        //  and note that the address is still there (even though it truly was
+        //  removed from the database)
+        Object.assign(this.$data, this.$options.data.apply(this))
+      }
     },
   },
 }

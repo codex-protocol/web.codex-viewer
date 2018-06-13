@@ -27,6 +27,7 @@
 <script>
 import axios from 'axios'
 
+import EventBus from '../util/eventBus'
 import missingImage from '../assets/images/missing-image.png'
 
 export default {
@@ -44,23 +45,21 @@ export default {
       this.$router.push(this.route)
     },
     savePrivacySetting() {
-      const url = `/users/records/${this.codexRecord.tokenId}`
-      axios.put(url, {
-        isPrivate: !this.recordIsPublic,
-      }).then((response) => {
-        const { error } = response.data
-        if (error) {
-          console.log('there was an error setting Record privacy', error)
-          // @TODO: better error messaging
-          // Reset toggle on error
-          this.recordIsPublic = !this.recordIsPublic
-        }
-      }).catch((error) => {
-        console.log('there was an error setting Record privacy', error)
-        // @TODO: better error messaging
-        // Reset toggle on error
-        this.recordIsPublic = !this.recordIsPublic
-      })
+
+      const requestOptions = {
+        method: 'put',
+        url: `/users/records/${this.codexRecord.tokenId}`,
+        data: {
+          isPrivate: !this.recordIsPublic,
+        },
+      }
+
+      axios(requestOptions)
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
+          console.error('Could not update Record privacy:', error)
+          this.recordIsPublic = !this.isPrivate // Reset toggle on error
+        })
     },
   },
 }

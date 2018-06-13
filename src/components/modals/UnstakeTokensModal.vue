@@ -51,15 +51,18 @@ export default {
       this.$refs.unstakeAmount.focus()
     },
     unstakeTokens() {
-      EventBus.$emit('events:click-unstake-tokens')
+
       const amount = this.web3.instance().toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
+
+      EventBus.$emit('events:click-unstake-tokens')
+
       return callContract(this.stakeContract.unstake, input, this.web3)
         .then(() => {
           EventBus.$emit('events:unstake-tokens', { amount })
         })
         .catch((error) => {
-          console.log('there was an error calling unstakeTokens', error)
+          console.error('Could not unstake tokens:', error)
 
           // @NOTE: we must throw the error here so the MetaMaskNotificationModal
           //  can catch() it too

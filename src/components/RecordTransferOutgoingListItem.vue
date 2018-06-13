@@ -52,10 +52,12 @@ export default {
       callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
           EventBus.$emit('events:cancel-transfer')
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           this.cancelApproved = true
         })
         .catch((error) => {
-          console.log('There was an error cancelling the transfer', error)
+          EventBus.$emit('toast:error', `Could not cancel transfer: ${error.message}`)
+          console.error('Could not cancel transfer:', error)
         })
     },
   },

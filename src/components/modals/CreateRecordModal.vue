@@ -70,6 +70,8 @@
 
 <script>
 import axios from 'axios'
+
+import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -130,6 +132,7 @@ export default {
 
     },
     uploadFile(file) {
+
       this.progressVisible = true
       this.uploadSuccess = false
       this.uploadComplete = false
@@ -137,69 +140,80 @@ export default {
       const formData = new FormData()
       formData.append('files', file)
 
-      axios.post('/users/files', formData, { headers: {
-        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-      } }).then((response) => {
-        const { result, error } = response.data
-        this.uploadComplete = true
+      const requestOptions = {
 
-        if (error) {
-        // TODO: display an error
-          console.log('there was an error uploading the file', error)
-        } else {
-          console.log('file uploaded', result[0])
+        method: 'post',
+        url: '/users/files',
 
-          this.uploadSuccess = true
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
+
+        data: formData,
+      }
+
+      axios(requestOptions)
+        .then((response) => {
+
+          const { result } = response.data
+
           this.uploadedFile = result[0]
+          this.uploadSuccess = true
 
-        }
-      }).catch((error) => {
-        this.uploadComplete = true
-
-        // TODO: display an error
-        console.log('there was an error uploading the file', error)
-      })
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          console.error('Could not upload file:', error)
+        })
+        .finally(() => {
+          this.uploadComplete = true
+        })
     },
     createMetaData() {
 
       // TODO: Show some better error handling if these aren't filled in
       if (!this.canSubmit) {
-        throw new Error('missing required fields')
+        return Promise.reject(new Error('Could not create Record: Missing required fields.'))
       }
 
-      return axios.post('/users/record-metadata', {
-        name: this.name,
-        mainImage: this.uploadedFile,
-        description: this.description || null,
-      }).then((response) => {
+      const requestOptions = {
+        method: 'post',
+        url: '/users/record-metadata',
+        data: {
+          name: this.name,
+          mainImage: this.uploadedFile,
+          description: this.description || null,
+        },
+      }
 
-        const { result: metadata, error } = response.data
+      return axios(requestOptions)
+        .then((response) => {
 
-        if (error) {
+          const { result: metadata } = response.data
+
+          // TODO: maybe show somewhere that the locally-calculated hashes match
+          //  the server-side-calculated hashes? e.g.:
+          // const { sha3 } = this.web3.instance()
+          //
+          // metadata.nameHash === sha3(metadata.name)
+          // metadata.mainImage.hash === this.uploadedFileHash
+          // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
+
+          return this.createRecord(metadata)
+
+        })
+        .catch((error) => {
+          console.error('Could not create Record:', error)
+
+          this.codexRecord = null
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
           throw error
-        }
-
-        // TODO: maybe show somewhere that the locally-calculated hashes match
-        //  the server-side-calculated hashes? e.g.:
-        // const { sha3 } = this.web3.instance()
-        //
-        // metadata.nameHash === sha3(metadata.name)
-        // metadata.mainImage.hash === this.uploadedFileHash
-        // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
-
-        return this.createRecord(metadata)
-
-      }).catch((error) => {
-        console.log('there was an error calling createMetaData', error)
-        this.codexRecord = null
-        this.error = error
-
-        // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-        //  can catch() it too
-        throw error
-      })
+        })
     },
     createRecord(metadata) {
+
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
@@ -211,14 +225,10 @@ export default {
         metadata.id,
       ]
 
+      // @NOTE: no need to catch() here since rejections will bubble up to the
+      //  catch() in createMetaData() above
       return callContract(this.recordContract.mint, input, this.web3)
-        .catch((error) => {
-          console.log('there was an error calling createRecord', error)
 
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
-        })
     },
   },
   computed: {

@@ -35,20 +35,12 @@ export default {
       EventBus.$emit('events:faucet-request')
 
       axios.get('/user/faucet')
-        .then((response) => {
-
-          if (response instanceof Error) {
-            throw response
-          }
-
-          const { error } = response.data
-
-          if (error) {
-            throw error
-          }
+        .then(() => {
+          EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
         })
         .catch((error) => {
-          console.error('there was an error requesting tokens', error)
+          EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
+          console.error('Could not request tokens:', error)
         })
         .then(() => {
           this.modalVisible = false

@@ -1,4 +1,5 @@
 import { logTrack } from './log'
+import { mixpanelTrack } from './mixpanel'
 import events from './events'
 
 const provider = process.env.ANALYTICS_PROVIDER
@@ -8,6 +9,9 @@ const analytics = {
     switch (provider) {
       case 'log':
         logTrack(event, params)
+        break
+      case 'mixpanel':
+        mixpanelTrack(event, params)
         break
       default:
         break
