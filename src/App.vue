@@ -86,10 +86,9 @@ export default {
   watch: {
     web3Error(error) {
       // MetaMask has been locked while logged in
-      //  Clear user data and reload to hit router auth rules
+      //  Logout the user
       if (Web3Errors.Locked && this.authToken) {
-        this.$store.dispatch('logoutInPlace', this.$router)
-        window.location.reload(true)
+        this.$store.dispatch('logout', this.$router)
       }
     },
   },
