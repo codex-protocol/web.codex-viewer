@@ -154,6 +154,10 @@ const actions = {
 
     router.replace('/')
   },
+
+  logoutInPlace({ commit }, router) {
+    commit('clearUserState')
+  },
 }
 
 // @TODO: Only log for debug mode
