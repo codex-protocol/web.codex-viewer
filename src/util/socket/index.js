@@ -14,7 +14,9 @@ export default {
       this.socket.disconnect()
     }
 
-    this.socket = io(`${apiUrl}/?token=${newAuthToken}`)
+    this.socket = io(`${apiUrl}/?token=${newAuthToken}`, {
+      transports: ['websocket'],
+    })
 
     this.socket.once('connect', () => {
 
