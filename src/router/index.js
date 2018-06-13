@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import store from '../store'
 
+import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
@@ -25,7 +26,8 @@ const ifNotAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'home', path: '/', component: HomeView, beforeEnter: ifNotAuthenticated, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'login', path: '/login', component: LoginView, meta: { allowUnauthenticatedUsers: true } },
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming' },
     { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' } },
     { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },
@@ -34,7 +36,6 @@ const router = new Router({
     { name: 'collection', path: '/collection', component: RecordListView },
     { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
     { name: 'record-detail', path: '/record/:recordId', component: RecordDetailView, meta: { allowUnauthenticatedUsers: true } },
-    { path: '/', redirect: '/collection' },
   ],
 })
 

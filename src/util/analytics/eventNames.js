@@ -1,8 +1,16 @@
+// IMPORTANT: Do not change the values. These are used for analytics tracking and need
+//  to stay consistent
+
 export default {
+  'events:viewer:view-home-page': 'View Home Page',
+  'events:click-home-login': 'Click Homepage Login Button',
+  'events:click-about-codex': 'Click About Codex',
+
   'events:viewer:view-login-page': 'View Login Page',
   'events:click-login-button': 'Click Login Button',
+  'events:click-install-metamask': 'Click Install MetaMask',
+  'events:click-check-metamask': 'Click Check MetaMask',
   'events:login': 'Login',
-  'events:click-about-codex': 'Click About Codex',
   'events:click-logout-button': 'Click Logout Button',
 
   'events:view-collection-page': 'View Collection Page',
