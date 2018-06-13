@@ -43,15 +43,26 @@
       v-if="images.length"
       label="Other Images"
     >
-      <b-img
+      <span
         v-for="image in images"
         v-bind:key="image.id"
-        class="main-image"
-        thumbnail
-        fluid
-        :src="image.uri"
-        alt="Main Image"
-      />
+        class="other-image"
+      >
+        <b-img
+          class="main-image"
+          thumbnail
+          fluid
+          :src="image.uri"
+          alt="Main Image"
+        /><br>
+        <b-button
+          size="sm"
+          variant="danger"
+          @click.prevent="removeImage(image.id)"
+        >
+          Delete
+        </b-button>
+      </span>
     </b-form-group>
     <b-form-group
       label="Upload Images"
@@ -118,10 +129,18 @@ export default {
     addImage(id, uuid) {
       this.imageIds.push({ id, uuid })
     },
-    removeImage(uuid) {
+    removeAddedImage(uuid) {
       for (let i = 0; i < this.imageIds.length; i++) {
         if (this.imageIds[i].uuid === uuid) {
           this.imageIds.splice(i, 1)
+        }
+      }
+    },
+    removeImage(id) {
+      for (let i = 0; i < this.imageIds.length; i++) {
+        if (this.imageIds[i].id === id) {
+          this.imageIds.splice(i, 1)
+          this.images.splice(i, 1)
         }
       }
     },
@@ -139,7 +158,7 @@ export default {
     },
     fileRemoved(file, error, xhr) {
       const { uuid } = file.upload
-      this.removeImage(uuid)
+      this.removeAddedImage(uuid)
     },
     focusModal() {
       this.$refs.defaultModalFocus.focus()
@@ -205,5 +224,9 @@ export default {
 <style lang="stylus" scoped>
 .main-image
   max-width: 10rem
+
+.other-image
+  display: inline-block
+  text-align: center
 
 </style>
