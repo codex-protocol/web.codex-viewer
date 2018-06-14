@@ -3,25 +3,33 @@
     <div class="logo">
       <img src="../assets/logos/codex/gold.svg">
     </div>
-    <b-link to="/collection">
-      <img src="../assets/icons/collection.svg">Collection
-    </b-link>
-    <b-link to="/transfers">
-      <img src="../assets/icons/transfers.svg">Transfers
-    </b-link>
-    <b-link to="/settings">
-      <img src="../assets/icons/settings.svg">Settings
-    </b-link>
-    <b-link v-if="showManageTokensPage" to="/manage-tokens">
-      <img src="../assets/icons/codx-token.svg">Manage Tokens
-    </b-link>
-    <b-link to="/coming-soon">
-      <img src="../assets/icons/star.svg">Coming Soon
-    </b-link>
-    <span class="spacer"></span>
-    <b-link @click.prevent="logout">
-      <img src="../assets/icons/logout.svg">Logout
-    </b-link>
+    <div v-if="isAuthenticated">
+      <b-link to="/collection">
+        <img src="../assets/icons/collection.svg">Collection
+      </b-link>
+      <b-link to="/transfers">
+        <img src="../assets/icons/transfers.svg">Transfers
+      </b-link>
+      <b-link to="/settings">
+        <img src="../assets/icons/settings.svg">Settings
+      </b-link>
+      <b-link v-if="showManageTokensPage" to="/manage-tokens">
+        <img src="../assets/icons/codx-token.svg">Manage Tokens
+      </b-link>
+      <b-link to="/coming-soon">
+        <img src="../assets/icons/star.svg">Coming Soon
+      </b-link>
+      <span class="spacer"></span>
+      <b-link @click.prevent="logout">
+        <img src="../assets/icons/logout.svg">Logout
+      </b-link>
+    </div>
+    <div v-else>
+      <span class="spacer"></span>
+      <b-link to="/login">
+        <img src="../assets/icons/logout.svg">Login
+      </b-link>
+    </div>
   </nav>
 </template>
 
@@ -35,6 +43,11 @@ export default {
     return {
       showManageTokensPage,
     }
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    },
   },
   methods: {
     logout() {

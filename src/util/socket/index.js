@@ -8,10 +8,19 @@ export default {
 
   socket: null,
 
-  updateSocket(newAuthToken) {
-
+  disconnect() {
     if (this.socket) {
       this.socket.disconnect()
+    }
+  },
+
+  updateSocket(newAuthToken) {
+
+    this.disconnect()
+
+    // if newAuthToken is falsy, then just disconnect
+    if (!newAuthToken) {
+      return
     }
 
     this.socket = io(`${apiUrl}/?token=${newAuthToken}`, {
