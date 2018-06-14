@@ -3,7 +3,7 @@
     <div class="logo">
       <img src="../assets/logos/codex/gold.svg">
     </div>
-    <div v-if="isAuthenticated">
+    <div class="button-container" v-if="isAuthenticated">
       <b-link to="/collection">
         <img src="../assets/icons/collection.svg">Collection
       </b-link>
@@ -24,8 +24,7 @@
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
     </div>
-    <div v-else>
-      <span class="spacer"></span>
+    <div class="button-container" v-else>
       <b-link to="/login">
         <img src="../assets/icons/logout.svg">Login
       </b-link>
@@ -101,5 +100,10 @@ a
 
   img
     height: 100%
+
+.button-container
+  flex-grow: 1
+  display: flex
+  flex-direction: column
 
 </style>
