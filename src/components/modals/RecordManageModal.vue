@@ -45,7 +45,6 @@
       label="Replace Main Image"
     >
       <b-form-file
-        v-model="newMainImageFile"
         class="mt-3"
         accept="image/*"
         @input="displayAndUploadFile"
@@ -54,7 +53,7 @@
         class="mt-2"
         v-if="progressVisible"
         :value="100"
-        :animated="!uploadComplete"
+        :animated="!uploadMainImageComplete"
         :variant="progressVariant">
       </b-progress>
     </b-form-group>
@@ -110,19 +109,19 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'record-manage-modal',
-  props: [
-    'codexRecord',
-  ],
+  props: ['codexRecord'],
   components: {
     vueDropzone: vue2Dropzone,
     MetaMaskNotificationModal,
   },
   data() {
+    // Extra image objects
     const images = []
     for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
       images.push(this.codexRecord.metadata.images[i])
     }
 
+    // Extra image `id`s andn `hash`s
     const imageIds = []
     for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
       imageIds.push({
@@ -132,17 +131,23 @@ export default {
     }
 
     const filesUrl = `${apiUrl}/users/files`
+
     return {
       name: this.codexRecord.metadata.name,
+      nameHash: this.codexRecord.metadata.nameHash,
       description: this.codexRecord.metadata.description,
+      descriptionHash: this.codexRecord.metadata.descriptionHash,
       mainImage: this.codexRecord.metadata.mainImage,
+      mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
       mainImageId: this.codexRecord.metadata.mainImage.id,
+      uploadedMainImageFile: null,
+      imageStreamUri: null,
+      progressVisible: false,
+      uploadMainImageComplete: false,
+      uploadMainImageSuccess: false,
       images,
       imageIds,
-      nameHash: this.codexRecord.metadata.nameHash,
-      descriptionHash: this.codexRecord.metadata.descriptionHash,
       fileHashes: this.codexRecord.metadata.fileHashes,
-      newMainImageFile: null,
       tokenId: this.codexRecord.tokenId,
       providerMetadataId: this.codexRecord.metadata.id,
       dropzoneOptions: {
@@ -153,12 +158,6 @@ export default {
         addRemoveLinks: true,
         headers: { Authorization: this.$store.state.auth.authToken },
       },
-      uploadedFile: null,
-      mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
-      imageStreamUri: null,
-      progressVisible: false,
-      uploadComplete: false,
-      uploadSuccess: false,
     }
   },
   methods: {
@@ -168,10 +167,12 @@ export default {
     setMainImageId(id) {
       this.mainImageId = id
     },
+    // Record a new extra image which has been added
     addImage(id, uuid, hash) {
       this.imageIds.push({ id, uuid, hash })
       this.addFileHash(hash)
     },
+    // Remove a new extra image that was added but not saved
     removeAddedImage(uuid) {
       for (let i = 0; i < this.imageIds.length; i++) {
         if (this.imageIds[i].uuid === uuid) {
@@ -190,6 +191,7 @@ export default {
         }
       }
     },
+    // Remove a saved extra image
     removeImage(id) {
       for (let i = 0; i < this.imageIds.length; i++) {
         if (this.imageIds[i].id === id) {
@@ -208,6 +210,7 @@ export default {
     hash(input) {
       return this.$store.state.web3.instance().sha3(input)
     },
+    // Upload a new main image
     displayAndUploadFile(file) {
       if (!file) {
         return
@@ -239,11 +242,12 @@ export default {
 
       binaryFileReader.readAsBinaryString(file)
     },
+    // Handle the upload of a new main image
     uploadFile(file) {
 
       this.progressVisible = true
-      this.uploadSuccess = false
-      this.uploadComplete = false
+      this.uploadMainImageSuccess = false
+      this.uploadMainImageComplete = false
 
       const formData = new FormData()
       formData.append('files', file)
@@ -265,9 +269,9 @@ export default {
 
           const { result } = response.data
 
-          this.uploadedFile = result[0]
-          this.uploadSuccess = true
-          this.setMainImageId(this.uploadedFile.id)
+          this.uploadedMainImageFile = result[0]
+          this.uploadMainImageSuccess = true
+          this.setMainImageId(this.uploadedMainImageFile.id)
 
         })
         .catch((error) => {
@@ -275,7 +279,7 @@ export default {
           console.error('Could not upload file:', error)
         })
         .finally(() => {
-          this.uploadComplete = true
+          this.uploadMainImageComplete = true
         })
     },
     getImageIds() {
@@ -348,11 +352,11 @@ export default {
       return this.web3.recordContractInstance()
     },
     progressVariant() {
-      if (!this.uploadComplete) {
+      if (!this.uploadMainImageComplete) {
         return 'primary'
       }
 
-      if (this.uploadSuccess) {
+      if (this.uploadMainImageSuccess) {
         return 'success'
       }
 

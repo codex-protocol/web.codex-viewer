@@ -25,12 +25,6 @@
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
           <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
           <div class="mt-3" v-if="isOwner">
-            <!-- @FIXME: Not wired up yet
-            <b-button class="mr-3" variant="primary">
-              Modify
-            </b-button>
-            -->
-
             <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
               Manage
             </b-button>
@@ -67,6 +61,7 @@
         </div>
       </div>
       <div
+        v-if="codexRecord.metadata.images.length"
         class="record-extra-images mb-5"
       >
         <b-img
@@ -187,6 +182,8 @@ export default {
   methods: {
     recordModifiedHandler(updatedCodexRecord) {
       this.codexRecord = updatedCodexRecord
+      // Reset the primary displayed image to the main image
+      this.activeMainImage = null
     },
     getRecord() {
       axios.get(`/record/${this.recordId}`)
