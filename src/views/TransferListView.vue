@@ -2,8 +2,8 @@
   <div>
     <app-header title="Transfers" />
     <app-sub-header
-      v-bind:transferDirection="transferDirection"
-      v-bind:fetchData="this.fetchData"
+      :fetchData="this.fetchData"
+      :transferDirection="transferDirection"
     />
     <b-card-group deck class="record-list" v-if="records.length">
       <record-transfer-incoming-list-item
@@ -49,13 +49,13 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('socket:address-approved:owner', this.addApprovedRecordHandler)
-    EventBus.$on('socket:address-approved:approved', this.addApprovedRecordHandler)
+    EventBus.$on('socket:address-approved:owner', this.addOutgoingRecordHandler)
+    EventBus.$on('socket:address-approved:approved', this.addIncomingRecordHandler)
     EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },
   beforeDestroy() {
-    EventBus.$off('socket:address-approved:owner', this.addApprovedRecordHandler)
-    EventBus.$off('socket:address-approved:approved', this.addApprovedRecordHandler)
+    EventBus.$off('socket:address-approved:owner', this.addOutgoingRecordHandler)
+    EventBus.$off('socket:address-approved:approved', this.addIncomingRecordHandler)
     EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },
   created() {
@@ -68,20 +68,51 @@ export default {
     },
   },
   methods: {
+
     // add the record to the incoming list if it was just approved
-    addApprovedRecordHandler(codexRecordToAdd) {
+    addIncomingRecordHandler(codexRecordToAdd) {
+
+      // only add the record if we're on the appropriate tab
+      if (this.transferDirection !== 'incoming') {
+        return
+      }
+
       // make sure we don't introduce duplicates...
       const alreadyExists = this.records.some((codexRecord) => {
         return codexRecord.tokenId === codexRecordToAdd.tokenId
       })
-      if (!alreadyExists) this.records.push(codexRecordToAdd)
+
+      if (!alreadyExists) {
+        this.records.push(codexRecordToAdd)
+      }
+
     },
+
+    // add the record to the outgoing list if it was just approved
+    addOutgoingRecordHandler(codexRecordToAdd) {
+
+      // only add the record if we're on the appropriate tab
+      if (this.transferDirection !== 'outgoing') {
+        return
+      }
+
+      // make sure we don't introduce duplicates...
+      const alreadyExists = this.records.some((codexRecord) => {
+        return codexRecord.tokenId === codexRecordToAdd.tokenId
+      })
+
+      if (!alreadyExists) {
+        this.records.push(codexRecordToAdd)
+      }
+    },
+
     // remove the record from the outgoing list if it was just transferred
     removeTransferredRecordHandler(codexRecordToRemove) {
       this.records = this.records.filter((codexRecord) => {
         return codexRecord.tokenId !== codexRecordToRemove.tokenId
       })
     },
+
     fetchData(transferDirection) {
 
       const requestOptions = {
