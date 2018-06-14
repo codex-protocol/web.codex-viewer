@@ -140,6 +140,8 @@ export default {
       descriptionHash: this.codexRecord.metadata.descriptionHash,
       fileHashes: this.codexRecord.metadata.fileHashes,
       newMainImageFile: null,
+      tokenId: this.codexRecord.tokenId,
+      providerMetadataId: this.codexRecord.metadata.id,
       dropzoneOptions: {
         url: filesUrl,
         paramName: 'files',
@@ -322,12 +324,6 @@ export default {
     },
     recordContract() {
       return this.web3.recordContractInstance()
-    },
-    tokenId() {
-      return this.codexRecord.tokenId
-    },
-    providerMetadataId() {
-      return this.codexRecord.metadata.id
     },
     progressVariant() {
       if (!this.uploadComplete) {
