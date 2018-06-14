@@ -15,6 +15,7 @@
       <b-form-input
         id="name"
         v-model="name"
+        @input="updateNameHash"
         type="text"
       />
     </b-form-group>
@@ -25,6 +26,7 @@
       <b-form-textarea
         id="description"
         v-model="description"
+        @input="updateDescriptionHash"
         :rows="4"
       />
     </b-form-group>
@@ -32,12 +34,29 @@
       label="Main Image"
     >
       <b-img
-        class="main-image"
+        class="record-image"
         thumbnail
         fluid
-        :src="mainImage"
+        :src="imageStreamUri || mainImage.uri"
         alt="Main Image"
       />
+    </b-form-group>
+    <b-form-group
+      label="Replace Main Image"
+    >
+      <b-form-file
+        v-model="newMainImageFile"
+        class="mt-3"
+        accept="image/*"
+        @input="displayAndUploadFile"
+      />
+      <b-progress
+        class="mt-2"
+        v-if="progressVisible"
+        :value="100"
+        :animated="!uploadComplete"
+        :variant="progressVariant">
+      </b-progress>
     </b-form-group>
     <b-form-group
       v-if="images.length"
@@ -49,11 +68,11 @@
         class="other-image"
       >
         <b-img
-          class="main-image"
+          class="record-image"
           thumbnail
           fluid
           :src="image.uri"
-          alt="Main Image"
+          alt="Other Image"
         /><br>
         <b-button
           size="sm"
@@ -83,6 +102,7 @@
 import axios from 'axios'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import EventBus from '../../util/eventBus'
 
 import { apiUrl } from '../../util/config'
 import callContract from '../../util/web3/callContract'
@@ -112,9 +132,14 @@ export default {
     return {
       name: this.codexRecord.metadata.name,
       description: this.codexRecord.metadata.description,
-      mainImage: this.codexRecord.metadata.mainImage.uri,
+      mainImage: this.codexRecord.metadata.mainImage,
+      mainImageId: this.codexRecord.metadata.mainImage.id,
       images,
       imageIds,
+      nameHash: this.codexRecord.metadata.nameHash,
+      descriptionHash: this.codexRecord.metadata.descriptionHash,
+      fileHashes: this.codexRecord.metadata.fileHashes,
+      newMainImageFile: null,
       dropzoneOptions: {
         url: filesUrl,
         paramName: 'files',
@@ -123,9 +148,21 @@ export default {
         addRemoveLinks: true,
         headers: { Authorization: this.$store.state.auth.authToken },
       },
+      uploadedFile: null,
+      uploadedFileHash: null,
+      imageStreamUri: null,
+      progressVisible: false,
+      uploadComplete: false,
+      uploadSuccess: false,
     }
   },
   methods: {
+    getMainImageId() {
+      return { id: this.mainImageId }
+    },
+    setMainImageId(id) {
+      this.mainImageId = id
+    },
     addImage(id, uuid) {
       this.imageIds.push({ id, uuid })
     },
@@ -143,6 +180,80 @@ export default {
           this.images.splice(i, 1)
         }
       }
+    },
+    updateNameHash() {
+      this.nameHash = this.hash(this.name)
+    },
+    updateDescriptionHash() {
+      this.descriptionHash = this.hash(this.description)
+    },
+    hash(input) {
+      return this.$store.state.web3.instance().sha3(input)
+    },
+    displayAndUploadFile(file) {
+      if (!file) {
+        return
+      }
+
+      this.uploadFile(file)
+
+      // display the file in the dialog box
+      const fileReader = new FileReader()
+
+      fileReader.addEventListener('loadend', () => {
+        this.imageStreamUri = fileReader.result
+      })
+
+      fileReader.readAsDataURL(file)
+
+      // hash the file's binary data
+      const binaryFileReader = new FileReader()
+
+      binaryFileReader.addEventListener('loadend', () => {
+        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
+      })
+
+      binaryFileReader.readAsBinaryString(file)
+
+    },
+    uploadFile(file) {
+
+      this.progressVisible = true
+      this.uploadSuccess = false
+      this.uploadComplete = false
+
+      const formData = new FormData()
+      formData.append('files', file)
+
+      const requestOptions = {
+
+        method: 'post',
+        url: '/users/files',
+
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
+
+        data: formData,
+      }
+
+      axios(requestOptions)
+        .then((response) => {
+
+          const { result } = response.data
+
+          this.uploadedFile = result[0]
+          this.uploadSuccess = true
+          this.setMainImageId(this.uploadedFile.id)
+
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          console.error('Could not upload file:', error)
+        })
+        .finally(() => {
+          this.uploadComplete = true
+        })
     },
     getImageIds() {
       const imageIds = this.imageIds.map((imageId) => {
@@ -172,6 +283,7 @@ export default {
       return axios.put(url, {
         name: this.name,
         description: this.description,
+        mainImage: this.getMainImageId(),
         images: this.getImageIds(),
       }).then((response) => {
         const { result, error } = response.data
@@ -188,8 +300,8 @@ export default {
     modifyRecord(nameHash, descriptionHash, fileHashes) {
       const input = [
         this.tokenId,
-        nameHash,
-        descriptionHash,
+        this.nameHash,
+        this.descriptionHash,
         fileHashes,
         '1',
         this.providerMetadataId,
@@ -217,15 +329,27 @@ export default {
     providerMetadataId() {
       return this.codexRecord.metadata.id
     },
+    progressVariant() {
+      if (!this.uploadComplete) {
+        return 'primary'
+      }
+
+      if (this.uploadSuccess) {
+        return 'success'
+      }
+
+      return 'danger'
+    },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
-.main-image
+.record-image
   max-width: 10rem
 
 .other-image
+  max-width: 10rem
   display: inline-block
   text-align: center
 
