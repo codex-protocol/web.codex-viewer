@@ -125,7 +125,10 @@ export default {
 
     const imageIds = []
     for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
-      imageIds.push({ id: this.codexRecord.metadata.images[i].id })
+      imageIds.push({
+        id: this.codexRecord.metadata.images[i].id,
+        hash: this.codexRecord.metadata.images[i].hash,
+      })
     }
 
     const filesUrl = `${apiUrl}/users/files`
@@ -151,7 +154,7 @@ export default {
         headers: { Authorization: this.$store.state.auth.authToken },
       },
       uploadedFile: null,
-      uploadedFileHash: null,
+      mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
       imageStreamUri: null,
       progressVisible: false,
       uploadComplete: false,
@@ -165,19 +168,32 @@ export default {
     setMainImageId(id) {
       this.mainImageId = id
     },
-    addImage(id, uuid) {
-      this.imageIds.push({ id, uuid })
+    addImage(id, uuid, hash) {
+      this.imageIds.push({ id, uuid, hash })
+      this.addFileHash(hash)
     },
     removeAddedImage(uuid) {
       for (let i = 0; i < this.imageIds.length; i++) {
         if (this.imageIds[i].uuid === uuid) {
+          this.removeFileHash(this.imageIds[i].hash)
           this.imageIds.splice(i, 1)
+        }
+      }
+    },
+    addFileHash(hash) {
+      this.fileHashes.push(hash)
+    },
+    removeFileHash(hash) {
+      for (let i = 0; i < this.fileHashes.length; i++) {
+        if (this.fileHashes[i] === hash) {
+          this.fileHashes.splice(i, 1)
         }
       }
     },
     removeImage(id) {
       for (let i = 0; i < this.imageIds.length; i++) {
         if (this.imageIds[i].id === id) {
+          this.removeFileHash(this.imageIds[i].hash)
           this.imageIds.splice(i, 1)
           this.images.splice(i, 1)
         }
@@ -208,15 +224,20 @@ export default {
 
       fileReader.readAsDataURL(file)
 
-      // hash the file's binary data
+      this.getFileHash(file, (err, hash) => {
+        this.removeFileHash(this.mainImageFileHash)
+        this.addFileHash(hash)
+        this.mainImageFileHash = hash
+      })
+    },
+    getFileHash(file, next) {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
+        next(null, this.web3.instance().sha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)
-
     },
     uploadFile(file) {
 
@@ -267,7 +288,9 @@ export default {
       const result = response.result[0]
       const { uuid } = file.upload
       const { id } = result
-      this.addImage(id, uuid)
+      this.getFileHash(file, (err, hash) => {
+        this.addImage(id, uuid, hash)
+      })
     },
     fileRemoved(file, error, xhr) {
       const { uuid } = file.upload
@@ -288,23 +311,22 @@ export default {
         mainImage: this.getMainImageId(),
         images: this.getImageIds(),
       }).then((response) => {
-        const { result, error } = response.data
+        const { error } = response.data
         if (error) {
           throw error
         } else {
-          const { nameHash, descriptionHash, fileHashes } = result.pendingUpdates[0]
-          return this.modifyRecord(nameHash, descriptionHash, fileHashes)
+          return this.modifyRecord()
         }
       }).catch((error) => {
         throw error
       })
     },
-    modifyRecord(nameHash, descriptionHash, fileHashes) {
+    modifyRecord() {
       const input = [
         this.tokenId,
         this.nameHash,
         this.descriptionHash,
-        fileHashes,
+        this.fileHashes,
         '1',
         this.providerMetadataId,
       ]
