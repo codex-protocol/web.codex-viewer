@@ -1,40 +1,18 @@
 <template>
   <div>
     <div v-if="codexRecord">
-      <div class="flex mb-5">
+      <div class="flex">
         <div class="record-image">
-          <b-img
-            fluid
-            v-if="codexRecord.metadata"
-            :src="mainImageUri"
-          />
-          <div class="private-img" v-else>
-            <p>This Codex Record is private</p>
+          <div class="record-image-wrap">
+            <b-img
+              fluid
+              v-if="codexRecord.metadata"
+              :src="mainImageUri"
+            />
+            <div class="private-img" v-else>
+              <p>This Codex Record is private</p>
+            </div>
           </div>
-          <span
-            class="record-extra-images"
-          >
-            <b-img
-              class="record-extra-image"
-              thumbnail
-              fluid
-              :src="codexRecord.metadata.mainImage.uri"
-              @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
-              alt="Thumbnail"
-            />
-            <b-img
-              v-if="codexRecord.metadata.images"
-              v-for="image in codexRecord.metadata.images"
-              v-bind:key="image.id"
-              ref="images"
-              class="record-extra-image"
-              thumbnail
-              fluid
-              :src="image.uri"
-              @click.prevent="setMainImage(image.uri)"
-              alt="Thumbnail"
-            />
-          </span>
         </div>
         <div class="top vertical">
           <div v-if="codexRecord.metadata">
@@ -87,6 +65,30 @@
             </b-button>
           </div>
         </div>
+      </div>
+      <div
+        class="record-extra-images mb-5"
+      >
+        <b-img
+          class="record-extra-image"
+          thumbnail
+          fluid
+          :src="codexRecord.metadata.mainImage.uri"
+          @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
+          alt="Thumbnail"
+        />
+        <b-img
+          v-if="codexRecord.metadata.images"
+          v-for="image in codexRecord.metadata.images"
+          v-bind:key="image.id"
+          ref="images"
+          class="record-extra-image"
+          thumbnail
+          fluid
+          :src="image.uri"
+          @click.prevent="setMainImage(image.uri)"
+          alt="Thumbnail"
+        />
       </div>
       <record-provenance :provenance="codexRecord.provenance" />
     </div>
@@ -241,13 +243,13 @@ export default {
   align-items: baseline
 
 .record-image
-  max-height: 50rem
-  min-width: 40%
-  max-width: 50%
   margin: 0 2rem 2rem 0
 
-  img
-    max-height: 30rem
+  .record-image-wrap
+    display: flex
+    align-items: start
+    width: 25rem
+    height: 25rem
 
 .record-extra-images
   display: inline-block
