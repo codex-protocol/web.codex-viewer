@@ -3,10 +3,38 @@
     <div v-if="codexRecord">
       <div class="flex mb-5">
         <div class="record-image">
-          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
+          <b-img
+            fluid
+            v-if="codexRecord.metadata"
+            :src="mainImageUri"
+          />
           <div class="private-img" v-else>
             <p>This Codex Record is private</p>
           </div>
+          <span
+            class="record-extra-images"
+          >
+            <b-img
+              class="record-extra-image"
+              thumbnail
+              fluid
+              :src="codexRecord.metadata.mainImage.uri"
+              @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
+              alt="Thumbnail"
+            />
+            <b-img
+              v-if="codexRecord.metadata.images"
+              v-for="image in codexRecord.metadata.images"
+              v-bind:key="image.id"
+              ref="images"
+              class="record-extra-image"
+              thumbnail
+              fluid
+              :src="image.uri"
+              @click.prevent="setMainImage(image.uri)"
+              alt="Thumbnail"
+            />
+          </span>
         </div>
         <div class="top vertical">
           <div v-if="codexRecord.metadata">
@@ -102,6 +130,7 @@ export default {
       codexRecord: null,
       error: null,
       missingImage,
+      activeMainImage: null,
     }
   },
   computed: {
@@ -134,6 +163,10 @@ export default {
     isAwaitingApproval() {
       return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
+    },
+    mainImageUri() {
+      return (this.activeMainImage) ||
+        (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
     },
   },
   created() {
@@ -185,6 +218,9 @@ export default {
     toggleShowDetails() {
       this.showDetails = !this.showDetails
     },
+    setMainImage(uri) {
+      this.activeMainImage = uri
+    },
   },
 }
 </script>
@@ -205,15 +241,22 @@ export default {
   align-items: baseline
 
 .record-image
-  height: 50vh
+  max-height: 50rem
   min-width: 40%
   max-width: 50%
   margin: 0 2rem 2rem 0
 
   img
-    width: 100%
-    max-height: 100%
-    object-fit: contain
+    max-height: 30rem
+
+.record-extra-images
+  display: inline-block
+
+.record-extra-image
+  max-width: 10rem
+
+  &:hover
+    cursor: pointer
 
 .description
   white-space: pre-wrap
