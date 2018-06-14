@@ -22,7 +22,7 @@ const ifAuthenticated = (to, from, next) => {
   }
 }
 
-// TODO: Add some logic to catch unhandled routes and redirect them to / or show some error
+// @TODO: Add some logic to catch unhandled routes and redirect them to / or show some error
 
 const router = new Router({
   routes: [

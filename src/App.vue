@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-side-bar v-if="authToken" />
+    <app-side-bar v-if="showSideBar" />
     <div class="main-content" :class="{ 'with-background': this.useBackground() }">
       <router-view />
     </div>
@@ -34,7 +34,21 @@ export default {
         }
       })
   },
+  data() {
+
+    return {
+      routesToHideSideBar: [
+        'home',
+        'login',
+      ],
+    }
+  },
   computed: {
+    showSideBar() {
+      // Rather than have to explicitly pass the AppSideBar component for every route,
+      //  we just conditionally remove it from a few specific routes here.
+      return this.routesToHideSideBar.indexOf(this.$route.name) === -1
+    },
     user() {
       return this.$store.state.auth.user
     },

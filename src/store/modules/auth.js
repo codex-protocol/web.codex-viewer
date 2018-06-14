@@ -185,6 +185,7 @@ const mutations = {
     logMutation('clearUserState')
 
     cachedAuthToken = null
+    SocketService.disconnect()
     window.localStorage.removeItem('authToken')
     delete axios.defaults.headers.common.Authorization
 
