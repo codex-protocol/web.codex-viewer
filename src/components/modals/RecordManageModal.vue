@@ -116,19 +116,12 @@ export default {
   },
   data() {
     // Extra image objects
-    const images = []
-    for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
-      images.push(this.codexRecord.metadata.images[i])
-    }
+    const images = Array.from(this.codexRecord.metadata.images)
 
-    // Extra image `id`s andn `hash`s
-    const imageIds = []
-    for (let i = 0; i < this.codexRecord.metadata.images.length; i++) {
-      imageIds.push({
-        id: this.codexRecord.metadata.images[i].id,
-        hash: this.codexRecord.metadata.images[i].hash,
-      })
-    }
+    // Extra image `id`s and `hash`s
+    const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => {
+      return { id, hash }
+    })
 
     const filesUrl = `${apiUrl}/users/files`
 
@@ -174,22 +167,22 @@ export default {
     },
     // Remove a new extra image that was added but not saved
     removeAddedImage(uuid) {
-      for (let i = 0; i < this.imageIds.length; i++) {
-        if (this.imageIds[i].uuid === uuid) {
-          this.removeFileHash(this.imageIds[i].hash)
-          this.imageIds.splice(i, 1)
-        }
+      const indexToRemove = this.imageIds.findIndex((imageId) => {
+        return imageId.uuid === uuid
+      })
+
+      if (indexToRemove !== -1) {
+        this.removeFileHash(this.imageIds[indexToRemove].hash)
+        this.imageIds.splice(indexToRemove, 1)
       }
     },
     addFileHash(hash) {
       this.fileHashes.push(hash)
     },
     removeFileHash(hash) {
-      for (let i = 0; i < this.fileHashes.length; i++) {
-        if (this.fileHashes[i] === hash) {
-          this.fileHashes.splice(i, 1)
-        }
-      }
+      this.fileHashes = this.fileHashes.filter((fileHash) => {
+        return fileHash !== hash
+      })
     },
     // Remove a saved extra image
     removeImage(id) {
@@ -283,10 +276,9 @@ export default {
         })
     },
     getImageIds() {
-      const imageIds = this.imageIds.map((imageId) => {
+      return this.imageIds.map((imageId) => {
         return { id: imageId.id }
       })
-      return imageIds
     },
     fileAdded(file, response) {
       const result = response.result[0]
@@ -307,23 +299,27 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     updateMetadata() {
-      const url = `/users/records/${this.tokenId}/metadata`
 
-      return axios.put(url, {
-        name: this.name,
-        description: this.description,
-        mainImage: this.getMainImageId(),
-        images: this.getImageIds(),
-      }).then((response) => {
-        const { error } = response.data
-        if (error) {
-          throw error
-        } else {
+      const requestOptions = {
+
+        method: 'put',
+        url: `/users/records/${this.tokenId}/metadata`,
+
+        data: {
+          name: this.name,
+          images: this.getImageIds(),
+          description: this.description,
+          mainImage: this.getMainImageId(),
+        },
+      }
+
+      return axios(requestOptions)
+        .then((response) => {
           return this.modifyRecord()
-        }
-      }).catch((error) => {
-        throw error
-      })
+        })
+        .catch((error) => {
+          throw error
+        })
     },
     modifyRecord() {
       const input = [
