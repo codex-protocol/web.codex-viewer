@@ -4,7 +4,7 @@
         <b-link
           to="/transfers/incoming"
           v-if="transferDirection !== 'incoming'"
-          @click="fetchData('incoming')">
+        >
           Incoming
         </b-link>
         <span v-else>Incoming</span>
@@ -13,7 +13,7 @@
         <b-link
           to="/transfers/outgoing"
           v-if="transferDirection !== 'outgoing'"
-          @click="fetchData('outgoing')">
+        >
           Outgoing
         </b-link>
         <span v-else>Outgoing</span>
@@ -29,6 +29,11 @@
 export default {
   name: 'app-sub-header',
   props: ['transferDirection', 'fetchData'],
+  watch: {
+    transferDirection(newTransferDirection) {
+      this.fetchData(newTransferDirection)
+    },
+  },
 }
 </script>
 

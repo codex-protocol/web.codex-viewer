@@ -6,7 +6,7 @@ let ExpectedNetworkId
 if (process.env.TARGET_ENV === 'production') {
   ExpectedNetworkId = '4' // @TODO: change back to '1' when out of beta and on mainnet
 } else if (process.env.TARGET_ENV === 'staging') {
-  ExpectedNetworkId = '4'
+  ExpectedNetworkId = '3'
 } else {
   ExpectedNetworkId = '5777'
 }
