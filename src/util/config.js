@@ -2,6 +2,7 @@
 //  Do a search for references to process.env in non-build directories to consolidate
 
 const showManageTokensPage = process.env.TARGET_ENV === 'development'
+const showCreateGiveawayButton = process.env.TARGET_ENV === 'development'
 
 const apiUrl = (() => {
 
@@ -35,4 +36,5 @@ export {
   apiUrl,
   etherScanUrl,
   showManageTokensPage,
+  showCreateGiveawayButton,
 }

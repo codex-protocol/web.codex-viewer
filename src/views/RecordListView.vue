@@ -10,8 +10,8 @@
 
       <b-button
         variant="outline-primary"
-        v-if="showGiveawaysAdmin"
         @click="createGiveaway"
+        v-if="showCreateGiveawayButton && !giveaway"
       >
         Create giveaway
       </b-button>
@@ -23,24 +23,23 @@
         :key="record.tokenId"
       />
     </b-card-group>
-    <b-card-group deck class="record-list giveaway" v-else-if="giveaway">
-      <div class="overlay-container" >
+    <b-card-group deck class="record-list giveaway-container" v-else-if="giveaway">
+      <b-card
+        img-top
+        class="giveaway"
+        :img-src="giveaway.editionDetails.mainImage ? giveaway.editionDetails.mainImage.uri : missingImage"
+      >
         <div class="overlay" v-if="isLoading">
           <img class="spinner" src="../assets/images/spinner.svg" />
         </div>
-        <b-card
-          :img-src="giveaway.metadata.mainImage ? giveaway.metadata.mainImage.uri : missingImage"
-          img-top
+        <b-button
+          variant="secondary"
+          @click="acceptGiveaway"
+          :disabled="disableGiveawayButton"
         >
-          <b-button
-            variant="secondary"
-            @click="acceptGiveaway"
-            :disabled="disableGiveawayButton"
-          >
-            Create Record
-          </b-button>
-        </b-card>
-      </div>
+          Create Record
+        </b-button>
+      </b-card>
       <b-card class="info">
         <p>
           The first {{ giveaway.numberOfEditions }} users to participate in the Beta will receive an edition of this piece created by our designer Seb!
@@ -64,10 +63,11 @@
 import axios from 'axios'
 import missingImage from '../assets/images/missing-image.png'
 
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
+import { showCreateGiveawayButton } from '../util/config'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
-import EventBus from '../util/eventBus'
 
 export default {
   name: 'record-list',
@@ -79,19 +79,16 @@ export default {
   data() {
     return {
       records: [],
-      giveaway: null,
       missingImage,
-      disableGiveawayButton: false,
+      giveaway: null,
       isLoading: false,
+      showCreateGiveawayButton,
+      disableGiveawayButton: false,
     }
   },
   computed: {
     account() {
       return this.$store.state.web3.account
-    },
-    showGiveawaysAdmin() {
-      // This is enforced on the API too, but let's hide it from the UI
-      return this.account === '0x8c5013e3a10b97f0382f7afdc559c8615047be20'
     },
   },
   mounted() {
@@ -154,10 +151,12 @@ export default {
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      axios.get(`/user/giveaway/${this.giveaway._id}`)
+      axios.post(`/user/giveaway/${this.giveaway.id}`)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
           console.error('Could not claim edition:', error)
+          this.disableGiveawayButton = false
+          this.isLoading = false
         })
     },
   },
@@ -185,14 +184,13 @@ export default {
     flex-direction: column
     justify-content: center
 
-.overlay-container
+.giveaway
   position: relative
-  margin-left: 1rem
-  margin-right: 1rem
 
-  .card
-    margin-left: 0
-    margin-right: 0
+  .card-body
+    display: flex
+    align-items: center
+    justify-content: center
 
 .overlay
   top: 0
