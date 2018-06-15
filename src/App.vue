@@ -16,7 +16,7 @@ import AppSideBar from './components/AppSideBar'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
-import analytics from './util/analytics' // eslint-disable-line no-unused-vars
+import './util/analytics'
 
 export default {
   name: 'App',

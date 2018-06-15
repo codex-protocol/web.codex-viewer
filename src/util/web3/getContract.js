@@ -8,7 +8,7 @@ import contract from 'truffle-contract'
 const expectedNetworkId = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production': return '4' // @TODO: change back to '1' when out of beta and on mainnet
-    case 'staging': return '4'
+    case 'staging': return '3'
     default: return '5777'
   }
 })()
