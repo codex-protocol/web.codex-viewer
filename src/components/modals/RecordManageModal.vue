@@ -186,12 +186,14 @@ export default {
     },
     // Remove a saved extra image
     removeImage(id) {
-      for (let i = 0; i < this.imageIds.length; i++) {
-        if (this.imageIds[i].id === id) {
-          this.removeFileHash(this.imageIds[i].hash)
-          this.imageIds.splice(i, 1)
-          this.images.splice(i, 1)
-        }
+      const indexToRemove = this.imageIds.findIndex((imageId) => {
+        return imageId.id === id
+      })
+
+      if (indexToRemove !== -1) {
+        this.removeFileHash(this.imageIds[indexToRemove].hash)
+        this.imageIds.splice(indexToRemove, 1)
+        this.images.splice(indexToRemove, 1)
       }
     },
     updateNameHash() {
