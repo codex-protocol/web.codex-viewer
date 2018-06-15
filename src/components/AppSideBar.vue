@@ -9,6 +9,7 @@
       </b-link>
       <b-link to="/transfers">
         <img src="../assets/icons/transfers.svg">Transfers
+        <b-badge variant="danger"></b-badge> <!-- @TODO: fill this with the number of incoming transfers (requires migrating state to vuex?) -->
       </b-link>
       <b-link to="/settings">
         <img src="../assets/icons/settings.svg">Settings
@@ -105,5 +106,9 @@ a
   flex-grow: 1
   display: flex
   flex-direction: column
+
+.badge
+  margin-left: .25em
+  border-radius: .25em
 
 </style>

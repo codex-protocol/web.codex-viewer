@@ -1,11 +1,17 @@
 <template>
   <div>
     <div v-if="codexRecord">
-      <div class="flex mb-5">
+      <div class="flex">
         <div class="record-image">
-          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
-          <div class="private-img" v-else>
-            <p>This Codex Record is private</p>
+          <div class="record-image-wrap">
+            <b-img
+              fluid
+              v-if="codexRecord.metadata"
+              :src="mainImageUri"
+            />
+            <div class="private-img" v-else>
+              <p>This Codex Record is private</p>
+            </div>
           </div>
         </div>
         <div class="top vertical">
@@ -19,11 +25,9 @@
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
           <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
           <div class="mt-3" v-if="isOwner">
-            <!-- @FIXME: Not wired up yet
-            <b-button class="mr-3" variant="primary">
-              Modify
+            <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
+              Manage
             </b-button>
-            -->
 
             <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
               Transfer
@@ -45,6 +49,9 @@
               :isPrivate="isPrivate"
               :whitelistedAddresses="whitelistedAddresses"
             />
+            <record-manage-modal
+              :codexRecord="codexRecord"
+            />
           </div>
           <div class="mt-3" v-if="isApproved">
             <b-button @click="acceptTransfer">
@@ -52,6 +59,31 @@
             </b-button>
           </div>
         </div>
+      </div>
+      <div
+        v-if="codexRecord.metadata.images.length"
+        class="record-extra-images mb-5"
+      >
+        <b-img
+          class="record-extra-image"
+          thumbnail
+          fluid
+          :src="codexRecord.metadata.mainImage.uri"
+          @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
+          alt="Thumbnail"
+        />
+        <b-img
+          v-if="codexRecord.metadata.images"
+          v-for="image in codexRecord.metadata.images"
+          v-bind:key="image.id"
+          ref="images"
+          class="record-extra-image"
+          thumbnail
+          fluid
+          :src="image.uri"
+          @click.prevent="setMainImage(image.uri)"
+          alt="Thumbnail"
+        />
       </div>
       <record-provenance :provenance="codexRecord.provenance" />
     </div>
@@ -75,6 +107,7 @@ import EventBus from '../util/eventBus'
 
 import missingImage from '../assets/images/missing-image.png'
 import RecordProvenance from '../components/RecordProvenance'
+import RecordManageModal from '../components/modals/RecordManageModal'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
@@ -86,6 +119,7 @@ export default {
     PrivacySettingsModal,
     RecordProvenance,
     RecordBlockchainDetails,
+    RecordManageModal,
   },
   data() {
     return {
@@ -93,6 +127,7 @@ export default {
       codexRecord: null,
       error: null,
       missingImage,
+      activeMainImage: null,
     }
   },
   computed: {
@@ -126,6 +161,10 @@ export default {
       return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
     },
+    mainImageUri() {
+      return (this.activeMainImage) ||
+        (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
+    },
   },
   created() {
     EventBus.$emit('events:view-record-page')
@@ -143,6 +182,8 @@ export default {
   methods: {
     recordModifiedHandler(updatedCodexRecord) {
       this.codexRecord = updatedCodexRecord
+      // Reset the primary displayed image to the main image
+      this.activeMainImage = null
     },
     getRecord() {
       axios.get(`/record/${this.recordId}`)
@@ -176,6 +217,9 @@ export default {
     toggleShowDetails() {
       this.showDetails = !this.showDetails
     },
+    setMainImage(uri) {
+      this.activeMainImage = uri
+    },
   },
 }
 </script>
@@ -196,15 +240,22 @@ export default {
   align-items: baseline
 
 .record-image
-  height: 50vh
-  min-width: 40%
-  max-width: 50%
   margin: 0 2rem 2rem 0
 
-  img
-    width: 100%
-    max-height: 100%
-    object-fit: contain
+  .record-image-wrap
+    display: flex
+    align-items: start
+    width: 25rem
+    height: 25rem
+
+.record-extra-images
+  display: inline-block
+
+.record-extra-image
+  max-width: 10rem
+
+  &:hover
+    cursor: pointer
 
 .description
   white-space: pre-wrap
