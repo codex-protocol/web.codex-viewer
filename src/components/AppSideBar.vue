@@ -54,7 +54,7 @@ export default {
     },
   },
   created() {
-    if (this.isAuthenticated()) {
+    if (this.isAuthenticated) {
       this.updateIncomingTransfersCount()
     }
   },
