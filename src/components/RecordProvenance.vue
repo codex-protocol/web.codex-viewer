@@ -71,19 +71,15 @@ export default {
     //  to use the past tense versions)
     getEventDescription(eventType) {
       switch (eventType) {
-        case 'create':
         case 'created':
           return 'Created by'
 
-        case 'destroy':
         case 'destroyed':
           return 'Destroyed by'
 
-        case 'transfer':
-        case 'transfered':
+        case 'transferred':
           return 'Transferred to'
 
-        case 'modify':
         case 'modified':
           return 'Modified by'
 
@@ -93,17 +89,9 @@ export default {
     },
     getEventAddress(row) {
       switch (row.type) {
-        case 'create':
-        case 'destroy':
-        case 'transfer':
-
-        // eslint-disable-next-line: no-fallthrough
-        case 'created':
-        case 'destroyed':
-        case 'transfered':
+        case 'transferred':
           return row.newOwnerAddress
 
-        case 'modify':
         case 'modified':
           return row.codexRecordModifiedEvent.modifierAddress
 
