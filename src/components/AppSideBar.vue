@@ -9,7 +9,7 @@
       </b-link>
       <b-link to="/transfers">
         <img src="../assets/icons/transfers.svg">Transfers
-        <b-badge variant="danger"></b-badge> <!-- @TODO: fill this with the number of incoming transfers (requires migrating state to vuex?) -->
+        <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
       <b-link to="/settings">
         <img src="../assets/icons/settings.svg">Settings
@@ -34,6 +34,9 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+
 import EventBus from '../util/eventBus'
 import { showManageTokensPage } from '../util/config'
 
@@ -41,6 +44,7 @@ export default {
   name: 'app-side-bar',
   data() {
     return {
+      numberOfIncomingTransfers: 0,
       showManageTokensPage,
     }
   },
@@ -49,10 +53,52 @@ export default {
       return this.$store.getters.isAuthenticated
     },
   },
+  created() {
+    if (this.isAuthenticated()) {
+      this.updateIncomingTransfersCount()
+    }
+  },
+  mounted() {
+    EventBus.$on('socket:address-approved:approved', this.updateIncomingTransfersCount)
+    EventBus.$on('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+  },
+  beforeDestroy() {
+    EventBus.$off('socket:address-approved:approved', this.updateIncomingTransfersCount)
+    EventBus.$off('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+  },
   methods: {
     logout() {
       EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
+    },
+    // @TODO: instead of requesting these independantly of
+    //  src/views/TransferListView.vue, the list of transfers should really be
+    //  retrieved & cached in vuex (or Resource pattern)
+    //
+    // @NOTE: this is also not responsive when a user ignores a transfer (until
+    //  they refresh the page of course), and the TODO above would address that
+    updateIncomingTransfersCount() {
+      const requestOptions = {
+
+        method: 'get',
+        url: '/user/transfers/incoming',
+
+        params: {
+          filters: {
+            isIgnored: false,
+          },
+        },
+      }
+
+      return axios(requestOptions)
+        .then((response) => {
+          this.numberOfIncomingTransfers = response.data.result.length
+        })
+        .catch((error) => {
+          // no need to show a toast here? this isn't a critical request
+          // EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
+          console.error('could not fetch incoming transfers for AppSideBar:', error)
+        })
     },
   },
 }

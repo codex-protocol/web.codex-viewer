@@ -200,7 +200,7 @@ export default {
       this.nameHash = this.hash(this.name)
     },
     updateDescriptionHash() {
-      this.descriptionHash = this.hash(this.description)
+      this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
       return this.$store.state.web3.instance().sha3(input)
@@ -310,8 +310,8 @@ export default {
         data: {
           name: this.name,
           images: this.getImageIds(),
-          description: this.description,
           mainImage: this.getMainImageId(),
+          description: this.description || null,
         },
       }
 

@@ -3,6 +3,7 @@
     :ref="id"
     :id="id"
     :title="title"
+    @hidden="onHide"
     :ok-title="okTitle"
     :hide-footer="isFooterHidden"
     :cancel-variant="cancelVariant"
@@ -89,6 +90,10 @@ export default {
     }
   },
   methods: {
+    onHide() {
+      Object.assign(this.$data, this.$options.data.apply(this))
+      if (typeof this.onClear === 'function') this.onClear()
+    },
     goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
@@ -143,14 +148,6 @@ export default {
     },
     modalSize() {
       return this.size || ''
-    },
-  },
-  watch: {
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        Object.assign(this.$data, this.$options.data.apply(this))
-        if (typeof this.onClear === 'function') this.onClear()
-      }
     },
   },
 }
