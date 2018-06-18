@@ -61,7 +61,7 @@
         </div>
       </div>
       <div
-        v-if="codexRecord.metadata.images.length"
+        v-if="codexRecord.metadata && codexRecord.metadata.images.length"
         class="record-extra-images mb-5"
       >
         <b-img
@@ -138,8 +138,11 @@ export default {
       return this.web3.account
     },
     isOwner() {
-      return this.account &&
+      return (
+        this.account &&
+        this.$store.state.auth.authToken &&
         this.account === this.codexRecord.ownerAddress
+      )
     },
     isApproved() {
       return this.account &&

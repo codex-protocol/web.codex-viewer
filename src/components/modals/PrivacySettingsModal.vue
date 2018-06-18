@@ -6,6 +6,7 @@
     cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="saveSettings"
+    @hidden="onHide"
   >
     <b-form-group
       label="Share Record Publicly"
@@ -75,6 +76,17 @@ export default {
     },
   },
   methods: {
+    onHide() {
+      // @BUG: there's a bug here related to resetting this.sharedAddresses
+      //  to the this.whitelistedAddresses prop since the prop cannot be
+      //  updated to the updated value returned from the API from inside this
+      //  component
+      //
+      // to reproduce: remove an address, close the modal, reopen the modal
+      //  and note that the address is still there (even though it truly was
+      //  removed from the database)
+      Object.assign(this.$data, this.$options.data.apply(this))
+    },
     removeWhitelistedAddress(address) {
 
       const sharedAddresses = this.sharedAddresses.filter((sharedAddress) => {
@@ -89,7 +101,7 @@ export default {
         },
       }
 
-      axios(requestOptions)
+      return axios(requestOptions)
         .then((response) => {
           const { result } = response.data
           this.newWhitelistedAddress = null
@@ -121,7 +133,7 @@ export default {
         },
       }
 
-      axios(requestOptions)
+      return axios(requestOptions)
         .then((response) => {
 
           const { result } = response.data
@@ -138,21 +150,6 @@ export default {
           this.recordIsPublic = !this.isPrivate
           this.newWhitelistedAddress = null
         })
-    },
-  },
-  watch: {
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        // @BUG: there's a bug here related to resetting this.sharedAddresses
-        //  to the this.whitelistedAddresses prop since the prop cannot be
-        //  updated to the updated value returned from the API from inside this
-        //  component
-        //
-        // to reproduce: remove an address, close the modal, reopen the modal
-        //  and note that the address is still there (even though it truly was
-        //  removed from the database)
-        Object.assign(this.$data, this.$options.data.apply(this))
-      }
     },
   },
 }
