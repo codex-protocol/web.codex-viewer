@@ -89,6 +89,8 @@ export default {
     },
     getEventAddress(row) {
       switch (row.type) {
+        case 'created':
+        case 'destroyed':
         case 'transferred':
           return row.newOwnerAddress
 
