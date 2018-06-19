@@ -1,5 +1,5 @@
 const formatDate = (date) => {
-  return (new Date(date)).toLocaleString()
+  return new Date(date).toLocaleString()
 }
 
 // https://stackoverflow.com/questions/3177836/how-to-format-time-since-xxx-e-g-4-minutes-ago-similar-to-stack-exchange-site
@@ -28,7 +28,4 @@ const timeSince = (date) => {
   return `${Math.floor(seconds)} seconds`
 }
 
-export {
-  formatDate,
-  timeSince,
-}
+export { formatDate, timeSince }

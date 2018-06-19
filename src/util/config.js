@@ -2,7 +2,6 @@
 //  Do a search for references to process.env in non-build directories to consolidate
 
 const apiUrl = (() => {
-
   switch (process.env.TARGET_ENV) {
     case 'production':
       return 'https://codex-registry-api.codexprotocol.com'
@@ -13,7 +12,6 @@ const apiUrl = (() => {
     default:
       return 'http://localhost:3001'
   }
-
 })()
 
 const etherScanUrl = (() => {

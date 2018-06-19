@@ -50,13 +50,28 @@ export default {
   },
   mounted() {
     EventBus.$on('socket:address-approved:owner', this.addOutgoingRecordHandler)
-    EventBus.$on('socket:address-approved:approved', this.addIncomingRecordHandler)
-    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$on(
+      'socket:address-approved:approved',
+      this.addIncomingRecordHandler
+    )
+    EventBus.$on(
+      'socket:record-transferred:old-owner',
+      this.removeTransferredRecordHandler
+    )
   },
   beforeDestroy() {
-    EventBus.$off('socket:address-approved:owner', this.addOutgoingRecordHandler)
-    EventBus.$off('socket:address-approved:approved', this.addIncomingRecordHandler)
-    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$off(
+      'socket:address-approved:owner',
+      this.addOutgoingRecordHandler
+    )
+    EventBus.$off(
+      'socket:address-approved:approved',
+      this.addIncomingRecordHandler
+    )
+    EventBus.$off(
+      'socket:record-transferred:old-owner',
+      this.removeTransferredRecordHandler
+    )
   },
   created() {
     EventBus.$emit('events:view-transfers-page')
@@ -68,10 +83,8 @@ export default {
     },
   },
   methods: {
-
     // add the record to the incoming list if it was just approved
     addIncomingRecordHandler(codexRecordToAdd) {
-
       // only add the record if we're on the appropriate tab
       if (this.transferDirection !== 'incoming') {
         return
@@ -85,12 +98,10 @@ export default {
       if (!alreadyExists) {
         this.records.push(codexRecordToAdd)
       }
-
     },
 
     // add the record to the outgoing list if it was just approved
     addOutgoingRecordHandler(codexRecordToAdd) {
-
       // only add the record if we're on the appropriate tab
       if (this.transferDirection !== 'outgoing') {
         return
@@ -114,17 +125,20 @@ export default {
     },
 
     fetchData(transferDirection) {
-
-      const getTransfers = transferDirection === 'incoming'
-        ? Transfer.getIncomingTransfers
-        : Transfer.getOutgoingTransfers
+      const getTransfers =
+        transferDirection === 'incoming'
+          ? Transfer.getIncomingTransfers
+          : Transfer.getOutgoingTransfers
 
       getTransfers()
         .then((transfers) => {
           this.records = transfers
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not fetch ${transferDirection} transfers: ${error.message}`
+          )
         })
     },
   },

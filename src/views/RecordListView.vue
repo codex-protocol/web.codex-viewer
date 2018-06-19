@@ -97,13 +97,25 @@ export default {
     //  effect of pushing the new record onto this.records, so we use the same
     //  handler for both
     EventBus.$on('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$on('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$on(
+      'socket:record-transferred:new-owner',
+      this.addTransferredRecordHandler
+    )
+    EventBus.$on(
+      'socket:record-transferred:old-owner',
+      this.removeTransferredRecordHandler
+    )
   },
   beforeDestroy() {
     EventBus.$off('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$off('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$off(
+      'socket:record-transferred:new-owner',
+      this.addTransferredRecordHandler
+    )
+    EventBus.$off(
+      'socket:record-transferred:old-owner',
+      this.removeTransferredRecordHandler
+    )
   },
   created() {
     this.getRecords()
@@ -127,33 +139,39 @@ export default {
           this.records = records
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not get collection: ${error.message}`
+          )
         })
     },
     getGiveaways() {
-      Giveaway.getAllEligibleGiveaways()
-        .then((giveaways) => {
-          // For now, just select the first giveaway that is available
-          this.giveaway = giveaways[0]
-        })
+      Giveaway.getAllEligibleGiveaways().then((giveaways) => {
+        // For now, just select the first giveaway that is available
+        this.giveaway = giveaways[0]
+      })
     },
     createGiveaway() {
-      Giveaway.createNewGiveaway()
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
-        })
+      Giveaway.createNewGiveaway().catch((error) => {
+        EventBus.$emit(
+          'toast:error',
+          `Could not create giveaway: ${error.message}`
+        )
+      })
     },
     acceptGiveaway() {
       // No need to toggle these off later--the toast will clean them up
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      Giveaway.participateInGiveaway(this.giveaway._id)
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
-          this.disableGiveawayButton = false
-          this.isLoading = false
-        })
+      Giveaway.participateInGiveaway(this.giveaway._id).catch((error) => {
+        EventBus.$emit(
+          'toast:error',
+          `Could not claim edition: ${error.message}`
+        )
+        this.disableGiveawayButton = false
+        this.isLoading = false
+      })
     },
   },
 }

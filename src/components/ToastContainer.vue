@@ -25,7 +25,6 @@
 </template>
 
 <script>
-
 import EventBus from '../util/eventBus'
 
 export default {
@@ -45,7 +44,6 @@ export default {
   },
   methods: {
     addToast({ text, type = 'info', timeout, clickHandler }) {
-
       const newToast = {
         text,
         type,
@@ -63,7 +61,6 @@ export default {
           this.removeToast(newToast)
         }, timeout)
       }
-
     },
 
     removeToast(toast) {
@@ -87,12 +84,10 @@ export default {
     })
   },
 }
-
 </script>
 
 <style lang="stylus" scoped>
-
-@import "../assets/variables.styl"
+@import '../assets/variables.styl'
 
 .toast-container
   top: 0
@@ -104,19 +99,18 @@ export default {
   overflow-y: hidden
   pointer-events: none
   box-sizing: border-box
-
   // this brings the toasts above the modal z-index, since we need to see errors
-  //  while inside of a modal... (maybe?)
+  // while inside of a modal... (maybe?)
   z-index: 1050
 
   .toast
     right: 0
-    opacity: .9
+    opacity: 0.9
     position: relative
     pointer-events: all
-    border-radius: .25rem
-    animation: .25s ease-out 0s slide-in
-    box-shadow: 0 1rem 1rem -1rem rgba(black, .5)
+    border-radius: 0.25rem
+    animation: 0.25s ease-out 0s slide-in
+    box-shadow: 0 1rem 1rem -1rem rgba(black, 0.5)
 
     &.clickable
       cursor: pointer
@@ -131,5 +125,4 @@ export default {
 
   to
     right: 0
-
 </style>

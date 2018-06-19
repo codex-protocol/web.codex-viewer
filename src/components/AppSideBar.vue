@@ -34,7 +34,6 @@
 </template>
 
 <script>
-
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import config from '../util/config'
@@ -58,12 +57,24 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('socket:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$on('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+    EventBus.$on(
+      'socket:address-approved:approved',
+      this.updateIncomingTransfersCount
+    )
+    EventBus.$on(
+      'socket:record-transferred:new-owner',
+      this.updateIncomingTransfersCount
+    )
   },
   beforeDestroy() {
-    EventBus.$off('socket:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$off('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+    EventBus.$off(
+      'socket:address-approved:approved',
+      this.updateIncomingTransfersCount
+    )
+    EventBus.$off(
+      'socket:record-transferred:new-owner',
+      this.updateIncomingTransfersCount
+    )
   },
   methods: {
     logout() {
@@ -90,7 +101,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import '../assets/variables.styl'
 
 nav
   width: 14rem
@@ -98,8 +109,7 @@ nav
   min-width: @width
   max-width: @width
   overflow-y: auto
-  background-color: rgba(white, .05)
-
+  background-color: rgba(white, 0.05)
   display: flex
   flex-direction: column
 
@@ -114,15 +124,15 @@ a
   box-sizing: border-box
 
   img
-    margin-right: .5rem
+    margin-right: 0.5rem
 
   &:hover
     text-decoration: none
-    background-color: rgba(white, .1)
+    background-color: rgba(white, 0.1)
 
   &.active
     font-weight: bold
-    background-color: rgba(white, .25)
+    background-color: rgba(white, 0.25)
 
 .logo
   height: 4rem
@@ -139,7 +149,6 @@ a
   flex-direction: column
 
 .badge
-  margin-left: .25em
-  border-radius: .25em
-
+  margin-left: 0.25em
+  border-radius: 0.25em
 </style>

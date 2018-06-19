@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import '../assets/variables.styl'
 
 .bounty-container
   border: 1px solid $color-primary

@@ -31,9 +31,4 @@ const Web3Errors = {
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
-export {
-  ExpectedNetworkId,
-  Networks,
-  Web3Errors,
-  ZeroAddress,
-}
+export { ExpectedNetworkId, Networks, Web3Errors, ZeroAddress }

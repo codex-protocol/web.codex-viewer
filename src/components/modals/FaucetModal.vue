@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
@@ -35,11 +34,18 @@ export default {
 
       Faucet.getDripFromFaucet()
         .then(() => {
-          EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
+          EventBus.$emit(
+            'toast:success',
+            'Tokens requested successfully! Your balance will update soon.',
+            5000
+          )
           this.modalVisible = false
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not request tokens: ${error.message}`
+          )
         })
     },
   },
@@ -47,9 +53,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 .token-icon
   width: 8rem
   margin-bottom: 2rem
-
 </style>

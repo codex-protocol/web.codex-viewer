@@ -2,7 +2,6 @@ import EventBus from '../eventBus'
 import eventNames from './eventNames'
 
 const events = (analytics) => {
-
   const has = (object, key) => {
     return object ? hasOwnProperty.call(object, key) : false
   }

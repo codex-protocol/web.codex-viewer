@@ -17,8 +17,7 @@ const state = {
   stakeContainerContractInstance: null,
 }
 
-const getters = {
-}
+const getters = {}
 
 const actions = {
   registerWeb3({ commit, dispatch }, router) {
@@ -47,7 +46,6 @@ const actions = {
             propertyName: 'stakeContainerContractInstance',
           }),
         ])
-
       })
       .catch((error) => {
         commit('setWeb3Error', { message: 'Unable to register web3', error })
@@ -60,13 +58,12 @@ const actions = {
   },
 
   registerContract({ commit }, payload) {
-    const {
-      web3,
-      registrationFunction,
-      propertyName,
-    } = payload
+    const { web3, registrationFunction, propertyName } = payload
 
-    console.info('registerContract action being executed for contract', registrationFunction.name)
+    console.info(
+      'registerContract action being executed for contract',
+      registrationFunction.name
+    )
 
     return registrationFunction(web3)
       .then((result) => {
@@ -76,7 +73,10 @@ const actions = {
         })
       })
       .catch((error) => {
-        commit('setWeb3Error', { message: 'Unable to register the contract', error })
+        commit('setWeb3Error', {
+          message: 'Unable to register the contract',
+          error,
+        })
       })
   },
 }
@@ -111,12 +111,12 @@ const mutations = {
   },
 
   registerContractInstance(currentState, payload) {
-    const {
-      propertyName,
-      contractInstance,
-    } = payload
+    const { propertyName, contractInstance } = payload
 
-    console.info('registerContractInstance mutation being executed for contract', propertyName)
+    console.info(
+      'registerContractInstance mutation being executed for contract',
+      propertyName
+    )
 
     currentState[propertyName] = () => {
       return contractInstance

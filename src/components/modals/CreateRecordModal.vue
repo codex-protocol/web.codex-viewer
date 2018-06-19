@@ -125,37 +125,39 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.web3
+          .instance()
+          .sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
-
     },
     uploadFile(file) {
-
       this.progressVisible = true
       this.uploadSuccess = false
       this.uploadComplete = false
 
       File.uploadFiles(file)
         .then((uploadedFiles) => {
-
           this.uploadedFile = uploadedFiles[0]
           this.uploadSuccess = true
-
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not upload file: ${error.message}`
+          )
         })
         .finally(() => {
           this.uploadComplete = true
         })
     },
     createMetaData() {
-
       // TODO: Show some better error handling if these aren't filled in
       if (!this.canSubmit) {
-        return Promise.reject(new Error('Could not create Record: Missing required fields.'))
+        return Promise.reject(
+          new Error('Could not create Record: Missing required fields.')
+        )
       }
 
       const metadataToUpload = {
@@ -166,7 +168,6 @@ export default {
 
       return Record.createMetadata(metadataToUpload)
         .then((metadata) => {
-
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
           // const { sha3 } = this.web3.instance()
@@ -176,7 +177,6 @@ export default {
           // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
 
           return this.createRecord(metadata)
-
         })
         .catch((error) => {
           console.error('Could not create Record:', error)
@@ -189,7 +189,6 @@ export default {
         })
     },
     createRecord(metadata) {
-
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
@@ -244,12 +243,11 @@ export default {
   margin: 0 1rem
   align-items: center
   justify-content: center
-  background-color: rgba(white, .1)
-  border: 1px solid rgba(white, .25)
+  background-color: rgba(white, 0.1)
+  border: 1px solid rgba(white, 0.25)
 
   img
     max-width: 100%
     max-height: 100%
     object-fit: contain
-
 </style>

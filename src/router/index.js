@@ -26,21 +26,55 @@ const ifAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    { name: 'home', path: '/', component: HomeView, meta: { allowUnauthenticatedUsers: true } },
-    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifAuthenticated, meta: { allowUnauthenticatedUsers: true } },
+    {
+      name: 'home',
+      path: '/',
+      component: HomeView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
+    {
+      name: 'login',
+      path: '/login',
+      component: LoginView,
+      beforeEnter: ifAuthenticated,
+      meta: { allowUnauthenticatedUsers: true },
+    },
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming' },
-    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' } },
-    { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },
+    {
+      name: 'incoming-transfers',
+      path: '/transfers/incoming',
+      component: TransferListView,
+      props: { transferDirection: 'incoming' },
+    },
+    {
+      name: 'outgoing-transfers',
+      path: '/transfers/outgoing',
+      component: TransferListView,
+      props: { transferDirection: 'outgoing' },
+    },
     { name: 'coming-soon', path: '/coming-soon', component: FeatureListView },
     { name: 'settings', path: '/settings', component: SettingsView },
     { name: 'collection', path: '/collection', component: RecordListView },
-    { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
-    { name: 'record-detail', path: '/record/:recordId', component: RecordDetailView, meta: { allowUnauthenticatedUsers: true } },
+    {
+      name: 'manage-tokens',
+      path: '/manage-tokens',
+      component: ManageTokensView,
+    },
+    {
+      name: 'record-detail',
+      path: '/record/:recordId',
+      component: RecordDetailView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((route) => { return !route.meta.allowUnauthenticatedUsers })) {
+  if (
+    to.matched.some((route) => {
+      return !route.meta.allowUnauthenticatedUsers
+    })
+  ) {
     if (!store.getters.isAuthenticated) {
       next('/login')
     } else {

@@ -23,54 +23,82 @@ const showToast = (text, route) => {
 export default {
   'mint-confirmed': (codexRecord) => {
     showToast(
-      `The Codex Record "${codexRecord.metadata.name}" has been successfully created.\n\nClick this notification to view the Record.`,
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully created.\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`
     )
   },
 
   'record-modified': (codexRecord) => {
     showToast(
-      `The Codex Record "${codexRecord.metadata.name}" has been successfully updated.\n\nClick this notification to view the Record.`,
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully updated.\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`
     )
   },
 
   'record-transferred:new-owner': (codexRecord) => {
     showToast(
-      `The Codex Record "${codexRecord.metadata.name}" has been successfully transferred to you.\n\nClick this notification to view the Record.`,
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully transferred to you.\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`
     )
   },
 
   'record-transferred:old-owner': (codexRecord) => {
-    showToast(`The Codex Record "${codexRecord.metadata.name}" has been successfully transferred to ${codexRecord.ownerAddress}.`)
+    showToast(
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully transferred to ${codexRecord.ownerAddress}.`
+    )
   },
 
   'record-destroyed': (codexRecord) => {
-    showToast(`The Codex Record "${codexRecord.metadata.name}" has been successfully destroyed.`)
+    showToast(
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully destroyed.`
+    )
   },
 
   'address-approved:owner': (codexRecord) => {
     showToast(
-      `The Codex Record "${codexRecord.metadata.name}" has been successfully approved for transfer to ${codexRecord.approvedAddress}.\n\nClick this notification to view your outgoing transfers.`,
+      `The Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully approved for transfer to ${
+        codexRecord.approvedAddress
+      }.\n\nClick this notification to view your outgoing transfers.`,
       '/transfers/outgoing'
     )
   },
 
   'address-approved:cancel': (codexRecord) => {
-    showToast(`The transfer of Codex Record "${codexRecord.metadata.name}" has been successfully cancelled.`)
+    showToast(
+      `The transfer of Codex Record "${
+        codexRecord.metadata.name
+      }" has been successfully cancelled.`
+    )
   },
 
   'address-approved:approved': (codexRecord) => {
     showToast(
-      `You have been approved to transfer the Codex Record "${codexRecord.metadata.name}" by the address ${codexRecord.ownerAddress}.\n\nClick this notification to view your incoming transfers.`,
+      `You have been approved to transfer the Codex Record "${
+        codexRecord.metadata.name
+      }" by the address ${
+        codexRecord.ownerAddress
+      }.\n\nClick this notification to view your incoming transfers.`,
       '/transfers/incoming'
     )
   },
 
   'address-whitelisted': (codexRecord) => {
     showToast(
-      `You have been approved to view the Codex Record "${codexRecord.metadata.name}".\n\nClick this notification to view the Record.`,
+      `You have been approved to view the Codex Record "${
+        codexRecord.metadata.name
+      }".\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`
     )
   },

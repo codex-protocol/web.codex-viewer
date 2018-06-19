@@ -238,21 +238,21 @@ export default {
     },
     // Handle the upload of a new main image
     uploadFile(file) {
-
       this.progressVisible = true
       this.uploadMainImageSuccess = false
       this.uploadMainImageComplete = false
 
       File.uploadFiles(file)
         .then((uploadedFiles) => {
-
           this.uploadedMainImageFile = uploadedFiles[0]
           this.uploadMainImageSuccess = true
           this.setMainImageId(this.uploadedMainImageFile.id)
-
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not upload file: ${error.message}`
+          )
         })
         .finally(() => {
           this.uploadMainImageComplete = true
@@ -282,7 +282,6 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     updateMetadata() {
-
       const updatedMetadata = {
         name: this.name,
         images: this.getImageIds(),
@@ -290,10 +289,9 @@ export default {
         mainImage: this.getMainImageId(),
       }
 
-      return Record.updateMetadata(this.tokenId, updatedMetadata)
-        .then(() => {
-          return this.modifyRecord()
-        })
+      return Record.updateMetadata(this.tokenId, updatedMetadata).then(() => {
+        return this.modifyRecord()
+      })
     },
     modifyRecord() {
       const input = [
@@ -306,7 +304,11 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
+      return callContract(
+        this.recordContract.modifyMetadataHashes,
+        input,
+        this.web3
+      )
     },
   },
   computed: {
@@ -339,5 +341,4 @@ export default {
   max-width: 10rem
   display: inline-block
   text-align: center
-
 </style>

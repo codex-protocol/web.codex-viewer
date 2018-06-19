@@ -106,10 +106,14 @@ export default {
     },
     showModifiedDetailsModal(row) {
       this.modifiedDetailsModalVisible = true
-      this.modifiedDetails = Object.keys(row.codexRecordModifiedEvent.changedData).map((fieldName) => {
+      this.modifiedDetails = Object.keys(
+        row.codexRecordModifiedEvent.changedData
+      ).map((fieldName) => {
         return {
           fieldName,
-          changed: row.codexRecordModifiedEvent.changedData[fieldName] ? 'yes' : 'no',
+          changed: row.codexRecordModifiedEvent.changedData[fieldName]
+            ? 'yes'
+            : 'no',
         }
       })
     },
@@ -118,10 +122,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 .flex
   display: flex
-  border-bottom: solid 1px rgba(white, .1)
+  border-bottom: solid 1px rgba(white, 0.1)
 
 .flex div
   flex: 1
@@ -135,9 +138,8 @@ export default {
 
 .modified-details
   .table
-    background-color: rgba(white, .1)
+    background-color: rgba(white, 0.1)
 
     &.border
-      border: 1px solid rgba(white, .25) !important
-
+      border: 1px solid rgba(white, 0.25) !important
 </style>

@@ -95,9 +95,7 @@ export default {
       if (typeof this.onClear === 'function') this.onClear()
     },
     goToStep(newCurrentStep) {
-
       switch (newCurrentStep) {
-
         case 0: // the slot contents
         case 1: // you're about to use MM
           this.preventClose = false
@@ -115,7 +113,9 @@ export default {
               this.goToStep(this.currentStep + 1)
             })
             .catch((error) => {
-              this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
+              this.metamaskError = (
+                error.message || 'An unknown error occurred'
+              ).replace(/.*Error:(.*)$/, '$1')
               this.goToStep(this.currentStep - 1)
             })
 
@@ -133,7 +133,6 @@ export default {
       }
 
       this.currentStep = newCurrentStep
-
     },
   },
   computed: {
@@ -163,7 +162,6 @@ export default {
   padding: 1em
   word-wrap: break-word
   white-space: pre-wrap
-  border-radius: .25rem
-  background-color: rgba(white, .1)
-
+  border-radius: 0.25rem
+  background-color: rgba(white, 0.1)
 </style>

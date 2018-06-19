@@ -31,14 +31,15 @@ export default {
       const input = [this.contractInstance.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.tokenContract.approve, input, this.web3)
-        .then(() => {
+      return callContract(this.tokenContract.approve, input, this.web3).then(
+        () => {
           EventBus.$emit('events:approve-contract', { id: this.id })
           this.$store.commit('updateApprovalStatus', {
             allowance: amount,
             stateProperty: this.stateProperty,
           })
-        })
+        }
+      )
     },
   },
   computed: {
@@ -56,5 +57,4 @@ export default {
 .token-icon
   width: 8rem
   margin-bottom: 2rem
-
 </style>

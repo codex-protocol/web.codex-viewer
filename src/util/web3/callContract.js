@@ -6,17 +6,14 @@ const gasBuffer = 100000
 const recommendedGasPriceInGwei = 10
 
 function callContract(func, args, web3) {
-  return func.estimateGas(
-    ...args,
-    { from: web3.account }
-  )
+  return func
+    .estimateGas(...args, { from: web3.account })
     .then((estimatedGas) => {
-      return func(
-        ...args,
-        { from: web3.account,
-          gas: estimatedGas + gasBuffer,
-          gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei') }
-      )
+      return func(...args, {
+        from: web3.account,
+        gas: estimatedGas + gasBuffer,
+        gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei'),
+      })
     })
     .catch((error) => {
       console.error('Error calling contract', error)

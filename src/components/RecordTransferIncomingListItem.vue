@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
@@ -34,17 +33,26 @@ export default {
   props: ['codexRecord'],
   data() {
     return {
-      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
+      route: {
+        name: 'record-detail',
+        params: { recordId: this.codexRecord.tokenId },
+      },
       transferAccepted: false,
       isLoading: false,
       missingImage,
     }
   },
   mounted() {
-    EventBus.$on('socket:record-transferred:new-owner', this.recordTransferredHandler)
+    EventBus.$on(
+      'socket:record-transferred:new-owner',
+      this.recordTransferredHandler
+    )
   },
   beforeDestroy() {
-    EventBus.$off('socket:record-transferred:new-owner', this.recordTransferredHandler)
+    EventBus.$off(
+      'socket:record-transferred:new-owner',
+      this.recordTransferredHandler
+    )
   },
   computed: {
     web3() {
@@ -67,7 +75,6 @@ export default {
       this.isLoading = false
     },
     acceptTransfer() {
-
       const input = [
         this.codexRecord.ownerAddress,
         this.web3.account,
@@ -79,8 +86,11 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
-
-          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
+          EventBus.$emit(
+            'toast:success',
+            'Transaction submitted successfully!',
+            5000
+          )
           EventBus.$emit('events:accept-transfer')
 
           // @NOTE: leave the in the loading state so that they can't click the
@@ -90,23 +100,31 @@ export default {
           //  storage?)
           //
           // this.isLoading = false
-
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not accept transfer: ${error.message}`
+          )
         })
     },
     ignoreTransfer() {
-
       this.isLoading = true
 
       Transfer.ignoreIncomingTransfer(this.codexRecord.tokenId)
         .then((record) => {
           this.codexRecord.isIgnored = record.isIgnored
-          EventBus.$emit('toast:success', 'Transfer ignored successfully!', 5000)
+          EventBus.$emit(
+            'toast:success',
+            'Transfer ignored successfully!',
+            5000
+          )
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not ignore transfer: ${error.message}`
+          )
         })
         .finally(() => {
           this.isLoading = false
@@ -117,8 +135,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
-@import "../assets/variables.styl"
+@import '../assets/variables.styl'
 
 .record-card
   width: 25%
@@ -126,11 +143,11 @@ export default {
   margin-bottom: 2em
 
   &.is-loading
-    opacity: .5
+    opacity: 0.5
 
   .card
     border: none
-    border-radius: 0 0 .25rem .25rem
+    border-radius: 0 0 0.25rem 0.25rem
 
   .accepted-overlay
     display: flex
@@ -175,5 +192,4 @@ export default {
 
       &+button
         margin-top: 1rem
-
 </style>

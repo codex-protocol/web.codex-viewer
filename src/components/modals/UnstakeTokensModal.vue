@@ -51,17 +51,17 @@ export default {
       this.$refs.unstakeAmount.focus()
     },
     unstakeTokens() {
-
       const amount = this.web3.instance().toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
 
       EventBus.$emit('events:click-unstake-tokens')
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.unstake, input, this.web3)
-        .then(() => {
+      return callContract(this.stakeContract.unstake, input, this.web3).then(
+        () => {
           EventBus.$emit('events:unstake-tokens', { amount })
-        })
+        }
+      )
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
@@ -85,5 +85,4 @@ export default {
 .token-icon
   width: 8rem
   margin-bottom: 2rem
-
 </style>

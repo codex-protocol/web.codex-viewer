@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import '../assets/variables.styl'
 
 .sub-heading
   font-weight: 600
@@ -47,15 +47,12 @@ export default {
   >span+span
     margin-left: 1rem
 
-  a
-  span
+  a, span
     display: inline-block
 
-  a:hover
-  .active
+  a:hover, .active
     font-weight: 600
     text-decoration: none
     color: $color-secondary-accent
     border-bottom: 3px solid $color-secondary-accent
-
 </style>

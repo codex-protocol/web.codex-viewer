@@ -13,7 +13,10 @@ const callApi = (requestOptions) => {
       return response.data.result
     })
     .catch((error) => {
-      console.error(`Error when calling ${requestOptions.method} ${requestOptions.url}:`, error)
+      console.error(
+        `Error when calling ${requestOptions.method} ${requestOptions.url}:`,
+        error
+      )
 
       throw error
     })

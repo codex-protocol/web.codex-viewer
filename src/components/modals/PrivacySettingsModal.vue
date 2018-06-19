@@ -55,7 +55,6 @@
 </template>
 
 <script>
-
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
@@ -88,10 +87,11 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     removeWhitelistedAddress(address) {
-
-      const whitelistedAddresses = this.sharedAddresses.filter((sharedAddress) => {
-        return sharedAddress !== address
-      })
+      const whitelistedAddresses = this.sharedAddresses.filter(
+        (sharedAddress) => {
+          return sharedAddress !== address
+        }
+      )
 
       const dataToUpdate = {
         whitelistedAddresses,
@@ -103,18 +103,21 @@ export default {
           this.sharedAddresses = result.whitelistedAddresses
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not remove whitelisted address: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not remove whitelisted address: ${error.message}`
+          )
           console.error('Could not remove whitelisted address:', error)
         })
     },
     saveSettings(event) {
-
       event.preventDefault()
 
       if (
         this.newWhitelistedAddress !== null &&
         !this.sharedAddresses.includes(this.newWhitelistedAddress) &&
-        this.newWhitelistedAddress.toLowerCase() !== this.web3.account.toLowerCase()
+        this.newWhitelistedAddress.toLowerCase() !==
+          this.web3.account.toLowerCase()
       ) {
         this.sharedAddresses.push(this.newWhitelistedAddress)
       }
@@ -126,13 +129,15 @@ export default {
 
       Record.updateRecord(this.recordId, dataToUpdate)
         .then((result) => {
-
           this.modalVisible = false
           this.newWhitelistedAddress = null
           this.sharedAddresses = result.whitelistedAddresses
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
+          EventBus.$emit(
+            'toast:error',
+            `Could not update Record: ${error.message}`
+          )
           console.error('Could not update record:', error)
 
           // Reset toggle on error
@@ -148,5 +153,4 @@ export default {
 .close
   position: relative
   margin-top: -3px
-
 </style>

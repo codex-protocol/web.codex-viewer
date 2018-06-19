@@ -5,7 +5,6 @@ import config from '../config'
 import eventToastHandlers from './eventToastHandlers'
 
 export default {
-
   socket: null,
 
   disconnect() {
@@ -15,7 +14,6 @@ export default {
   },
 
   updateSocket(newAuthToken) {
-
     this.disconnect()
 
     // if newAuthToken is falsy, then just disconnect
@@ -28,15 +26,12 @@ export default {
     })
 
     this.socket.once('connect', () => {
-
       this.socket.on('user-event', (event) => {
-
         console.info('socket event received:', event)
         EventBus.$emit(`socket:${event.name}`, event.data)
 
         const eventAction = eventToastHandlers[event.name]
         if (typeof eventAction === 'function') eventAction(event.data)
-
       })
     })
   },
