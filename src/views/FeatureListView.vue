@@ -71,8 +71,7 @@ export default {
           url: 'https://www.maecenas.co/',
         },
         {
-          description:
-            'Discover top rated art service companies with the Clarion List',
+          description: 'Discover top rated art service companies with the Clarion List',
           image: clLogo,
           url: 'https://www.clarionlist.com/',
         },

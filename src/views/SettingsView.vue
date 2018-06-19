@@ -54,10 +54,7 @@ export default {
           this.records = records
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not get collection: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
         })
     },
   },

@@ -125,9 +125,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.web3
-          .instance()
-          .sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -143,10 +141,7 @@ export default {
           this.uploadSuccess = true
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not upload file: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
         })
         .finally(() => {
           this.uploadComplete = true
@@ -155,9 +150,7 @@ export default {
     createMetaData() {
       // TODO: Show some better error handling if these aren't filled in
       if (!this.canSubmit) {
-        return Promise.reject(
-          new Error('Could not create Record: Missing required fields.')
-        )
+        return Promise.reject(new Error('Could not create Record: Missing required fields.'))
       }
 
       const metadataToUpload = {
@@ -243,11 +236,12 @@ export default {
   margin: 0 1rem
   align-items: center
   justify-content: center
-  background-color: rgba(white, 0.1)
-  border: 1px solid rgba(white, 0.25)
+  background-color: rgba(white, .1)
+  border: 1px solid rgba(white, .25)
 
   img
     max-width: 100%
     max-height: 100%
     object-fit: contain
+
 </style>

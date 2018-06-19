@@ -20,13 +20,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/variables.styl'
+@import "../assets/variables.styl"
 
 .header
   height: 2.5rem
   font-size: 2.5rem
   margin-bottom: 2rem
   color: $color-primary
+
   display: flex
   align-items: center
 
@@ -35,12 +36,13 @@ export default {
     font-weight: bold
     line-height: 1em
     font-family: $font-family-serif
-    margin: 0 0.5em 0 0
-    padding-right: 0.5em
+
+    margin: 0 .5em 0 0
+    padding-right: .5em
     border-right: 1px solid $color-primary
 
   .network-details
-    font-size: 0.4em
+    font-size: .4em
     word-wrap: break-word
 
   .spacer

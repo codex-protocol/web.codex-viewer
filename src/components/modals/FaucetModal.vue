@@ -42,10 +42,7 @@ export default {
           this.modalVisible = false
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not request tokens: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
         })
     },
   },
@@ -53,7 +50,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 .token-icon
   width: 8rem
   margin-bottom: 2rem
+
 </style>

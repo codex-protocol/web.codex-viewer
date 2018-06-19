@@ -36,10 +36,7 @@ export default {
     return {
       missingImage,
       recordIsPublic: !this.isPrivate,
-      route: {
-        name: 'record-detail',
-        params: { recordId: this.codexRecord.tokenId },
-      },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
   methods: {
@@ -51,24 +48,19 @@ export default {
         isPrivate: !this.recordIsPublic,
       }
 
-      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate).catch(
-        (error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not update Record privacy: ${error.message}`
-          )
+      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate).catch((error) => {
+        EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
 
-          // Reset toggle on error
-          this.recordIsPublic = !this.isPrivate
-        }
-      )
+        // Reset toggle on error
+        this.recordIsPublic = !this.isPrivate
+      })
     },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/variables.styl'
+@import "../assets/variables.styl"
 
 .record-settings-row
   height: 6rem

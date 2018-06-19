@@ -70,10 +70,7 @@ const actions = {
         })
       })
       .catch((error) => {
-        commit('setWeb3Error', {
-          message: 'Unable to register the contract',
-          error,
-        })
+        commit('setWeb3Error', { message: 'Unable to register the contract', error })
       })
   },
 }

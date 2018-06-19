@@ -28,10 +28,7 @@ export default {
     }
 
     return {
-      route: {
-        name: 'record-detail',
-        params: { recordId: this.codexRecord.tokenId },
-      },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       missingImage,
     }
   },
@@ -44,7 +41,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/variables.styl'
+@import "../assets/variables.styl"
 
 .record-card
   width: 25%
@@ -54,7 +51,7 @@ export default {
   .card
     border: none
     cursor: pointer
-    border-radius: 0 0 0.25rem 0.25rem
+    border-radius: 0 0 .25rem .25rem
 
   img
     width: 100%
@@ -63,19 +60,19 @@ export default {
     object-fit: contain
 
   .card-body
-    border-top: 1px solid rgba(black, 0.1)
+    border-top: 1px solid rgba(black, .1)
 
     a
       font-weight: bold
       color: $color-dark
-      /*
+
       // uncomment to keep record name on a single line?
       // display: block
       // overflow: hidden
       // white-space: nowrap
       // text-overflow: ellipsis
-      */
 
     small
       color: $color-light-gray
+
 </style>

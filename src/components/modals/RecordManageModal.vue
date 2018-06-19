@@ -249,10 +249,7 @@ export default {
           this.setMainImageId(this.uploadedMainImageFile.id)
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not upload file: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
         })
         .finally(() => {
           this.uploadMainImageComplete = true
@@ -304,11 +301,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(
-        this.recordContract.modifyMetadataHashes,
-        input,
-        this.web3
-      )
+      return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
     },
   },
   computed: {
@@ -341,4 +334,5 @@ export default {
   max-width: 10rem
   display: inline-block
   text-align: center
+
 </style>

@@ -26,12 +26,7 @@ const ifAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    {
-      name: 'home',
-      path: '/',
-      component: HomeView,
-      meta: { allowUnauthenticatedUsers: true },
-    },
+    { name: 'home', path: '/', component: HomeView, meta: { allowUnauthenticatedUsers: true } },
     {
       name: 'login',
       path: '/login',
@@ -55,11 +50,7 @@ const router = new Router({
     { name: 'coming-soon', path: '/coming-soon', component: FeatureListView },
     { name: 'settings', path: '/settings', component: SettingsView },
     { name: 'collection', path: '/collection', component: RecordListView },
-    {
-      name: 'manage-tokens',
-      path: '/manage-tokens',
-      component: ManageTokensView,
-    },
+    { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
     {
       name: 'record-detail',
       path: '/record/:recordId',
@@ -70,11 +61,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (
-    to.matched.some((route) => {
-      return !route.meta.allowUnauthenticatedUsers
-    })
-  ) {
+  const enforceAuthentication = to.matched.some((route) => {
+    return !route.meta.allowUnauthenticatedUsers
+  })
+
+  if (enforceAuthentication) {
     if (!store.getters.isAuthenticated) {
       next('/login')
     } else {

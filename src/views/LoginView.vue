@@ -49,29 +49,25 @@ export default {
         params: [account, this.web3.instance().toHex(personalMessageToSign)],
       }
 
-      this.web3
-        .instance()
-        .currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-          // result.error will be populated if the user rejects the signature
-          //  prompt
-          if (error || result.error) {
-            console.error(error || result.error)
-            return
-          }
+      this.web3.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+        // result.error will be populated if the user rejects the signature
+        //  prompt
+        if (error || result.error) {
+          console.error(error || result.error)
+          return
+        }
 
-          EventBus.$emit('events:login')
+        EventBus.$emit('events:login')
 
-          const sendAuthRequestOptions = {
-            userAddress: account,
-            signedData: result.result.substr(2),
-          }
+        const sendAuthRequestOptions = {
+          userAddress: account,
+          signedData: result.result.substr(2),
+        }
 
-          this.$store
-            .dispatch('sendAuthRequest', sendAuthRequestOptions)
-            .then(() => {
-              this.$router.replace('collection')
-            })
+        this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions).then(() => {
+          this.$router.replace('collection')
         })
+      })
     },
     setButton(title, method) {
       this.buttonTitle = title
@@ -92,8 +88,7 @@ export default {
       switch (this.web3Error) {
         case Web3Errors.Missing:
           title = 'Let&rsquo;s get started'
-          description =
-            '<p>To continue, please install the MetaMask browser extension.</p>'
+          description = '<p>To continue, please install the MetaMask browser extension.</p>'
           description +=
             '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
           this.setButton('Install MetaMask', this.installMetamask)
@@ -108,8 +103,7 @@ export default {
 
         case Web3Errors.Unknown:
           title = 'Let&rsquo;s get started'
-          description =
-            '<p>To continue, please install the MetaMask browser extension.</p>'
+          description = '<p>To continue, please install the MetaMask browser extension.</p>'
           description +=
             '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
           this.setButton('Install MetaMask', this.installMetamask)

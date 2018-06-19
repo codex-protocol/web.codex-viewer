@@ -97,25 +97,13 @@ export default {
     //  effect of pushing the new record onto this.records, so we use the same
     //  handler for both
     EventBus.$on('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$on(
-      'socket:record-transferred:new-owner',
-      this.addTransferredRecordHandler
-    )
-    EventBus.$on(
-      'socket:record-transferred:old-owner',
-      this.removeTransferredRecordHandler
-    )
+    EventBus.$on('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },
   beforeDestroy() {
     EventBus.$off('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$off(
-      'socket:record-transferred:new-owner',
-      this.addTransferredRecordHandler
-    )
-    EventBus.$off(
-      'socket:record-transferred:old-owner',
-      this.removeTransferredRecordHandler
-    )
+    EventBus.$off('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },
   created() {
     this.getRecords()
@@ -139,10 +127,7 @@ export default {
           this.records = records
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not get collection: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
         })
     },
     getGiveaways() {
@@ -153,10 +138,7 @@ export default {
     },
     createGiveaway() {
       Giveaway.createNewGiveaway().catch((error) => {
-        EventBus.$emit(
-          'toast:error',
-          `Could not create giveaway: ${error.message}`
-        )
+        EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
       })
     },
     acceptGiveaway() {
@@ -165,10 +147,7 @@ export default {
       this.isLoading = true
 
       Giveaway.participateInGiveaway(this.giveaway._id).catch((error) => {
-        EventBus.$emit(
-          'toast:error',
-          `Could not claim edition: ${error.message}`
-        )
+        EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
         this.disableGiveawayButton = false
         this.isLoading = false
       })

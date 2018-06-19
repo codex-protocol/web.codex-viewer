@@ -198,10 +198,7 @@ export default {
           this.codexRecord = record
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not get Record: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not get Record: ${error.message}`)
           this.codexRecord = null
           this.error = error
         })
@@ -211,18 +208,11 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
-          EventBus.$emit(
-            'toast:success',
-            'Transaction submitted successfully!',
-            5000
-          )
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer')
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not accept transfer: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
         })
     },
     toggleShowDetails() {

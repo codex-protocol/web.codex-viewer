@@ -80,4 +80,5 @@ export default {
 .icon
   width: 8rem
   margin-bottom: 2rem
+
 </style>

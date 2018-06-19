@@ -32,9 +32,7 @@ const registerWeb3 = () => {
             return
           }
 
-          const returnValue = Object.assign({}, result, {
-            networkId,
-          })
+          const returnValue = Object.assign({}, result, { networkId })
           resolve(returnValue)
         })
       })
@@ -47,9 +45,7 @@ const registerWeb3 = () => {
             return
           }
 
-          const returnValue = Object.assign({}, result, {
-            accounts,
-          })
+          const returnValue = Object.assign({}, result, { accounts })
           resolve(returnValue)
         })
       })

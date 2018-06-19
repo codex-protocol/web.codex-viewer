@@ -56,11 +56,9 @@ export default {
       EventBus.$emit('events:click-stake-tokens')
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.stake, input, this.web3).then(
-        () => {
-          EventBus.$emit('events:stake-tokens', { amount })
-        }
-      )
+      return callContract(this.stakeContract.stake, input, this.web3).then(() => {
+        EventBus.$emit('events:stake-tokens', { amount })
+      })
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
@@ -84,4 +82,5 @@ export default {
 .token-icon
   width: 8rem
   margin-bottom: 2rem
+
 </style>

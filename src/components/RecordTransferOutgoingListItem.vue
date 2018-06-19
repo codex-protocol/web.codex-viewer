@@ -28,10 +28,7 @@ export default {
   props: ['codexRecord'],
   data() {
     return {
-      route: {
-        name: 'record-detail',
-        params: { recordId: this.codexRecord.tokenId },
-      },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       cancelApproved: false,
       missingImage,
     }
@@ -55,18 +52,11 @@ export default {
       callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
           EventBus.$emit('events:cancel-transfer')
-          EventBus.$emit(
-            'toast:success',
-            'Transaction submitted successfully!',
-            5000
-          )
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           this.cancelApproved = true
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not cancel transfer: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not cancel transfer: ${error.message}`)
         })
     },
   },
@@ -74,7 +64,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../assets/variables.styl'
+
+@import "../assets/variables.styl"
 
 .record-card
   width: 25%
@@ -83,7 +74,7 @@ export default {
 
   .card
     border: none
-    border-radius: 0 0 0.25rem 0.25rem
+    border-radius: 0 0 .25rem .25rem
 
   .approved-overlay
     display: flex
@@ -128,4 +119,5 @@ export default {
 
       &+button
         margin-top: 1rem
+
 </style>
