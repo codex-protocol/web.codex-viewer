@@ -60,10 +60,7 @@ const actions = {
   registerContract({ commit }, payload) {
     const { web3, registrationFunction, propertyName } = payload
 
-    console.info(
-      'registerContract action being executed for contract',
-      registrationFunction.name
-    )
+    console.info('registerContract action being executed for contract', registrationFunction.name)
 
     return registrationFunction(web3)
       .then((result) => {
@@ -113,10 +110,7 @@ const mutations = {
   registerContractInstance(currentState, payload) {
     const { propertyName, contractInstance } = payload
 
-    console.info(
-      'registerContractInstance mutation being executed for contract',
-      propertyName
-    )
+    console.info('registerContractInstance mutation being executed for contract', propertyName)
 
     currentState[propertyName] = () => {
       return contractInstance

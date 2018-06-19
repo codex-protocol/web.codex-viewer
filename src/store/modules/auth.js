@@ -116,21 +116,14 @@ const actions = {
   },
 
   getApprovalStatus({ commit }, payload) {
-    const {
-      account,
-      tokenContract,
-      registryContractAddress,
-      stakeContractAddress,
-    } = payload
+    const { account, tokenContract, registryContractAddress, stakeContractAddress } = payload
 
-    tokenContract
-      .allowance(account, registryContractAddress)
-      .then((allowance) => {
-        commit('updateApprovalStatus', {
-          allowance,
-          stateProperty: 'registryContractApproved',
-        })
+    tokenContract.allowance(account, registryContractAddress).then((allowance) => {
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'registryContractApproved',
       })
+    })
 
     tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
       commit('updateApprovalStatus', {

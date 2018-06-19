@@ -49,12 +49,7 @@ const getCodexRecordContract = (web3) => {
 }
 
 const getCodexCoinContract = (web3) => {
-  return getContract(
-    'codexCoin',
-    codexCoinJson,
-    codexCoinJson.address,
-    web3.currentProvider
-  )
+  return getContract('codexCoin', codexCoinJson, codexCoinJson.address, web3.currentProvider)
 }
 
 const getStakeContainerContract = (web3) => {
@@ -66,8 +61,4 @@ const getStakeContainerContract = (web3) => {
   )
 }
 
-export {
-  getCodexRecordContract,
-  getCodexCoinContract,
-  getStakeContainerContract,
-}
+export { getCodexRecordContract, getCodexCoinContract, getStakeContainerContract }

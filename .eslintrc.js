@@ -4,7 +4,7 @@ module.exports = {
   rules: {
     "prettier/prettier": [
       "error", {
-        "printWidth": 80,
+        "printWidth": 100,
         "singleQuote": true,
         "semi": false,
         "trailingComma": "es5",

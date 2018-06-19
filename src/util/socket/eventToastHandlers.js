@@ -50,18 +50,14 @@ export default {
 
   'record-transferred:old-owner': (codexRecord) => {
     showToast(
-      `The Codex Record "${
-        codexRecord.metadata.name
-      }" has been successfully transferred to ${codexRecord.ownerAddress}.`
+      `The Codex Record "${codexRecord.metadata.name}" has been successfully transferred to ${
+        codexRecord.ownerAddress
+      }.`
     )
   },
 
   'record-destroyed': (codexRecord) => {
-    showToast(
-      `The Codex Record "${
-        codexRecord.metadata.name
-      }" has been successfully destroyed.`
-    )
+    showToast(`The Codex Record "${codexRecord.metadata.name}" has been successfully destroyed.`)
   },
 
   'address-approved:owner': (codexRecord) => {
@@ -77,9 +73,7 @@ export default {
 
   'address-approved:cancel': (codexRecord) => {
     showToast(
-      `The transfer of Codex Record "${
-        codexRecord.metadata.name
-      }" has been successfully cancelled.`
+      `The transfer of Codex Record "${codexRecord.metadata.name}" has been successfully cancelled.`
     )
   },
 
