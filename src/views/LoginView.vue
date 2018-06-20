@@ -39,14 +39,16 @@ export default {
     },
     metamaskLogin() {
       const { account } = this.web3
-      const personalMessageToSign =
-        'Please sign this message to authenticate with the Codex Registry.'
+      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
       EventBus.$emit('events:click-login-button')
 
       const sendAsyncOptions = {
         method: 'personal_sign',
-        params: [account, this.web3.instance().toHex(personalMessageToSign)],
+        params: [
+          account,
+          this.web3.instance().toHex(personalMessageToSign),
+        ],
       }
 
       this.web3.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
@@ -64,9 +66,10 @@ export default {
           signedData: result.result.substr(2),
         }
 
-        this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions).then(() => {
-          this.$router.replace('collection')
-        })
+        this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions)
+          .then(() => {
+            this.$router.replace('collection')
+          })
       })
     },
     setButton(title, method) {
@@ -89,31 +92,26 @@ export default {
         case Web3Errors.Missing:
           title = 'Let&rsquo;s get started'
           description = '<p>To continue, please install the MetaMask browser extension.</p>'
-          description +=
-            '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
           this.setButton('Install MetaMask', this.installMetamask)
           break
 
         case Web3Errors.Locked:
           title = 'Your MetaMask is locked'
-          description =
-            'Please open your MetaMask browser extension and follow the instructions to unlock it'
+          description = 'Please open your MetaMask browser extension and follow the instructions to unlock it'
           this.setButton(false)
           break
 
         case Web3Errors.Unknown:
           title = 'Let&rsquo;s get started'
           description = '<p>To continue, please install the MetaMask browser extension.</p>'
-          description +=
-            '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
           this.setButton('Install MetaMask', this.installMetamask)
           break
 
         case Web3Errors.WrongNetwork:
           title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${
-            Networks[ExpectedNetworkId]
-          }. Please change the network in your MetaMask settings.`
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
           this.setButton(false)
           break
 

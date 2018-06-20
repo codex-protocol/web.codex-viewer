@@ -26,6 +26,7 @@ export default {
 
   ignoreIncomingTransfer: (tokenId) => {
     const requestOptions = {
+
       method: 'put',
       url: `/user/transfers/incoming/${tokenId}`,
 

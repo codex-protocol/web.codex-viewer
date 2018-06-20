@@ -27,15 +27,19 @@ export default {
   created() {
     this.initializeApi()
 
-    this.$store.dispatch('registerWeb3', this.$router).then(() => {
-      if (this.authToken) {
-        this.$store.dispatch('updateUserState', this.authToken)
-      }
-    })
+    this.$store.dispatch('registerWeb3', this.$router)
+      .then(() => {
+        if (this.authToken) {
+          this.$store.dispatch('updateUserState', this.authToken)
+        }
+      })
   },
   data() {
     return {
-      routesToHideSideBar: ['home', 'login'],
+      routesToHideSideBar: [
+        'home',
+        'login',
+      ],
     }
   },
   computed: {
@@ -70,12 +74,7 @@ export default {
           this.$store.dispatch('logout', this.$router)
         }
 
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message
-        ) {
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
           throw new Error(error.response.data.error.message)
         }
 
@@ -83,9 +82,7 @@ export default {
       }
 
       axios.interceptors.response.use(
-        (response) => {
-          return response
-        }, // @NOTE: use a no-op here since we're only interested in intercepting errors
+        response => response, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
     },
@@ -100,7 +97,7 @@ export default {
     },
   },
   watch: {
-    web3Error(error) {
+    web3Error() {
       // MetaMask has been locked while logged in
       //  Logout the user
       if (Web3Errors.Locked && this.authToken) {

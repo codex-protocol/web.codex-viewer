@@ -55,6 +55,7 @@
 </template>
 
 <script>
+
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
@@ -87,9 +88,7 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     removeWhitelistedAddress(address) {
-      const whitelistedAddresses = this.sharedAddresses.filter((sharedAddress) => {
-        return sharedAddress !== address
-      })
+      const whitelistedAddresses = this.sharedAddresses.filter(sharedAddress => sharedAddress !== address)
 
       const dataToUpdate = {
         whitelistedAddresses,

@@ -106,14 +106,10 @@ export default {
     },
     showModifiedDetailsModal(row) {
       this.modifiedDetailsModalVisible = true
-      this.modifiedDetails = Object.keys(row.codexRecordModifiedEvent.changedData).map(
-        (fieldName) => {
-          return {
-            fieldName,
-            changed: row.codexRecordModifiedEvent.changedData[fieldName] ? 'yes' : 'no',
-          }
-        }
-      )
+      this.modifiedDetails = Object.keys(row.codexRecordModifiedEvent.changedData).map(fieldName => ({
+        fieldName,
+        changed: row.codexRecordModifiedEvent.changedData[fieldName] ? 'yes' : 'no',
+      }))
     },
   },
 }

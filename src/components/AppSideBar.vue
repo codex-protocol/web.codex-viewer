@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import config from '../util/config'

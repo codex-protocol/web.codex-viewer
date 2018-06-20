@@ -7,12 +7,9 @@ import contract from 'truffle-contract'
 //  ordering the imports or something), so we'll just duplicate that logic here
 const expectedNetworkId = (() => {
   switch (process.env.TARGET_ENV) {
-    case 'production':
-      return '4' // @TODO: change back to '1' when out of beta and on mainnet
-    case 'staging':
-      return '3'
-    default:
-      return '5777'
+    case 'production': return '4' // @TODO: change back to '1' when out of beta and on mainnet
+    case 'staging': return '3'
+    default: return '5777'
   }
 })()
 
@@ -39,26 +36,29 @@ const getContract = (contractProperty, json, address, provider) => {
   return contracts[contractProperty]
 }
 
-const getCodexRecordContract = (web3) => {
-  return getContract(
-    'codexRecord',
-    codexRecordJson,
-    codexRecordProxyJson.address,
-    web3.currentProvider
-  )
-}
+const getCodexRecordContract = web3 => getContract(
+  'codexRecord',
+  codexRecordJson,
+  codexRecordProxyJson.address,
+  web3.currentProvider
+)
 
-const getCodexCoinContract = (web3) => {
-  return getContract('codexCoin', codexCoinJson, codexCoinJson.address, web3.currentProvider)
-}
+const getCodexCoinContract = web3 => getContract(
+  'codexCoin',
+  codexCoinJson,
+  codexCoinJson.address,
+  web3.currentProvider
+)
 
-const getStakeContainerContract = (web3) => {
-  return getContract(
-    'stakeContainer',
-    stakeContainerJson,
-    stakeContainerJson.address,
-    web3.currentProvider
-  )
-}
+const getStakeContainerContract = web3 => getContract(
+  'stakeContainer',
+  stakeContainerJson,
+  stakeContainerJson.address,
+  web3.currentProvider
+)
 
-export { getCodexRecordContract, getCodexCoinContract, getStakeContainerContract }
+export {
+  getCodexRecordContract,
+  getCodexCoinContract,
+  getStakeContainerContract,
+}

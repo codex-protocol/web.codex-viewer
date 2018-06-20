@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
 import missingImage from '../assets/images/missing-image.png'
 
 export default {

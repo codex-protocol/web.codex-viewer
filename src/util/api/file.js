@@ -6,6 +6,7 @@ export default {
     formData.append('files', files)
 
     const requestOptions = {
+
       method: 'post',
       url: '/users/files',
 

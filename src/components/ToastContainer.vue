@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 import EventBus from '../util/eventBus'
 
 export default {
@@ -43,7 +44,9 @@ export default {
     }
   },
   methods: {
-    addToast({ text, type = 'info', timeout, clickHandler }) {
+    addToast({
+      text, type = 'info', timeout, clickHandler,
+    }) {
       const newToast = {
         text,
         type,
@@ -76,7 +79,9 @@ export default {
     Object.keys(this.types).forEach((type) => {
       EventBus.$on(`toast:${type}`, (text, timeout, clickHandler) => {
         if (typeof text === 'string') {
-          this.addToast({ text, type, timeout, clickHandler })
+          this.addToast({
+            text, type, timeout, clickHandler,
+          })
         } else {
           this.addToast(Object.assign({ type }, text))
         }
@@ -84,6 +89,7 @@ export default {
     })
   },
 }
+
 </script>
 
 <style lang="stylus" scoped>

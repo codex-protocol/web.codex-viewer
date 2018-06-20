@@ -120,9 +120,7 @@ export default {
     const images = Array.from(this.codexRecord.metadata.images)
 
     // Extra image `id`s and `hash`s
-    const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => {
-      return { id, hash }
-    })
+    const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => ({ id, hash }))
 
     return {
       name: this.codexRecord.metadata.name,
@@ -166,9 +164,7 @@ export default {
     },
     // Remove a new extra image that was added but not saved
     removeAddedImage(uuid) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.uuid === uuid
-      })
+      const indexToRemove = this.imageIds.findIndex(imageId => imageId.uuid === uuid)
 
       if (indexToRemove !== -1) {
         this.removeFileHash(this.imageIds[indexToRemove].hash)
@@ -179,15 +175,11 @@ export default {
       this.fileHashes.push(hash)
     },
     removeFileHash(hash) {
-      this.fileHashes = this.fileHashes.filter((fileHash) => {
-        return fileHash !== hash
-      })
+      this.fileHashes = this.fileHashes.filter(fileHash => fileHash !== hash)
     },
     // Remove a saved extra image
     removeImage(id) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.id === id
-      })
+      const indexToRemove = this.imageIds.findIndex(imageId => imageId.id === id)
 
       if (indexToRemove !== -1) {
         this.removeFileHash(this.imageIds[indexToRemove].hash)
@@ -256,9 +248,7 @@ export default {
         })
     },
     getImageIds() {
-      return this.imageIds.map((imageId) => {
-        return { id: imageId.id }
-      })
+      return this.imageIds.map(imageId => ({ id: imageId.id }))
     },
     fileAdded(file, response) {
       const result = response.result[0]
@@ -286,9 +276,8 @@ export default {
         mainImage: this.getMainImageId(),
       }
 
-      return Record.updateMetadata(this.tokenId, updatedMetadata).then(() => {
-        return this.modifyRecord()
-      })
+      return Record.updateMetadata(this.tokenId, updatedMetadata)
+        .then(() => this.modifyRecord())
     },
     modifyRecord() {
       const input = [

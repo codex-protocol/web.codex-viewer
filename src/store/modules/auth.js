@@ -12,22 +12,18 @@ if (cachedAuthToken) {
   axios.defaults.headers.common.Authorization = cachedAuthToken
 }
 
-const initialState = () => {
-  return {
-    user: null,
-    balance: new BigNumber(0),
-    authToken: cachedAuthToken,
-    totalStakedFor: new BigNumber(0),
-    personalStakes: [],
-    registryContractApproved: false,
-    stakeContractApproved: false,
-  }
-}
+const initialState = () => ({
+  user: null,
+  balance: new BigNumber(0),
+  authToken: cachedAuthToken,
+  totalStakedFor: new BigNumber(0),
+  personalStakes: [],
+  registryContractApproved: false,
+  stakeContractApproved: false,
+})
 
 const getters = {
-  isAuthenticated: (currentState) => {
-    return !!currentState.authToken
-  },
+  isAuthenticated: currentState => !!currentState.authToken,
 }
 
 const actions = {
@@ -56,6 +52,7 @@ const actions = {
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.recordContractInstance()
     const stakeContract = web3.stakeContainerContractInstance()
+
 
     // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
     //  contract to get events on when balances/stakes change. (We can update it
@@ -96,7 +93,10 @@ const actions = {
   },
 
   getTokenBalance({ commit }, payload) {
-    const { account, tokenContract } = payload
+    const {
+      account,
+      tokenContract,
+    } = payload
 
     tokenContract.balanceOf(account).then((balance) => {
       commit('updateTokenBalance', balance)
@@ -104,7 +104,10 @@ const actions = {
   },
 
   getStakeBalances({ commit }, payload) {
-    const { account, stakeContract } = payload
+    const {
+      account,
+      stakeContract,
+    } = payload
 
     stakeContract.getPersonalStakes(account).then((personalStakes) => {
       commit('updatePersonalStakes', personalStakes)
@@ -116,7 +119,12 @@ const actions = {
   },
 
   getApprovalStatus({ commit }, payload) {
-    const { account, tokenContract, registryContractAddress, stakeContractAddress } = payload
+    const {
+      account,
+      tokenContract,
+      registryContractAddress,
+      stakeContractAddress,
+    } = payload
 
     tokenContract.allowance(account, registryContractAddress).then((allowance) => {
       commit('updateApprovalStatus', {
@@ -196,7 +204,10 @@ const mutations = {
   },
 
   updateApprovalStatus(currentState, payload) {
-    const { allowance, stateProperty } = payload
+    const {
+      allowance,
+      stateProperty,
+    } = payload
 
     logMutation('updateApprovalStatus', payload)
 

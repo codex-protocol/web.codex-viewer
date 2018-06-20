@@ -30,27 +30,22 @@ export default {
     },
     errorContent() {
       let title = 'MetaMask is missing or locked'
-      let description =
-        'To continue, please install or unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
+      let description = 'To continue, please install or unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
 
       switch (this.web3Error) {
         case Web3Errors.Missing:
           title = 'MetaMask is missing'
-          description =
-            'To continue, please install the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
+          description = 'To continue, please install the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension'
           break
 
         case Web3Errors.Locked:
           title = 'MetaMask is locked'
-          description =
-            'To continue, please unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension.'
+          description = 'To continue, please unlock the <a href="https://metamask.io" target="_blank">Metamask</a> browser extension.'
           break
 
         case Web3Errors.WrongNetwork:
           title = 'Wrong MetaMask network'
-          description = `You're on the wrong MetaMask network. Expected network is ${
-            Networks[ExpectedNetworkId]
-          }`
+          description = `You're on the wrong MetaMask network. Expected network is ${Networks[ExpectedNetworkId]}`
           break
 
         case Web3Errors.None:

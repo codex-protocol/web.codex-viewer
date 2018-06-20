@@ -47,26 +47,22 @@ export default {
     return {
       features: [
         {
-          description:
-            'Automatically fill your collection with pieces purchased through Live Auctioneers',
+          description: 'Automatically fill your collection with pieces purchased through Live Auctioneers',
           image: laLogo,
           url: 'https://liveauctioneers.com',
         },
         {
-          description:
-            'Get appraisals for individual pieces or for your entire collection from the experts at Value My Stuff',
+          description: 'Get appraisals for individual pieces or for your entire collection from the experts at Value My Stuff',
           image: vmsLogo,
           url: 'https://www.valuemystuff.com',
         },
         {
-          description:
-            'Automatically fill your collection with pieces purchased from auction houses using Auction Mobility software',
+          description: 'Automatically fill your collection with pieces purchased from auction houses using Auction Mobility software',
           image: amLogo,
           url: 'https://auctionmobility.com',
         },
         {
-          description:
-            "Democratize your collection using Maecenas' cutting edge blockchain technology",
+          description: 'Democratize your collection using Maecenas\' cutting edge blockchain technology',
           image: maecenas,
           url: 'https://www.maecenas.co/',
         },
@@ -76,8 +72,7 @@ export default {
           url: 'https://www.clarionlist.com/',
         },
         {
-          description:
-            'Manage your art collection natively on Codex Viewer without having to setup your online blockchain wallet',
+          description: 'Manage your art collection natively on Codex Viewer without having to setup your online blockchain wallet',
           image: oilPainting,
         },
       ],

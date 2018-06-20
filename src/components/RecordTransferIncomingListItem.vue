@@ -23,6 +23,7 @@
 </template>
 
 <script>
+
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
@@ -66,7 +67,11 @@ export default {
       this.isLoading = false
     },
     acceptTransfer() {
-      const input = [this.codexRecord.ownerAddress, this.web3.account, this.codexRecord.tokenId]
+      const input = [
+        this.codexRecord.ownerAddress,
+        this.web3.account,
+        this.codexRecord.tokenId,
+      ]
 
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer')

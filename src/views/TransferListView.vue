@@ -68,6 +68,7 @@ export default {
     },
   },
   methods: {
+
     // add the record to the incoming list if it was just approved
     addIncomingRecordHandler(codexRecordToAdd) {
       // only add the record if we're on the appropriate tab
@@ -76,9 +77,7 @@ export default {
       }
 
       // make sure we don't introduce duplicates...
-      const alreadyExists = this.records.some((codexRecord) => {
-        return codexRecord.tokenId === codexRecordToAdd.tokenId
-      })
+      const alreadyExists = this.records.some(codexRecord => codexRecord.tokenId === codexRecordToAdd.tokenId)
 
       if (!alreadyExists) {
         this.records.push(codexRecordToAdd)
@@ -93,9 +92,7 @@ export default {
       }
 
       // make sure we don't introduce duplicates...
-      const alreadyExists = this.records.some((codexRecord) => {
-        return codexRecord.tokenId === codexRecordToAdd.tokenId
-      })
+      const alreadyExists = this.records.some(codexRecord => codexRecord.tokenId === codexRecordToAdd.tokenId)
 
       if (!alreadyExists) {
         this.records.push(codexRecordToAdd)
@@ -104,26 +101,20 @@ export default {
 
     // remove the record from the outgoing list if it was just transferred
     removeTransferredRecordHandler(codexRecordToRemove) {
-      this.records = this.records.filter((codexRecord) => {
-        return codexRecord.tokenId !== codexRecordToRemove.tokenId
-      })
+      this.records = this.records.filter(codexRecord => codexRecord.tokenId !== codexRecordToRemove.tokenId)
     },
 
     fetchData(transferDirection) {
-      const getTransfers =
-        transferDirection === 'incoming'
-          ? Transfer.getIncomingTransfers
-          : Transfer.getOutgoingTransfers
+      const getTransfers = transferDirection === 'incoming'
+        ? Transfer.getIncomingTransfers
+        : Transfer.getOutgoingTransfers
 
       getTransfers()
         .then((transfers) => {
           this.records = transfers
         })
         .catch((error) => {
-          EventBus.$emit(
-            'toast:error',
-            `Could not fetch ${transferDirection} transfers: ${error.message}`
-          )
+          EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
         })
     },
   },

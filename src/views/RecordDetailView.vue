@@ -144,7 +144,8 @@ export default {
       )
     },
     isApproved() {
-      return this.account && this.account === this.codexRecord.approvedAddress
+      return this.account &&
+        this.account === this.codexRecord.approvedAddress
     },
     recordId() {
       return this.$route.params.recordId
@@ -159,18 +160,12 @@ export default {
       return this.codexRecord.whitelistedAddresses
     },
     isAwaitingApproval() {
-      return (
-        this.codexRecord.approvedAddress !== null &&
+      return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
-      )
     },
     mainImageUri() {
-      return (
-        this.activeMainImage ||
-        (this.codexRecord.metadata.mainImage
-          ? this.codexRecord.metadata.mainImage.uri
-          : missingImage)
-      )
+      return (this.activeMainImage) ||
+        (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
     },
   },
   created() {
@@ -204,7 +199,11 @@ export default {
         })
     },
     acceptTransfer() {
-      const input = [this.codexRecord.ownerAddress, this.account, this.recordId]
+      const input = [
+        this.codexRecord.ownerAddress,
+        this.account,
+        this.recordId,
+      ]
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {

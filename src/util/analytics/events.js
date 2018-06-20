@@ -2,9 +2,7 @@ import EventBus from '../eventBus'
 import eventNames from './eventNames'
 
 const events = (analytics) => {
-  const has = (object, key) => {
-    return object ? hasOwnProperty.call(object, key) : false
-  }
+  const has = (object, key) => (object ? hasOwnProperty.call(object, key) : false)
 
   const registerEvent = (event) => {
     EventBus.$on(event, (params) => {

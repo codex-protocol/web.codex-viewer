@@ -5,6 +5,7 @@ import config from '../config'
 import eventToastHandlers from './eventToastHandlers'
 
 export default {
+
   socket: null,
 
   disconnect() {

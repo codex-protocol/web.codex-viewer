@@ -117,9 +117,7 @@ export default {
     },
     // add the record from the collection if it was just transferred
     removeTransferredRecordHandler(codexRecordToRemove) {
-      this.records = this.records.filter((codexRecord) => {
-        return codexRecord.tokenId !== codexRecordToRemove.tokenId
-      })
+      this.records = this.records.filter(codexRecord => codexRecord.tokenId !== codexRecordToRemove.tokenId)
     },
     getRecords() {
       Record.getUserRecords()
@@ -131,26 +129,29 @@ export default {
         })
     },
     getGiveaways() {
-      Giveaway.getAllEligibleGiveaways().then((giveaways) => {
-        // For now, just select the first giveaway that is available
-        this.giveaway = giveaways[0]
-      })
+      Giveaway.getAllEligibleGiveaways()
+        .then((giveaways) => {
+          // For now, just select the first giveaway that is available
+          this.giveaway = giveaways[0]
+        })
     },
     createGiveaway() {
-      Giveaway.createNewGiveaway().catch((error) => {
-        EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
-      })
+      Giveaway.createNewGiveaway()
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
+        })
     },
     acceptGiveaway() {
       // No need to toggle these off later--the toast will clean them up
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      Giveaway.participateInGiveaway(this.giveaway._id).catch((error) => {
-        EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
-        this.disableGiveawayButton = false
-        this.isLoading = false
-      })
+      Giveaway.participateInGiveaway(this.giveaway._id)
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
+          this.disableGiveawayButton = false
+          this.isLoading = false
+        })
     },
   },
 }

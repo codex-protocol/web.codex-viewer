@@ -72,13 +72,11 @@ export default {
     StakeTokensModal,
     UnstakeTokensModal,
   },
-  data: () => {
-    return {
-      // @TODO: change back when out of beta and on mainnet
-      // shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
-      shouldShowFaucetButton: true,
-    }
-  },
+  data: () => ({
+    // @TODO: change back when out of beta and on mainnet
+    // shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
+    shouldShowFaucetButton: true,
+  }),
   created() {
     EventBus.$emit('events:view-tokens-page')
   },

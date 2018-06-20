@@ -137,7 +137,7 @@ export default {
 
       File.uploadFiles(file)
         .then((uploadedFiles) => {
-          this.uploadedFile = uploadedFiles[0]
+          [this.uploadedFile] = uploadedFiles
           this.uploadSuccess = true
         })
         .catch((error) => {
@@ -160,7 +160,8 @@ export default {
       }
 
       return Record.createMetadata(metadataToUpload)
-        .then((metadata) => {
+        .then(metadata =>
+
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
           // const { sha3 } = this.web3.instance()
@@ -169,8 +170,7 @@ export default {
           // metadata.mainImage.hash === this.uploadedFileHash
           // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
 
-          return this.createRecord(metadata)
-        })
+          this.createRecord(metadata))
         .catch((error) => {
           console.error('Could not create Record:', error)
 

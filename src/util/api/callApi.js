@@ -9,9 +9,7 @@ const callApi = (requestOptions) => {
   }
 
   return axios(requestOptions)
-    .then((response) => {
-      return response.data.result
-    })
+    .then(response => response.data.result)
     .catch((error) => {
       console.error(`Error when calling ${requestOptions.method} ${requestOptions.url}:`, error)
 

@@ -17,6 +17,7 @@
 </template>
 
 <script>
+
 import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
@@ -34,11 +35,7 @@ export default {
 
       Faucet.getDripFromFaucet()
         .then(() => {
-          EventBus.$emit(
-            'toast:success',
-            'Tokens requested successfully! Your balance will update soon.',
-            5000
-          )
+          EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
         })
         .catch((error) => {

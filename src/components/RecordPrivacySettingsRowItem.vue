@@ -48,12 +48,13 @@ export default {
         isPrivate: !this.recordIsPublic,
       }
 
-      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate).catch((error) => {
-        EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
+      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
 
-        // Reset toggle on error
-        this.recordIsPublic = !this.isPrivate
-      })
+          // Reset toggle on error
+          this.recordIsPublic = !this.isPrivate
+        })
     },
   },
 }
