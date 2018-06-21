@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <app-side-bar v-if="showSideBar" />
-    <div class="main-content" :class="{ 'with-background': this.useBackground() }">
-      <router-view />
+    <div class="content">
+      <app-side-bar v-if="showSideBar" />
+      <div class="main-content" :class="{ 'with-background': this.useBackground() }">
+        <router-view />
+      </div>
     </div>
+    <app-footer :useBackground="this.useBackground" />
     <toast-container />
   </div>
 </template>
@@ -13,6 +16,7 @@ import axios from 'axios'
 
 import config from './util/config'
 import AppSideBar from './components/AppSideBar'
+import AppFooter from './components/AppFooter'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
@@ -22,6 +26,7 @@ export default {
   name: 'App',
   components: {
     AppSideBar,
+    AppFooter,
     ToastContainer,
   },
   created() {
@@ -130,8 +135,12 @@ body
   font-family: $font-family-sans-serif
 
 #app
+  display: flex
+  flex-direction: column
+  min-height: 100vh
   width: 100%
-  height: 100%
+
+.content
   display: flex
 
 .main-content
