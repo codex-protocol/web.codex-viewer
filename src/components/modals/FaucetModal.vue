@@ -18,8 +18,7 @@
 
 <script>
 
-import axios from 'axios'
-
+import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
 export default {
@@ -34,16 +33,13 @@ export default {
       event.preventDefault()
       EventBus.$emit('events:faucet-request')
 
-      axios.get('/user/faucet')
+      Faucet.getDripFromFaucet()
         .then(() => {
           EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
+          this.modalVisible = false
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
-          console.error('Could not request tokens:', error)
-        })
-        .then(() => {
-          this.modalVisible = false
         })
     },
   },

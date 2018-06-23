@@ -57,7 +57,6 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not cancel transfer: ${error.message}`)
-          console.error('Could not cancel transfer:', error)
         })
     },
   },

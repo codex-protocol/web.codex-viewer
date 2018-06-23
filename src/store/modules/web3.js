@@ -102,7 +102,7 @@ const mutations = {
   pollWeb3Instance(currentState, payload) {
     console.info('pollWeb3Instance mutation being executed', payload)
 
-    // NOTE: We don't change the network here because changing the network
+    // @NOTE: We don't change the network here because changing the network
     //  in MetaMask triggers a full page reload so registerWeb3Instance will
     //  fire again.
 

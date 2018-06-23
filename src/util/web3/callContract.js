@@ -9,14 +9,22 @@ function callContract(func, args, web3) {
   return func.estimateGas(
     ...args,
     { from: web3.account }
-  ).then((estimatedGas) => {
-    return func(
-      ...args,
-      { from: web3.account,
-        gas: estimatedGas + gasBuffer,
-        gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei') }
-    )
-  })
+  )
+    .then((estimatedGas) => {
+      return func(
+        ...args,
+        {
+          from: web3.account,
+          gas: estimatedGas + gasBuffer,
+          gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei'),
+        }
+      )
+    })
+    .catch((error) => {
+      console.error('Error calling contract', error)
+
+      throw error
+    })
 }
 
 export default callContract

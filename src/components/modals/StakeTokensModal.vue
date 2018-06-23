@@ -56,16 +56,10 @@ export default {
 
       EventBus.$emit('events:click-stake-tokens')
 
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.stake, input, this.web3)
         .then(() => {
           EventBus.$emit('events:stake-tokens', { amount })
-        })
-        .catch((error) => {
-          console.error('Could not stake tokens:', error)
-
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
         })
     },
     clearModal() {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <app-header title="Coming Soon" />
-    <h5 class="mb-5">Upcoming partnerships and features</h5>
+    <h5 class="mb-5">Upcoming extensions and features</h5>
     <b-card-group deck>
       <div class="feature-card" v-for="feature in features" :key="feature.description">
         <a
@@ -9,8 +9,7 @@
           target="_blank"
           @click="clickPartner(feature.url)"
         >
-          <b-card
-          >
+          <b-card>
             <img :src="feature.image" />
             <p class="card-text" slot="footer">{{ feature.description }}</p>
           </b-card>

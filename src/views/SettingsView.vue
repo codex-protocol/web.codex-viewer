@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
@@ -49,13 +49,12 @@ export default {
   },
   methods: {
     getRecords() {
-      axios.get('/user/records')
-        .then((response) => {
-          this.records = response.data.result
+      Record.getUserRecords()
+        .then((records) => {
+          this.records = records
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
-          console.error('Could not get collection:', error)
         })
     },
   },

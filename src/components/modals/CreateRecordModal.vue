@@ -69,8 +69,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-
+import File from '../../util/api/file'
+import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
@@ -137,33 +137,15 @@ export default {
       this.uploadSuccess = false
       this.uploadComplete = false
 
-      const formData = new FormData()
-      formData.append('files', file)
+      File.uploadFiles(file)
+        .then((uploadedFiles) => {
 
-      const requestOptions = {
-
-        method: 'post',
-        url: '/users/files',
-
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-        },
-
-        data: formData,
-      }
-
-      axios(requestOptions)
-        .then((response) => {
-
-          const { result } = response.data
-
-          this.uploadedFile = result[0]
+          this.uploadedFile = uploadedFiles[0]
           this.uploadSuccess = true
 
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
-          console.error('Could not upload file:', error)
         })
         .finally(() => {
           this.uploadComplete = true
@@ -176,20 +158,14 @@ export default {
         return Promise.reject(new Error('Could not create Record: Missing required fields.'))
       }
 
-      const requestOptions = {
-        method: 'post',
-        url: '/users/record-metadata',
-        data: {
-          name: this.name,
-          mainImage: this.uploadedFile,
-          description: this.description || null,
-        },
+      const metadataToUpload = {
+        name: this.name,
+        mainImage: this.uploadedFile,
+        description: this.description || null,
       }
 
-      return axios(requestOptions)
-        .then((response) => {
-
-          const { result: metadata } = response.data
+      return Record.createMetadata(metadataToUpload)
+        .then((metadata) => {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
@@ -225,10 +201,8 @@ export default {
         metadata.id,
       ]
 
-      // @NOTE: no need to catch() here since rejections will bubble up to the
-      //  catch() in createMetaData() above
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.mint, input, this.web3)
-
     },
   },
   computed: {

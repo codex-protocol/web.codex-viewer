@@ -53,20 +53,21 @@
       </b-card>
     </b-card-group>
     <div v-else>
-      You have no Records in your collection!
+      You have no Codex Records in your collection!
     </div>
     <create-record-modal />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import EventBus from '../util/eventBus'
+import Record from '../util/api/record'
+import Giveaway from '../util/api/giveaway'
+import config from '../util/config'
 import missingImage from '../assets/images/missing-image.png'
 
-import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
-import { showCreateGiveawayButton } from '../util/config'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -82,8 +83,8 @@ export default {
       missingImage,
       giveaway: null,
       isLoading: false,
-      showCreateGiveawayButton,
       disableGiveawayButton: false,
+      showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
   },
   computed: {
@@ -121,29 +122,25 @@ export default {
       })
     },
     getRecords() {
-      axios.get('/user/records')
-        .then((response) => {
-          this.records = response.data.result
+      Record.getUserRecords()
+        .then((records) => {
+          this.records = records
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
-          console.error('Could not get collection:', error)
         })
     },
     getGiveaways() {
-      axios.get('/giveaways')
-        .then((response) => {
-          if (response.data.result.length) {
-            // For now, just select the first giveaway that is available
-            this.giveaway = response.data.result[0]
-          }
+      Giveaway.getAllEligibleGiveaways()
+        .then((giveaways) => {
+          // For now, just select the first giveaway that is available
+          this.giveaway = giveaways[0]
         })
     },
     createGiveaway() {
-      axios.post('/giveaways')
+      Giveaway.createNewGiveaway()
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
-          console.error('Could not create giveaway:', error)
         })
     },
     acceptGiveaway() {
@@ -151,10 +148,9 @@ export default {
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      axios.post(`/user/giveaway/${this.giveaway.id}`)
+      Giveaway.participateInGiveaway(this.giveaway._id)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
-          console.error('Could not claim edition:', error)
           this.disableGiveawayButton = false
           this.isLoading = false
         })

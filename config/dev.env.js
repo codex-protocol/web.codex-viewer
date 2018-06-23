@@ -13,4 +13,5 @@ module.exports = merge(prodEnv, {
   TARGET_ENV: '"development"',
   ANALYTICS_PROVIDER: '"log"',
   MIXPANEL_TOKEN: `"${process.env.DEVELOPMENT_MIXPANEL_TOKEN || ''}"`,
+  FRESHCHAT_API_TOKEN: `"${process.env.FRESHCHAT_API_TOKEN || ''}"`,
 })

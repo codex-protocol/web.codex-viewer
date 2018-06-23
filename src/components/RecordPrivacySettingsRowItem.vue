@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-
+import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import missingImage from '../assets/images/missing-image.png'
 
@@ -46,19 +45,16 @@ export default {
     },
     savePrivacySetting() {
 
-      const requestOptions = {
-        method: 'put',
-        url: `/users/records/${this.codexRecord.tokenId}`,
-        data: {
-          isPrivate: !this.recordIsPublic,
-        },
+      const dataToUpdate = {
+        isPrivate: !this.recordIsPublic,
       }
 
-      axios(requestOptions)
+      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
-          console.error('Could not update Record privacy:', error)
-          this.recordIsPublic = !this.isPrivate // Reset toggle on error
+
+          // Reset toggle on error
+          this.recordIsPublic = !this.isPrivate
         })
     },
   },

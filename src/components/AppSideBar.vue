@@ -11,16 +11,24 @@
         <img src="../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
-      <b-link to="/settings">
-        <img src="../assets/icons/settings.svg">Settings
+      <b-link to="/codex-quests">
+        <img src="../assets/icons/codex-quest.svg">Codex Quests
       </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens">
         <img src="../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
-      <b-link to="/coming-soon">
-        <img src="../assets/icons/star.svg">Coming Soon
+      <b-link v-if="showManageTokensPage" to="/faucet">
+        <img src="../assets/icons/faucet.svg">Faucet
       </b-link>
-      <span class="spacer"></span>
+      <b-link to="/extensions">
+        <img src="../assets/icons/star.svg">Extensions
+      </b-link>
+      <b-link v-if="showCodexGallery" to="/Gallery">
+        <img src="../assets/icons/star.svg">Gallery
+      </b-link>
+      <b-link to="/settings">
+        <img src="../assets/icons/settings.svg">Settings
+      </b-link>
       <b-link @click.prevent="logout">
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
@@ -35,17 +43,17 @@
 
 <script>
 
-import axios from 'axios'
-
+import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import { showManageTokensPage } from '../util/config'
+import config from '../util/config'
 
 export default {
   name: 'app-side-bar',
   data() {
     return {
       numberOfIncomingTransfers: 0,
-      showManageTokensPage,
+      showManageTokensPage: config.showManageTokensPage,
+      showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
   computed: {
@@ -71,33 +79,19 @@ export default {
       EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
     },
-    // @TODO: instead of requesting these independantly of
+    // @TODO: instead of requesting these independently of
     //  src/views/TransferListView.vue, the list of transfers should really be
     //  retrieved & cached in vuex (or Resource pattern)
     //
     // @NOTE: this is also not responsive when a user ignores a transfer (until
     //  they refresh the page of course), and the TODO above would address that
     updateIncomingTransfersCount() {
-      const requestOptions = {
-
-        method: 'get',
-        url: '/user/transfers/incoming',
-
-        params: {
-          filters: {
-            isIgnored: false,
-          },
-        },
-      }
-
-      return axios(requestOptions)
-        .then((response) => {
-          this.numberOfIncomingTransfers = response.data.result.length
+      return Transfer.getIncomingTransfers()
+        .then((transfers) => {
+          this.numberOfIncomingTransfers = transfers.length
         })
-        .catch((error) => {
-          // no need to show a toast here? this isn't a critical request
-          // EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
-          console.error('could not fetch incoming transfers for AppSideBar:', error)
+        .catch(() => {
+          // @NOTE: This is a non-essential action, so prevent any errors from bubbling further
         })
     },
   },
@@ -109,17 +103,14 @@ export default {
 
 nav
   width: 14rem
-  height: 100%
+  min-height: 100%
   min-width: @width
   max-width: @width
-  overflow-y: scroll
+  overflow-y: auto
   background-color: rgba(white, .05)
 
   display: flex
   flex-direction: column
-
-.spacer
-  flex-grow: 1
 
 a
   padding: 1rem

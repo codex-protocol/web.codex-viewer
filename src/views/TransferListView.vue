@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
@@ -115,28 +115,16 @@ export default {
 
     fetchData(transferDirection) {
 
-      const requestOptions = {
+      const getTransfers = transferDirection === 'incoming'
+        ? Transfer.getIncomingTransfers
+        : Transfer.getOutgoingTransfers
 
-        method: 'get',
-        url: `/user/transfers/${transferDirection}`,
-
-        params: {
-          filters: {},
-        },
-      }
-
-      if (transferDirection === 'incoming') {
-        requestOptions.params.filters.isIgnored = false
-      }
-
-      axios(requestOptions)
-        .then((response) => {
-          const { result } = response.data
-          this.records = result
+      getTransfers()
+        .then((transfers) => {
+          this.records = transfers
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
-          console.error(`could not fetch ${transferDirection} transfers`, error)
         })
     },
   },

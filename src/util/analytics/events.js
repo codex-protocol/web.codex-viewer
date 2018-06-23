@@ -61,6 +61,15 @@ const events = (analytics) => {
   // Coming Soon
   registerEvent('events:view-coming-soon-page')
   registerEvent('events:click-partner-link')
+
+  // Gallery
+  registerEvent('events:gallery-page')
+
+  // Faucet
+  registerEvent('events:faucet-page')
+
+  // Codex Quests
+  registerEvent('events:codex-quests-page')
 }
 
 export default events
