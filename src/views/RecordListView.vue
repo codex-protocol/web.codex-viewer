@@ -148,7 +148,7 @@ export default {
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      Giveaway.participateInGiveaway(this.giveaway._id)
+      Giveaway.participateInGiveaway(this.giveaway.id)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
           this.disableGiveawayButton = false
