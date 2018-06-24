@@ -12,7 +12,7 @@ export default {
 
   participateInGiveaway: (giveawayId) => {
     const requestOptions = {
-      method: 'get',
+      method: 'post',
       url: `/user/giveaway/${giveawayId}`,
     }
 
