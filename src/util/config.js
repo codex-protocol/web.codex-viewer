@@ -1,9 +1,6 @@
 // @TODO: Move all config to a common location using dotenv or some other config util.
 //  Do a search for references to process.env in non-build directories to consolidate
 
-const showManageTokensPage = process.env.TARGET_ENV === 'development'
-const showCreateGiveawayButton = process.env.TARGET_ENV === 'development'
-
 const apiUrl = (() => {
 
   switch (process.env.TARGET_ENV) {
@@ -22,7 +19,8 @@ const apiUrl = (() => {
 const etherScanUrl = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'https://rinkeby.etherscan.io/' // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      return 'https://rinkeby.etherscan.io/'
 
     case 'staging':
       return 'https://ropsten.etherscan.io/'
@@ -32,9 +30,16 @@ const etherScanUrl = (() => {
   }
 })()
 
-export {
+export default {
+  showManageTokensPage: process.env.TARGET_ENV === 'development',
+
+  showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
+
+  showCodexQuestsMarketing: true,
+
+  // @TODO: Navigation to this page is fine for now, but don't surface it in the side bar until the feature is ready
+  showCodexGalleryInSideBar: false,
+
   apiUrl,
   etherScanUrl,
-  showManageTokensPage,
-  showCreateGiveawayButton,
 }

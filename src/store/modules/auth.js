@@ -1,6 +1,7 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
+import User from '../../util/api/user'
 import EventBus from '../../util/eventBus'
 import SocketService from '../../util/socket'
 
@@ -87,12 +88,11 @@ const actions = {
         commit('setUser', newUser)
 
       } else {
-        axios.get('user')
-          .then((response) => {
-            commit('setUser', response.data.result)
+        User.getUser()
+          .then((user) => {
+            commit('setUser', user)
           })
           .catch((error) => {
-            console.error('Could not get user:', error)
             commit('clearUserState')
           })
       }
@@ -155,7 +155,7 @@ const actions = {
   logout({ commit }, router) {
     commit('clearUserState')
 
-    router.replace('/login')
+    router.replace('/')
   },
 }
 

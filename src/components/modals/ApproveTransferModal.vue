@@ -72,16 +72,11 @@ export default {
     approveTransfer() {
       EventBus.$emit('events:record-click-transfer')
       const input = [this.toEthAddress, this.recordId]
+
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
           EventBus.$emit('events:record-transfer')
-        })
-        .catch((error) => {
-          console.error('Could not approve transfer:', error)
-
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
         })
     },
   },

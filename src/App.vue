@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'with-background': this.useBackground() }">
     <app-side-bar v-if="showSideBar" />
-    <div class="main-content" :class="{ 'with-background': this.useBackground() }">
-      <router-view />
+    <div class="main-content-wrapper">
+      <div class="main-content">
+        <router-view />
+      </div>
+      <app-footer />
     </div>
     <toast-container />
   </div>
@@ -10,9 +13,11 @@
 
 <script>
 import axios from 'axios'
+import 'freshchat-widget'
 
-import { apiUrl } from './util/config'
+import config from './util/config'
 import AppSideBar from './components/AppSideBar'
+import AppFooter from './components/AppFooter'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
@@ -22,6 +27,7 @@ export default {
   name: 'App',
   components: {
     AppSideBar,
+    AppFooter,
     ToastContainer,
   },
   created() {
@@ -41,6 +47,7 @@ export default {
         'home',
         'login',
       ],
+      freshChatToken: process.env.FRESHCHAT_API_TOKEN,
     }
   },
   computed: {
@@ -67,7 +74,7 @@ export default {
   },
   methods: {
     initializeApi() {
-      axios.defaults.baseURL = apiUrl
+      axios.defaults.baseURL = config.apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
       const authErrorHandler = (error) => {
@@ -83,7 +90,7 @@ export default {
       }
 
       axios.interceptors.response.use(
-        (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
+        (response) => { return response }, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
     },
@@ -105,6 +112,15 @@ export default {
         this.$store.dispatch('logout', this.$router)
       }
     },
+  },
+  mounted() {
+    const token = this.freshChatToken
+    if (token) {
+      window.fcWidget.init({
+        token,
+        host: 'https://wchat.freshchat.com',
+      })
+    }
   },
 }
 </script>
@@ -130,20 +146,24 @@ body
   font-family: $font-family-sans-serif
 
 #app
-  width: 100%
-  height: 100%
   display: flex
-
-.main-content
   width: 100%
-  height: 100%
-  flex-grow: 1
-  padding: 2rem
-  overflow: scroll
-  min-width: 40rem
 
   &.with-background
     background: url(assets/images/pattern-dark.jpeg)
+
+.main-content-wrapper
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+  width: 100%
+  min-width: 40rem
+
+.main-content
+  flex: 1
+  width: 100%
+  padding: 2rem
+  overflow: auto
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

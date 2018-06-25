@@ -57,16 +57,10 @@ export default {
 
       EventBus.$emit('events:click-unstake-tokens')
 
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.unstake, input, this.web3)
         .then(() => {
           EventBus.$emit('events:unstake-tokens', { amount })
-        })
-        .catch((error) => {
-          console.error('Could not unstake tokens:', error)
-
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
         })
     },
     clearModal() {

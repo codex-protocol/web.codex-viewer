@@ -18,13 +18,6 @@
     </div>
 
     <div class="item">
-      <p>Your balance: {{ formatTokenAmount(userState.balance) }} CODX</p>
-      <b-button variant="primary" v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
-        Get more CODX
-      </b-button>
-    </div>
-
-    <div class="item">
       <p v-if="!stakeContractApproved">Before you can stake CODX, you have to approve the contract above</p>
 
       <personal-stakes-table :personal-stakes="userState.personalStakes" />
@@ -37,8 +30,6 @@
       </b-button>
       <b-button variant="outline-primary">Collect interest</b-button>
     </div>
-
-    <faucet-modal />
 
     <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
       This will grant the Codex Viewer permission to spend CODX on your behalf.
@@ -55,10 +46,10 @@
 
 <script>
 import EventBus from '../util/eventBus'
+
 import AppHeader from '../components/AppHeader'
 import PersonalStakesTable from '../components/PersonalStakesTable'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
-import FaucetModal from '../components/modals/FaucetModal'
 import StakeTokensModal from '../components/modals/StakeTokensModal'
 import UnstakeTokensModal from '../components/modals/UnstakeTokensModal'
 
@@ -68,16 +59,8 @@ export default {
     AppHeader,
     PersonalStakesTable,
     ApproveContractModal,
-    FaucetModal,
     StakeTokensModal,
     UnstakeTokensModal,
-  },
-  data: () => {
-    return {
-      // @TODO: change back when out of beta and on mainnet
-      // shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
-      shouldShowFaucetButton: true,
-    }
   },
   created() {
     EventBus.$emit('events:view-tokens-page')
@@ -100,11 +83,6 @@ export default {
     },
     recordContract() {
       return this.$store.state.web3.recordContractInstance()
-    },
-  },
-  methods: {
-    formatTokenAmount(rawAmount) {
-      return rawAmount.div('1e18').toFixed(3)
     },
   },
 }

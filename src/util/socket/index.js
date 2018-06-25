@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 
 import EventBus from '../eventBus'
-import { apiUrl } from '../config'
+import config from '../config'
 import eventToastHandlers from './eventToastHandlers'
 
 export default {
@@ -23,7 +23,7 @@ export default {
       return
     }
 
-    this.socket = io(`${apiUrl}/?token=${newAuthToken}`, {
+    this.socket = io(`${config.apiUrl}/?token=${newAuthToken}`, {
       transports: ['websocket'],
     })
 

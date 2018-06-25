@@ -1,29 +1,43 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm-7">
+      <div class="col-sm-5">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
-        <h1>Codex Viewer</h1>
-        <div class="lead">Decentralized application for viewing The Codex Registry</div>
-        <b-button variant="primary" @click="login">Login</b-button>
-        <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
+        <h1>Codex Viewer (Beta)</h1>
+        <div class="lead">Create and manage blockchain identities for your unique assets.</div>
+        <div class="button-container mb-5">
+          <b-button variant="primary" @click="login">Login</b-button>
+          <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
+        </div>
+        <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
-      <div class="col-sm-5 secondary">
-        <div class="bust"><img src="../assets/images/bust.png" /></div>
+      <div class="col-sm-7 secondary">
+        <div class="login-art"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import config from '../util/config'
 import EventBus from '../util/eventBus'
+
+import LoginMarketingCard from '../components/LoginMarketingCard'
 
 export default {
   name: 'home-view',
+  components: {
+    LoginMarketingCard,
+  },
+  data() {
+    return {
+      showLoginMarketingCard: config.showCodexQuestsMarketing,
+    }
+  },
   methods: {
     login() {
       EventBus.$emit('events:click-home-login')
-      window.location = '/#/login'
+      this.$router.push('login')
     },
     aboutCodex() {
       EventBus.$emit('events:click-about-codex')
@@ -37,33 +51,42 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
 
   .container
+    height: 100%
     display: flex
     align-items: center
-    height: 100%
 
   .row
     width: 100%
 
   .secondary
     text-align: right
+    align-self: center
 
   .logo
     max-width: 100px
     margin-bottom: 2.5rem
+    margin-top: 2.5rem
 
   h1
-    font-family: $font-family-serif
     font-weight: bold
-    font-size: 3rem
+    font-family: $font-family-serif
 
   .lead
-    font-weight: 400
-    font-size: 1.25rem
-    margin-bottom: 3.125rem
+    margin-bottom: 3rem
 
   .btn-primary
     margin-right: 1rem
 
+  .button-container
+    display: flex
+    flex-direction: row
+
+    button
+      width: 50%
+
+  .login-art img
+    width: 100%
 </style>

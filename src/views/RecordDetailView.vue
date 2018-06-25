@@ -99,8 +99,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-
+import Record from '../util/api/record'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
 import EventBus from '../util/eventBus'
@@ -189,13 +188,12 @@ export default {
       this.activeMainImage = null
     },
     getRecord() {
-      axios.get(`/record/${this.recordId}`)
-        .then((response) => {
-          this.codexRecord = response.data.result
+      Record.getRecord(this.recordId)
+        .then((record) => {
+          this.codexRecord = record
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get Record: ${error.message}`)
-          console.error('Could not get Record:', error)
           this.codexRecord = null
           this.error = error
         })
@@ -214,7 +212,6 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
-          console.error('Could not accept transfer:', error)
         })
     },
     toggleShowDetails() {

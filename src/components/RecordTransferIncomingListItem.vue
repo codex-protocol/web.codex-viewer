@@ -24,8 +24,7 @@
 
 <script>
 
-import axios from 'axios'
-
+import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
 import missingImage from '../assets/images/missing-image.png'
@@ -95,32 +94,19 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
-          console.error('Could not accept transfer:', error)
         })
     },
     ignoreTransfer() {
 
-      const requestOptions = {
-
-        method: 'put',
-        url: `/user/transfers/incoming/${this.codexRecord.tokenId}`,
-
-        data: {
-          isIgnored: true,
-        },
-      }
-
       this.isLoading = true
 
-      axios(requestOptions)
-        .then((response) => {
-          const { result } = response.data
-          this.codexRecord.isIgnored = result.isIgnored
+      Transfer.ignoreIncomingTransfer(this.codexRecord.tokenId)
+        .then((record) => {
+          this.codexRecord.isIgnored = record.isIgnored
           EventBus.$emit('toast:success', 'Transfer ignored successfully!', 5000)
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
-          console.error('Could not ignore transfer:', error)
         })
         .finally(() => {
           this.isLoading = false

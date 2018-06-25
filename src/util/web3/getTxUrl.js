@@ -1,7 +1,7 @@
-import { etherScanUrl } from '../config'
+import config from '../config'
 
 const getTxUrl = (txHash) => {
-  return `${etherScanUrl}tx/${txHash}`
+  return `${config.etherScanUrl}tx/${txHash}`
 }
 
 export default getTxUrl

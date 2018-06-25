@@ -1,7 +1,7 @@
 <template>
   <div class="header">
-    <h1>{{ title }}</h1>
-    <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
+    <h1 :class="{ 'show-network-details': web3.account }">{{ title }}</h1>
+    <div class="network-details" v-if="web3.account">{{ web3.account }} ({{ web3.network }})</div>
     <div class="spacer"></div>
     <slot></slot>
   </div>
@@ -37,9 +37,10 @@ export default {
     line-height: 1em
     font-family: $font-family-serif
 
-    margin: 0 .5em 0 0
-    padding-right: .5em
-    border-right: 1px solid $color-primary
+    &.show-network-details
+      margin: 0 .5em 0 0
+      padding-right: .5em
+      border-right: 1px solid $color-primary
 
   .network-details
     font-size: .4em

@@ -56,7 +56,7 @@
 
 <script>
 
-import axios from 'axios'
+import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
 export default {
@@ -89,21 +89,16 @@ export default {
     },
     removeWhitelistedAddress(address) {
 
-      const sharedAddresses = this.sharedAddresses.filter((sharedAddress) => {
+      const whitelistedAddresses = this.sharedAddresses.filter((sharedAddress) => {
         return sharedAddress !== address
       })
 
-      const requestOptions = {
-        method: 'put',
-        url: `/users/records/${this.recordId}`,
-        data: {
-          whitelistedAddresses: sharedAddresses,
-        },
+      const dataToUpdate = {
+        whitelistedAddresses,
       }
 
-      return axios(requestOptions)
-        .then((response) => {
-          const { result } = response.data
+      Record.updateRecord(this.recordId, dataToUpdate)
+        .then((result) => {
           this.newWhitelistedAddress = null
           this.sharedAddresses = result.whitelistedAddresses
         })
@@ -124,19 +119,13 @@ export default {
         this.sharedAddresses.push(this.newWhitelistedAddress)
       }
 
-      const requestOptions = {
-        method: 'put',
-        url: `/users/records/${this.recordId}`,
-        data: {
-          isPrivate: !this.recordIsPublic,
-          whitelistedAddresses: this.sharedAddresses,
-        },
+      const dataToUpdate = {
+        isPrivate: !this.recordIsPublic,
+        whitelistedAddresses: this.sharedAddresses,
       }
 
-      return axios(requestOptions)
-        .then((response) => {
-
-          const { result } = response.data
+      Record.updateRecord(this.recordId, dataToUpdate)
+        .then((result) => {
 
           this.modalVisible = false
           this.newWhitelistedAddress = null
