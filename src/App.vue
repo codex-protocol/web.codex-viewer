@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="{ 'with-background': this.useBackground() }">
-    <app-side-bar v-if="showSideBar" />
+    <app-side-bar v-if="!hideSideBar" />
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view />
@@ -41,20 +41,13 @@ export default {
       })
   },
   data() {
-
     return {
-      routesToHideSideBar: [
-        'home',
-        'login',
-      ],
       freshChatToken: process.env.FRESHCHAT_API_TOKEN,
     }
   },
   computed: {
-    showSideBar() {
-      // Rather than have to explicitly pass the AppSideBar component for every route,
-      //  we just conditionally remove it from a few specific routes here.
-      return this.routesToHideSideBar.indexOf(this.$route.name) === -1
+    hideSideBar() {
+      return this.$route.meta && this.$route.meta.hideSideBar
     },
     user() {
       return this.$store.state.auth.user
@@ -157,7 +150,6 @@ body
   flex-direction: column
   min-height: 100vh
   width: 100%
-  min-width: 40rem
 
 .main-content
   flex: 1

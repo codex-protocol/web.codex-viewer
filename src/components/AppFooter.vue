@@ -7,7 +7,7 @@
       <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
       <a href="mailto:support@codexprotocol.com">Contact Us</a>
     </div>
-    <div>
+    <div class="icons">
       <a href="https://github.com/codex-protocol/">
         <icon-base iconName="github" width="24" height="24" class="icon">
           <icon-github />
@@ -67,13 +67,36 @@ export default {
   align-items: center
   flex-direction: column
 
-  .links a
-    font-size: 80%
-    margin-right: 2rem
-    color: $color-light
+  .links
+  .icons
+    width: 100%
+    display: flex
+    justify-content: space-around
 
-a .icon
-  fill: $color-light
-  color: $color-light
-  margin-right: 1rem
+    a
+      padding: 0 .5em
+      color: $color-light
+
+  .links
+    flex-wrap: wrap
+    max-width: 25rem
+
+    a
+      font-size: .8em
+      text-align: center
+
+    // @NOTE: 550px is about where the FreshChat icon starts to overlap the
+    //  footer links
+    @media(max-width: 550px)
+      flex-wrap: wrap
+
+      a
+        width: 100%
+
+  .icons
+    max-width: 10rem
+
+    a
+      display: inline-block
+
 </style>

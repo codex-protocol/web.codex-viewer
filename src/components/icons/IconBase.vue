@@ -22,12 +22,19 @@ const getViewBox = (iconName) => {
   // We're mostly using Material Icons which work with `0 0 18 18`.
   //  But some of our icons are from Font Awesome which have a different base viewbox.
   switch (iconName) {
+    case 'opera':
     case 'github':
+    case 'chrome':
     case 'telegram':
       return '0 0 496 512'
+
+    case 'firefox':
+      return '0 0 480 512'
+
     case 'medium':
     case 'twitter':
       return '0 0 512 512'
+
     default:
       return '0 0 18 18'
   }
