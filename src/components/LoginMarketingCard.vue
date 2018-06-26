@@ -1,7 +1,7 @@
 <template>
   <div class="marketing-container">
-    <h1>Codex Quests are live!</h1>
-    <p>Earn CODX by completing quests and providing feedback to our team.</p>
+    <h1>Earn CODX</h1>
+    <p>Codex Quests are live! Earn CODX tokens by completing quests and providing feedback to our team.</p>
     <p>
       <b-link to="/codex-quests">Find out more here</b-link>
     </p>
