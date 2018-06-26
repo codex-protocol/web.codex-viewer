@@ -12,7 +12,7 @@
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
       <b-link to="/codex-quests">
-        <img src="../assets/icons/codex-quest.svg">Codex Quests
+        <img src="../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens">
         <img src="../assets/icons/codx-token.svg">Manage Tokens
