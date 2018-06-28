@@ -154,7 +154,6 @@ body
 .main-content
   flex: 1
   width: 100%
-  padding: 2rem
   overflow: auto
 
 // CSS Checkbox toggle
