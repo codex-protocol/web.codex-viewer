@@ -155,6 +155,12 @@ const actions = {
   logout({ commit }, router) {
     commit('clearUserState')
 
+    // if this is an unauthenticated route, clear their auth token (i.e. log
+    //  the user out), but do not redirect them to the homepage
+    if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
+      return
+    }
+
     router.replace('/')
   },
 }

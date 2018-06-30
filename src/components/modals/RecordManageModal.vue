@@ -286,8 +286,8 @@ export default {
       const updatedMetadata = {
         name: this.name,
         images: this.getImageIds(),
-        description: this.description,
         mainImage: this.getMainImageId(),
+        description: this.description || null,
       }
 
       return Record.updateMetadata(this.tokenId, updatedMetadata)
