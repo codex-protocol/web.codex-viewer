@@ -55,9 +55,13 @@ $grid-gutter-width:                 2rem;
 .custom-file-label {
   border: none;
   padding: .5rem;
-  overflow: hidden;
   border-radius: .25em;
+  color: rgba($color-light, .75);
   background-color: rgba(white, .1);
+}
+
+.custom-file-label {
+  overflow: hidden;
 }
 
 .form-control:focus {
@@ -65,8 +69,8 @@ $grid-gutter-width:                 2rem;
   background-color: rgba(white, .2);
 }
 
-.form-control::placeholder,
-.custom-file-label {
+.custom-file-label,
+.form-control::placeholder {
   color: rgba($color-light, .5);
 }
 
