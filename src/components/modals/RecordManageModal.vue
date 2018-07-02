@@ -110,7 +110,7 @@ import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
-import providerDataHelper from '../../util/providerDataHelper'
+import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -308,7 +308,7 @@ export default {
         this.nameHash,
         this.descriptionHash,
         this.fileHashes,
-        providerDataHelper.encode([
+        additionalDataHelper.encode([
           '1', // providerId
           this.providerMetadataId,
         ]),

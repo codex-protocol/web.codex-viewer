@@ -75,7 +75,7 @@ import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
-import providerDataHelper from '../../util/providerDataHelper'
+import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -202,7 +202,7 @@ export default {
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
-        providerDataHelper.encode([
+        additionalDataHelper.encode([
           '1', // providerId
           metadata.id,
         ]),
