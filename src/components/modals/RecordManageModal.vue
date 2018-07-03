@@ -30,6 +30,7 @@
         :rows="4"
       />
     </b-form-group>
+    <hr>
     <b-form-group
       label="Main Image"
     >
@@ -57,21 +58,22 @@
         :variant="progressVariant">
       </b-progress>
     </b-form-group>
+    <hr>
     <b-form-group
       v-if="images.length"
-      label="Other Images"
+      label="Additional Images"
     >
       <span
         v-for="image in images"
         v-bind:key="image.id"
-        class="other-image"
+        class="additional-image"
       >
         <b-img
           class="record-image"
           thumbnail
           fluid
           :src="image.uri"
-          alt="Other Image"
+          alt="Additional Image"
         /><br>
         <b-button
           size="sm"
@@ -83,7 +85,7 @@
       </span>
     </b-form-group>
     <b-form-group
-      label="Upload Images"
+      label="Upload Additional Images"
     >
       <vue-dropzone
         ref="dropzone"
@@ -335,7 +337,7 @@ export default {
 .record-image
   max-width: 10rem
 
-.other-image
+.additional-image
   max-width: 10rem
   display: inline-block
   text-align: center
