@@ -85,7 +85,7 @@ export default {
 
         this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions)
           .then(() => {
-            this.$router.replace('collection')
+            this.$router.replace({ name: 'collection' })
           })
 
       })

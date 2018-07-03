@@ -37,7 +37,7 @@ export default {
   methods: {
     login() {
       EventBus.$emit('events:click-home-login')
-      this.$router.push('login')
+      this.$router.push({ name: 'login' })
     },
     aboutCodex() {
       EventBus.$emit('events:click-about-codex')
