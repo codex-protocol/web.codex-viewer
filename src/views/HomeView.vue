@@ -61,7 +61,7 @@ export default {
   .primary
     margin-bottom: 2rem
 
-    @media screen and (min-width: 768px)
+    @media screen and (min-width: $breakpoint-md)
       margin-bottom: 0
 
   .secondary
