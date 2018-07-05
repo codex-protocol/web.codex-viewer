@@ -18,6 +18,7 @@
     </app-header>
     <b-card-group deck class="record-list" v-if="records.length">
       <!-- TODO: Better handling of record w/ no metadata -->
+      <faucet-marketing-card />
       <record-list-item
         v-if="record.metadata"
         v-for="record in records"
@@ -70,6 +71,7 @@ import missingImage from '../assets/images/missing-image.png'
 
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
+import FaucetMarketingCard from '../components/FaucetMarketingCard'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -77,6 +79,7 @@ export default {
   components: {
     AppHeader,
     RecordListItem,
+    FaucetMarketingCard,
     CreateRecordModal,
   },
   data() {
