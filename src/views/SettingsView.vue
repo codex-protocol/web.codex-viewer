@@ -6,13 +6,15 @@
         <b-row>
           <b-col class="image">Image</b-col>
           <b-col class="name">Asset Name</b-col>
+          <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
           <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
+      <!-- TODO: Better handling of record w/ no metadata -->
       <record-privacy-settings-row-item v-for="record in records"
+        v-if="record.metadata"
         :codex-record="record"
         :key="record.tokenId"
-        :isPrivate="record.isPrivate"
       />
     </div>
     <div v-else>
@@ -39,12 +41,16 @@ export default {
     }
   },
   created() {
+    // @TODO: add the same socket event handlers as the collection page here too?
     EventBus.$emit('events:view-settings-page')
     this.getRecords()
   },
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    user() {
+      return this.$store.state.auth.user
     },
   },
   methods: {
@@ -63,32 +69,6 @@ export default {
 
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
-
-.header
-  height: 2.5rem
-  font-size: 2.5rem
-  margin-bottom: 2rem
-  color: $color-primary
-
-  display: flex
-  align-items: center
-
-  h1
-    font-size: 1em
-    font-weight: bold
-    line-height: 1em
-    font-family: $font-family-serif
-
-    margin: 0 .5em 0 0
-    padding-right: .5em
-    border-right: 1px solid $color-primary
-
-  .network-details
-    font-size: .4em
-    word-wrap: break-word
-
-  .spacer
-    flex-grow: 1
 
 .record-list
   display: flex

@@ -17,7 +17,7 @@
       <div class="schedule">
         <h2>June 26th - Sharing</h2>
         <p>
-          Share the "Digital Assembly" edition you claimed from your collection on Twitter and tag Codex Protocol (be sure to make your Codex Record public before sharing!).
+          Share the "Full Assembly" edition you claimed from your collection on Twitter and tag Codex Protocol (be sure to make your Codex Record public before sharing!).
         </p>
 
         <h2>June 29th - Transfers</h2>
@@ -27,7 +27,18 @@
 
         <h2>July 3rd - Modifications</h2>
         <p>
-          Add a "behind the scenes" picture to the Digital Assembly edition you've claimed. For example, take a picture of your monitor displaying the Codex Record.
+          Add a "behind the scenes" picture (e.g. a picture of your monitor displaying the artwork) to the "Full Assembly" edition you've claimed.
+        </p>
+        <p>
+          To do this, click the "Manage" button on the details page of the your edition of "Full Assembly". (This button will only show up for Codex Records you own.)
+        </p>
+        <p><img src="../assets/images/codex-quests/modifications-1.png"></p>
+        <p>
+          After clicking the "Manage" button, a modal dialog will pop up that allows you to edit metadata and attach additional photos.
+        </p>
+        <p><img src="../assets/images/codex-quests/modifications-2.png"></p>
+        <p>
+          After adding your “behind the scenes” photo, click on “Save” to submit the updates to the blockchain and send a link to your updated Codex Record to codex-quests@codexprotocol.com.
         </p>
 
         <h2>July 9th - Tokens</h2>
@@ -71,7 +82,7 @@ export default {
 <style lang="stylus" scoped>
 
 .content
-  width: 45%
+  max-width: 50%
 
 .schedule
   h2
@@ -79,5 +90,11 @@ export default {
 
 h2
   font-size: 1.5rem
+
+img
+  width: 100%
+  border-radius: .25rem
+  border: .5rem solid rgba(white, .25)
+  box-shadow: 0 1rem 1rem -1rem rgba(black, .5)
 
 </style>

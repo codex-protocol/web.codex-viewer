@@ -28,8 +28,10 @@
         <b-card-group
           deck
           class="record-list"
+          v-if="records.length"
         >
           <record-list-item
+            v-if="record.metadata"
             v-for="record in records"
             :codex-record="record"
             :key="record.tokenId"
@@ -110,12 +112,16 @@ export default {
     // @NOTE: incoming transfers and newly minted Records both have the same
     //  effect of pushing the new record onto this.records, so we use the same
     //  handler for both
+    //
+    // the same concept applies for outgoing transfers and destroyed records
     EventBus.$on('socket:mint-confirmed', this.addTransferredRecordHandler)
+    EventBus.$on('socket:record-destroyed', this.removeTransferredRecordHandler)
     EventBus.$on('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },
   beforeDestroy() {
     EventBus.$off('socket:mint-confirmed', this.addTransferredRecordHandler)
+    EventBus.$off('socket:record-destroyed', this.removeTransferredRecordHandler)
     EventBus.$off('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
   },

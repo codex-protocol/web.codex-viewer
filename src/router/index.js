@@ -16,6 +16,7 @@ import ManageTokensView from '../views/ManageTokensView'
 import CodexQuestsView from '../views/CodexQuestsView'
 import FaucetView from '../views/FaucetView'
 import GalleryView from '../views/GalleryView'
+import GalleryListView from '../views/GalleryListView'
 import UnsupportedDeviceView from '../views/UnsupportedDeviceView'
 import UnsupportedBrowserView from '../views/UnsupportedBrowserView'
 
@@ -143,7 +144,13 @@ if (config.showManageTokensPage) {
 if (config.showCodexQuestsMarketing) {
   router.addRoutes([
     { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView, meta: { allowUnauthenticatedUsers: true } },
-    { name: 'gallery', path: '/gallery', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
+  ])
+}
+
+if (config.showCodexGalleryInSideBar) {
+  router.addRoutes([
+    { name: 'galleries', path: '/galleries', component: GalleryListView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'gallery', path: '/galleries/:galleryShareCode', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
   ])
 }
 

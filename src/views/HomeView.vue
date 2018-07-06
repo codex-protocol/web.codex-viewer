@@ -6,7 +6,7 @@
         <h1>Codex Viewer (Beta)</h1>
         <div class="lead">Create and manage blockchain identities for your unique assets.</div>
         <div class="mb-5">
-          <b-button variant="primary" @click="login">Login</b-button>
+          <b-button variant="primary" @click="login">Get Started</b-button>
           <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
         </div>
         <login-marketing-card v-if="showLoginMarketingCard" />
@@ -37,7 +37,7 @@ export default {
   methods: {
     login() {
       EventBus.$emit('events:click-home-login')
-      this.$router.push('login')
+      this.$router.push({ name: 'login' })
     },
     aboutCodex() {
       EventBus.$emit('events:click-about-codex')

@@ -52,7 +52,7 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'approve-transfer-modal',
-  props: ['recordId'],
+  props: ['codexRecord'],
   components: {
     MetaMaskNotificationModal,
   },
@@ -71,7 +71,7 @@ export default {
     },
     approveTransfer() {
       EventBus.$emit('events:record-click-transfer')
-      const input = [this.toEthAddress, this.recordId]
+      const input = [this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.approve, input, this.web3)

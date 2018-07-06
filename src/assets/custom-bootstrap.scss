@@ -55,9 +55,13 @@ $grid-gutter-width:                 2rem;
 .custom-file-label {
   border: none;
   padding: .5rem;
-  overflow: hidden;
   border-radius: .25em;
+  color: rgba($color-light, .75);
   background-color: rgba(white, .1);
+}
+
+.custom-file-label {
+  overflow: hidden;
 }
 
 .form-control:focus {
@@ -65,8 +69,8 @@ $grid-gutter-width:                 2rem;
   background-color: rgba(white, .2);
 }
 
-.form-control::placeholder,
-.custom-file-label {
+.custom-file-label,
+.form-control::placeholder {
   color: rgba($color-light, .5);
 }
 
@@ -80,4 +84,35 @@ $grid-gutter-width:                 2rem;
 .alert .close:hover,
 .alert .close:focus {
   color: inherit;
+}
+
+hr {
+  border-top: 1px solid rgba(white, 0.1);
+}
+
+// these styles make it so bootstrap's carousel component takes up the full
+//  dimensions of it's parent container, and remain that size regardless of the
+//  size of the image
+//
+// this prevents the carousel component from showing jarring content jumps when
+//  transitioning between images with different aspect ratios, which is
+//  necessary for the gallery pages
+.fixed-size-carousel {
+  .carousel-inner, .carousel-item, .carousel-item > img {
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+  }
+
+  .carousel-item > img {
+    object-fit: contain;
+  }
+}
+
+.card-header > .fixed-size-carousel {
+  height: 100%;
+}
+
+.carousel-item:focus {
+  outline: none;
 }
