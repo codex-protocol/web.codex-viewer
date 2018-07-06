@@ -172,10 +172,11 @@ export default {
   display: flex
   flex-wrap: wrap
 
-  > div
-    flex: none
-    width: 25%
-    text-align: center
+.info
+.giveaway
+  flex: none
+  width: 25%
+  text-align: center
 
 .info
   background: $color-dark

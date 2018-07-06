@@ -89,3 +89,26 @@ $grid-gutter-width:                 2rem;
 hr {
   border-top: 1px solid rgba(white, 0.1);
 }
+
+// these styles make it so bootstrap's carousel component takes up the full
+//  dimensions of it's parent container, and remain that size regardless of the
+//  size of the image
+//
+// this prevents the carousel component from showing jarring content jumps when
+//  transitioning between images with different aspect ratios, which is
+//  necessary for the gallery pages
+.fixed-size-carousel {
+  .carousel-inner, .carousel-item, .carousel-item > img {
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+  }
+
+  .carousel-item > img {
+    object-fit: contain;
+  }
+}
+
+.card-header > .fixed-size-carousel {
+  height: 100%;
+}

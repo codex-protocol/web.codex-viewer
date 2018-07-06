@@ -48,6 +48,7 @@ export default {
 .record-card
   width: 25%
   max-width: 32rem
+  text-align: center
   margin-bottom: 2em
 
   .card
@@ -67,12 +68,6 @@ export default {
     a
       font-weight: bold
       color: $color-dark
-
-      // uncomment to keep record name on a single line?
-      // display: block
-      // overflow: hidden
-      // white-space: nowrap
-      // text-overflow: ellipsis
 
     small
       color: $color-light-gray

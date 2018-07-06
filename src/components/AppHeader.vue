@@ -1,7 +1,7 @@
 <template>
   <div class="header">
-    <h1 :class="{ 'show-network-details': web3.account }">{{ title }}</h1>
-    <div class="network-details" v-if="web3.account">{{ web3.account }} ({{ web3.network }})</div>
+    <h1 :class="{ 'show-network-details': showNetworkDetails }">{{ title }}</h1>
+    <div class="network-details" v-if="showNetworkDetails">{{ web3.account }} ({{ web3.network }})</div>
     <div class="spacer"></div>
     <slot></slot>
   </div>
@@ -10,10 +10,13 @@
 <script>
 export default {
   name: 'app-header',
-  props: ['title'],
+  props: ['hideNetworkDetails', 'title'],
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    showNetworkDetails() {
+      return !this.hideNetworkDetails && this.web3.account
     },
   },
 }

@@ -23,8 +23,8 @@
       <b-link to="/extensions">
         <img src="../assets/icons/star.svg">Extensions
       </b-link>
-      <b-link v-if="showCodexGallery" to="/Gallery">
-        <img src="../assets/icons/star.svg">Gallery
+      <b-link to="/galleries" v-if="showCodexGallery">
+        <img src="../assets/icons/gallery.svg">Galleries
       </b-link>
       <b-link to="/settings">
         <img src="../assets/icons/settings.svg">Settings
