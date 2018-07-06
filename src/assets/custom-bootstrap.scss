@@ -112,3 +112,7 @@ hr {
 .card-header > .fixed-size-carousel {
   height: 100%;
 }
+
+.carousel-item:focus {
+  outline: none;
+}
