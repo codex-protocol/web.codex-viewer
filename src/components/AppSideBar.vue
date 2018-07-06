@@ -33,7 +33,26 @@
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
     </div>
+
+    <!--
+      @TODO: maybe instead of duplicating content here, we can just move the
+      v-if="isAuthenticated" to each button instead of the container?
+    -->
     <div class="button-container" v-else>
+      <!--
+        @NOTE: the home route is actually just "/", but if I use that then
+        bootsrap highlights the button as if it were the active route for some
+        reason, so we'll just use "/home" which will redirect to "/" anyway
+      -->
+      <b-link to="/home">
+        <img src="../assets/icons/home.svg">Home
+      </b-link>
+      <b-link to="/codex-quests">
+        <img src="../assets/icons/codex-quest.svg">Earn CODX
+      </b-link>
+      <b-link to="/galleries" v-if="showCodexGallery">
+        <img src="../assets/icons/gallery.svg">Galleries
+      </b-link>
       <b-link to="/login">
         <img src="../assets/icons/logout.svg">Login
       </b-link>
