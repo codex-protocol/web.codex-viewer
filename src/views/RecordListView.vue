@@ -1,28 +1,42 @@
 <template>
-  <div>
-    <app-header title="Collection">
-      <b-button
-        variant="primary"
-        v-b-modal.createRecordModal
-      >
-        Add New Asset
-      </b-button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Collection">
+          <b-button
+            variant="primary"
+            v-b-modal.createRecordModal
+          >
+            Add New Asset
+          </b-button>
 
-      <b-button
-        variant="outline-primary"
-        @click="createGiveaway"
-        v-if="showCreateGiveawayButton && !giveaway"
-      >
-        Create giveaway
-      </b-button>
-    </app-header>
-    <b-card-group deck class="record-list" v-if="records.length">
-      <record-list-item
-        v-for="record in records"
-        :codex-record="record"
-        :key="record.tokenId"
-      />
-    </b-card-group>
+          <b-button
+            variant="outline-primary"
+            @click="createGiveaway"
+            v-if="showCreateGiveawayButton && !giveaway"
+          >
+            Create giveaway
+          </b-button>
+        </app-header>
+      </div>
+    </div>
+    <div
+      class="row"
+      v-if="records.length"
+    >
+      <div class="col-12">
+        <b-card-group
+          deck
+          class="record-list"
+        >
+          <record-list-item
+            v-for="record in records"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+        </b-card-group>
+      </div>
+    </div>
     <b-card-group deck class="record-list giveaway-container" v-else-if="giveaway">
       <b-card
         img-top
@@ -162,14 +176,14 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
+.container-fluid
+  max-width: 1140px
+
 .record-list
   display: flex
   flex-wrap: wrap
-
-  > div
-    flex: none
-    width: 25%
-    text-align: center
+  margin-left: 0
+  margin-right: 0
 
 .info
   background: $color-dark

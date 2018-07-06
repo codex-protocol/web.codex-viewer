@@ -1,18 +1,18 @@
 <template>
-  <div class="record-card" v-if="codexRecord.metadata">
-    <b-card
-      @click.prevent="viewRecord"
-      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-      img-top
-    >
-      <p>
-        <a href="#" @click.prevent="viewRecord">
-          {{ codexRecord.metadata.name }}
-        </a>
-      </p>
-      <small>#{{ codexRecord.tokenId }}</small>
-    </b-card>
-  </div>
+  <b-card
+    @click.prevent="viewRecord"
+    :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+    img-top
+    v-if="codexRecord.metadata"
+    title
+  >
+    <p>
+      <a href="#" @click.prevent="viewRecord">
+        {{ codexRecord.metadata.name }}
+      </a>
+    </p>
+    <small>#{{ codexRecord.tokenId }}</small>
+  </b-card>
 </template>
 
 <script>
@@ -45,36 +45,36 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.record-card
-  width: 25%
-  max-width: 32rem
-  margin-bottom: 2em
+.card
+  flex: none
+  min-width: 180px
+  text-align: center
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border: none
+  cursor: pointer
+  border-radius: 0 0 .25rem .25rem
 
-  .card
-    border: none
-    cursor: pointer
-    border-radius: 0 0 .25rem .25rem
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc((100% * 1/2) - 2rem)
 
-  img
-    width: 100%
-    max-height: 25vw // good enough ¯\_(ツ)_/¯
-    min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: contain
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc((100% * 1/3) - 2rem)
 
-  .card-body
-    border-top: 1px solid rgba(black, .1)
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc((100% * 1/4) - 2rem)
 
-    a
-      font-weight: bold
-      color: $color-dark
+  @media screen and (min-width: $breakpoint-xl)
+    max-width: calc((100% * 1/5) - 2rem)
 
-      // uncomment to keep record name on a single line?
-      // display: block
-      // overflow: hidden
-      // white-space: nowrap
-      // text-overflow: ellipsis
+.card-body
+  border-top: 1px solid rgba(black, .1)
 
-    small
-      color: $color-light-gray
+  a
+    font-weight: bold
+    color: $color-dark
+
+  small
+    color: $color-light-gray
 
 </style>

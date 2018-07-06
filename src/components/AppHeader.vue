@@ -1,7 +1,8 @@
 <template>
   <div class="header">
     <h1 :class="{ 'show-network-details': web3.account }">{{ title }}</h1>
-    <div class="network-details" v-if="web3.account">{{ web3.account }} ({{ web3.network }})</div>
+    <!-- @TODO: Move to footer SideNav -->
+    <!-- <div class="network-details" v-if="web3.account">{{ web3.account }} ({{ web3.network }})</div> -->
     <div class="spacer"></div>
     <slot></slot>
   </div>
@@ -25,6 +26,7 @@ export default {
 .header
   height: 2.5rem
   font-size: 2.5rem
+  margin-top: 1rem
   margin-bottom: 2rem
   color: $color-primary
 
@@ -40,7 +42,6 @@ export default {
     &.show-network-details
       margin: 0 .5em 0 0
       padding-right: .5em
-      border-right: 1px solid $color-primary
 
   .network-details
     font-size: .4em

@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="{ 'with-background': this.useBackground() }">
-    <app-side-bar v-if="!hideSideBar" />
+    <!-- @TODO: put back during mobile work -->
+    <!-- <app-side-bar v-if="!hideSideBar" /> -->
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view />
