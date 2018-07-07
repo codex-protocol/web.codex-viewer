@@ -182,9 +182,6 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.container-fluid
-  max-width: 1140px
-
 .record-list
   display: flex
   flex-wrap: wrap

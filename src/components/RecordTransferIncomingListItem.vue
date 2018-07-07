@@ -1,25 +1,21 @@
 <template>
-  <div
-    class="record-card"
+  <b-card
     v-if="!codexRecord.isIgnored"
+    :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+    img-top
     :class="{ 'is-loading': this.isLoading }"
   >
-    <b-card
-      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-      img-top
-    >
-      <div class="accepted-overlay" v-if="this.transferAccepted">
-        <p>Transfer Accepted</p>
-        <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
-      </div>
-      <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
-      <p class="address">Sent from {{ codexRecord.ownerAddress }}</p>
-      <p class="action-buttons">
-        <b-button variant="secondary" @click.prevent="acceptTransfer" :disabled="this.isLoading">Accept</b-button>
-        <b-button variant="outline-primary" @click.prevent="ignoreTransfer" :disabled="this.isLoading">Ignore</b-button>
-      </p>
-    </b-card>
-  </div>
+    <div class="accepted-overlay" v-if="this.transferAccepted">
+      <p>Transfer Accepted</p>
+      <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
+    </div>
+    <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
+    <p class="address">Sent from {{ codexRecord.ownerAddress }}</p>
+    <p class="action-buttons">
+      <b-button variant="secondary" @click.prevent="acceptTransfer" :disabled="this.isLoading">Accept</b-button>
+      <b-button variant="outline-primary" @click.prevent="ignoreTransfer" :disabled="this.isLoading">Ignore</b-button>
+    </p>
+  </b-card>
 </template>
 
 <script>
@@ -94,6 +90,7 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          this.isLoading = false
         })
     },
     ignoreTransfer() {
@@ -107,6 +104,7 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
+          this.isLoading = false
         })
         .finally(() => {
           this.isLoading = false
@@ -120,17 +118,28 @@ export default {
 
 @import "../assets/variables.styl"
 
-.record-card
-  width: 25%
-  max-width: 32rem
-  margin-bottom: 2em
+.card
+  flex: none
+  min-width: 180px
+  border: none
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border-radius: 0 0 .25rem .25rem
+
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc((100% * 1/2) - 2rem)
+
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc((100% * 1/3) - 2rem)
+
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc((100% * 1/4) - 2rem)
+
+  @media screen and (min-width: $breakpoint-xl)
+    max-width: calc((100% * 1/5) - 2rem)
 
   &.is-loading
     opacity: .5
-
-  .card
-    border: none
-    border-radius: 0 0 .25rem .25rem
 
   .accepted-overlay
     display: flex
@@ -146,12 +155,6 @@ export default {
 
     p
       font-weight: 600
-
-  img
-    width: 100%
-    max-height: 25vw // good enough ¯\_(ツ)_/¯
-    min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: contain
 
   a
     font-weight: bold

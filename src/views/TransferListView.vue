@@ -1,27 +1,35 @@
 <template>
-  <div>
-    <app-header title="Transfers" />
-    <app-sub-header
-      :fetchData="this.fetchData"
-      :transferDirection="transferDirection"
-    />
-    <b-card-group deck class="record-list" v-if="records.length">
-      <record-transfer-incoming-list-item
-        v-for="record in records"
-        :codex-record="record"
-        :key="record.tokenId"
-        v-if="transferDirection === 'incoming'"
-      />
-      <record-transfer-outgoing-list-item
-        v-for="record in records"
-        :codex-record="record"
-        :key="record.tokenId"
-        v-if="transferDirection === 'outgoing'"
-      />
-      <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
-    </b-card-group>
-    <div v-else>
-      You have no {{ transferDirection }} transfers.
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Transfers" />
+        <app-sub-header
+          :fetchData="this.fetchData"
+          :transferDirection="transferDirection"
+        />
+        <b-card-group
+          v-if="records.length"
+          deck
+          class="record-list"
+        >
+          <record-transfer-incoming-list-item
+            v-if="transferDirection === 'incoming'"
+            v-for="record in records"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+          <record-transfer-outgoing-list-item
+            v-if="transferDirection === 'outgoing'"
+            v-for="record in records"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+          <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
+        </b-card-group>
+        <div v-else>
+          You have no {{ transferDirection }} transfers.
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -137,5 +145,7 @@ export default {
 .record-list
   display: flex
   flex-wrap: wrap
+  margin-left: 0
+  margin-right: 0
 
 </style>

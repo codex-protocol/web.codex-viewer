@@ -1,20 +1,18 @@
 <template>
-  <div class="record-card">
-    <b-card
-      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-      img-top
-    >
-      <div class="approved-overlay" v-if="this.cancelApproved">
-        <p>Transfer Cancelled</p>
-        <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
-      </div>
-      <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
-      <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
-      <p class="action-buttons">
-        <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
-      </p>
-    </b-card>
-  </div>
+  <b-card
+    :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+    img-top
+  >
+    <div class="approved-overlay" v-if="this.cancelApproved">
+      <p>Transfer Cancelled</p>
+      <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
+    </div>
+    <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
+    <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
+    <p class="action-buttons">
+      <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
+    </p>
+  </b-card>
 </template>
 
 <script>
@@ -67,14 +65,25 @@ export default {
 
 @import "../assets/variables.styl"
 
-.record-card
-  width: 25%
-  max-width: 32rem
-  margin-bottom: 2em
+.card
+  flex: none
+  min-width: 180px
+  border: none
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border-radius: 0 0 .25rem .25rem
 
-  .card
-    border: none
-    border-radius: 0 0 .25rem .25rem
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc((100% * 1/2) - 2rem)
+
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc((100% * 1/3) - 2rem)
+
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc((100% * 1/4) - 2rem)
+
+  @media screen and (min-width: $breakpoint-xl)
+    max-width: calc((100% * 1/5) - 2rem)
 
   .approved-overlay
     display: flex
@@ -90,12 +99,6 @@ export default {
 
     p
       font-weight: 600
-
-  img
-    width: 100%
-    max-height: 25vw // good enough ¯\_(ツ)_/¯
-    min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: contain
 
   a
     font-weight: bold

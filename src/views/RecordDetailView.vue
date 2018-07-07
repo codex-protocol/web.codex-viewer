@@ -1,93 +1,97 @@
 <template>
-  <div>
-    <div v-if="codexRecord">
-      <div class="flex">
-        <div class="record-image">
-          <div class="record-image-wrap">
-            <b-img
-              fluid
-              v-if="codexRecord.metadata"
-              :src="mainImageUri"
-            />
-            <div class="private-img" v-else>
-              <p>This Codex Record is private</p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div v-if="codexRecord">
+          <div class="flex">
+            <div class="record-image">
+              <div class="record-image-wrap">
+                <b-img
+                  fluid
+                  v-if="codexRecord.metadata"
+                  :src="mainImageUri"
+                />
+                <div class="private-img" v-else>
+                  <p>This Codex Record is private</p>
+                </div>
+              </div>
+            </div>
+            <div class="top vertical">
+              <div v-if="codexRecord.metadata">
+                <h1>{{ codexRecord.metadata.name }}</h1>
+                <div class="description">{{ codexRecord.metadata.description }}</div>
+              </div>
+              <div v-else>
+                <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
+              </div>
+              <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
+              <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
+              <div class="mt-3" v-if="isOwner">
+                <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
+                  Manage
+                </b-button>
+
+                <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
+                  Transfer
+                </b-button>
+
+                <b-button class="mr-3" variant="primary" v-b-modal.recordPrivacySettings>
+                  Settings
+                </b-button>
+
+                <!-- @FIXME: Not wired up yet
+                <b-button variant="primary" v-if="this.isAwaitingApproval">
+                  Remove Approver
+                </b-button>
+                -->
+
+                <record-manage-modal :codex-record="codexRecord" />
+                <approve-transfer-modal :codex-record="codexRecord" />
+                <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+              </div>
+              <div class="mt-3" v-if="isApproved">
+                <b-button @click="acceptTransfer">
+                  Accept Record transfer
+                </b-button>
+              </div>
             </div>
           </div>
+          <div
+            v-if="codexRecord.metadata && codexRecord.metadata.images.length"
+            class="record-extra-images mb-5"
+          >
+            <b-img
+              class="record-extra-image"
+              thumbnail
+              fluid
+              :src="codexRecord.metadata.mainImage.uri"
+              @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
+              alt="Thumbnail"
+            />
+            <b-img
+              v-if="codexRecord.metadata.images"
+              v-for="image in codexRecord.metadata.images"
+              v-bind:key="image.id"
+              ref="images"
+              class="record-extra-image"
+              thumbnail
+              fluid
+              :src="image.uri"
+              @click.prevent="setMainImage(image.uri)"
+              alt="Thumbnail"
+            />
+          </div>
+          <record-provenance :provenance="codexRecord.provenance" />
         </div>
-        <div class="top vertical">
-          <div v-if="codexRecord.metadata">
-            <h1>{{ codexRecord.metadata.name }}</h1>
-            <div class="description">{{ codexRecord.metadata.description }}</div>
-          </div>
-          <div v-else>
-            <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
-          </div>
-          <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
-          <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
-          <div class="mt-3" v-if="isOwner">
-            <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
-              Manage
-            </b-button>
 
-            <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
-              Transfer
-            </b-button>
-
-            <b-button class="mr-3" variant="primary" v-b-modal.recordPrivacySettings>
-              Settings
-            </b-button>
-
-            <!-- @FIXME: Not wired up yet
-            <b-button variant="primary" v-if="this.isAwaitingApproval">
-              Remove Approver
-            </b-button>
-            -->
-
-            <record-manage-modal :codex-record="codexRecord" />
-            <approve-transfer-modal :codex-record="codexRecord" />
-            <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+        <div v-else>
+          <div v-if="error">
+            <p>There was an error loading Record with id {{ this.recordId }}</p>
+            <p>{{ this.error }}</p>
           </div>
-          <div class="mt-3" v-if="isApproved">
-            <b-button @click="acceptTransfer">
-              Accept Record transfer
-            </b-button>
-          </div>
+          <div v-else>Loading...</div>
         </div>
       </div>
-      <div
-        v-if="codexRecord.metadata && codexRecord.metadata.images.length"
-        class="record-extra-images mb-5"
-      >
-        <b-img
-          class="record-extra-image"
-          thumbnail
-          fluid
-          :src="codexRecord.metadata.mainImage.uri"
-          @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
-          alt="Thumbnail"
-        />
-        <b-img
-          v-if="codexRecord.metadata.images"
-          v-for="image in codexRecord.metadata.images"
-          v-bind:key="image.id"
-          ref="images"
-          class="record-extra-image"
-          thumbnail
-          fluid
-          :src="image.uri"
-          @click.prevent="setMainImage(image.uri)"
-          alt="Thumbnail"
-        />
-      </div>
-      <record-provenance :provenance="codexRecord.provenance" />
-    </div>
-
-    <div v-else>
-      <div v-if="error">
-        <p>There was an error loading Record with id {{ this.recordId }}</p>
-        <p>{{ this.error }}</p>
-      </div>
-      <div v-else>Loading...</div>
     </div>
   </div>
 </template>
