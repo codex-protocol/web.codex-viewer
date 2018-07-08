@@ -18,6 +18,14 @@
 <script>
 export default {
   name: 'faucet-marketing-card',
+  computed: {
+    balance() {
+
+    },
+    registryContractApproved() {
+
+    },
+  },
 }
 </script>
 
