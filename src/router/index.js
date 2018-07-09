@@ -134,10 +134,15 @@ const router = new Router({
   ],
 })
 
+if (config.showFaucet) {
+  router.addRoutes([
+    { name: 'faucet', path: '/faucet', component: FaucetView, meta: { allowUnauthenticatedUsers: true } },
+  ])
+}
+
 if (config.showManageTokensPage) {
   router.addRoutes([
     { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
-    { name: 'faucet', path: '/faucet', component: FaucetView },
   ])
 }
 

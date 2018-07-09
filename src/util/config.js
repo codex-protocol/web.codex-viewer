@@ -31,6 +31,8 @@ const etherScanUrl = (() => {
 })()
 
 export default {
+  showFaucet: true,
+
   showManageTokensPage: process.env.TARGET_ENV === 'development',
 
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',

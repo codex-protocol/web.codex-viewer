@@ -17,7 +17,7 @@
       <b-link v-if="showManageTokensPage" to="/manage-tokens">
         <img src="../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
-      <b-link v-if="showManageTokensPage" to="/faucet">
+      <b-link v-if="showFaucet" to="/faucet">
         <img src="../assets/icons/faucet.svg">Faucet
       </b-link>
       <b-link to="/extensions">
@@ -71,6 +71,7 @@ export default {
   data() {
     return {
       numberOfIncomingTransfers: 0,
+      showFaucet: config.showFaucet,
       showManageTokensPage: config.showManageTokensPage,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
