@@ -72,6 +72,7 @@ export default {
 
 @import "../assets/variables.styl"
 
+// @TODO: Use a better method than sizing the image viewport using `vh`
 .carousel
   width: 100%
   max-width: 100%
