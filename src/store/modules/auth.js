@@ -21,6 +21,7 @@ const initialState = () => {
     personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
+    hideSetup: !!window.localStorage.getItem('hideSetup'),
   }
 }
 
@@ -153,6 +154,10 @@ const actions = {
     commit('updateTokenBalance', optimisticBalance)
   },
 
+  hideSetup({ commit }) {
+    commit('hideSetup')
+  },
+
   // This is currently used for handling some Metamask state changes
   //  Changing the route this navigates to will require updating how we handle
   //  the state changes.
@@ -197,6 +202,7 @@ const mutations = {
     cachedAuthToken = null
     SocketService.disconnect()
     window.localStorage.removeItem('authToken')
+    window.localStorage.removeItem('hideSetup')
     delete axios.defaults.headers.common.Authorization
 
     // Reset state to its initial values
@@ -236,6 +242,14 @@ const mutations = {
     // If somehow the user has used so many tokens that their allowance is now low,
     //  they'll need to re-approve the contract for more.
     currentState[stateProperty] = allowance.greaterThan(new BigNumber('10e18'))
+  },
+
+  hideSetup(currentState) {
+    logMutation('hideSetup')
+
+    currentState.hideSetup = true
+
+    window.localStorage.setItem('hideSetup', true)
   },
 }
 
