@@ -43,7 +43,8 @@
 
         <h2>July 9th - Tokens</h2>
         <p>
-          Grab some CODX from the faucet and stake some tokens to receive a discount on any protocol operations after fees are turned on later this week.
+          Grab some CODX from the faucet so that you are prepared for when protocol fees are turned on later this week.
+          After you have some tokens, send a screenshot of your non-zero balance to codex-quests@codexprotocol.com as evidence of you completing the quest.
         </p>
 
         <h2>July 11th - Gallery</h2>

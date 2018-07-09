@@ -12,12 +12,20 @@
             {{ codexRecord.metadata.name }}
           </a>
         </b-col>
+        <b-col class="toggle" v-if="user && user.isGalleryEnabled">
+          <input
+            type="checkbox"
+            class="toggle-checkbox"
+            v-model="isInGallery"
+            @change="toggleIsInGallery"
+          />
+        </b-col>
         <b-col class="toggle">
           <input
             type="checkbox"
             class="toggle-checkbox"
-            v-model="recordIsPublic"
-            @change="savePrivacySetting"
+            v-model="isPublic"
+            @change="toggleIsPrivate"
           />
         </b-col>
       </b-row>
@@ -31,31 +39,61 @@ import missingImage from '../assets/images/missing-image.png'
 
 export default {
   name: 'record-privacy-settings-row-item',
-  props: ['codexRecord', 'isPrivate'],
+  props: ['codexRecord'],
   data() {
     return {
       missingImage,
-      recordIsPublic: !this.isPrivate,
+      isPrivate: this.codexRecord.isPrivate,
+      isInGallery: this.codexRecord.isInGallery,
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
+  },
+  computed: {
+    user() {
+      return this.$store.state.auth.user
+    },
+    isPublic: {
+      get: function getIsPublic() {
+        return !this.isPrivate
+      },
+      set: function setIsPublic(newValue) {
+        this.isPrivate = !newValue
+      },
+    },
   },
   methods: {
     viewRecord() {
       this.$router.push(this.route)
     },
-    savePrivacySetting() {
+    toggleIsPrivate() {
+      if (this.isPrivate) {
+        this.isInGallery = false
+      }
+      return this.updateRecord()
+    },
+    toggleIsInGallery() {
+      if (this.isInGallery) {
+        this.isPrivate = false
+      }
+      return this.updateRecord()
+    },
+    updateRecord() {
 
       const dataToUpdate = {
-        isPrivate: !this.recordIsPublic,
+        isPrivate: this.isPrivate,
+        isInGallery: this.isInGallery,
       }
 
-      Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
+      return Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not update Record privacy: ${error.message}`)
-
-          // Reset toggle on error
-          this.recordIsPublic = !this.isPrivate
+          EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
+          console.error('Could not update Record:', error)
+          this.reset()
         })
+    },
+    reset() {
+      this.isPrivate = this.codexRecord.isPrivate
+      this.isInGallery = this.codexRecord.isInGallery
     },
   },
 }

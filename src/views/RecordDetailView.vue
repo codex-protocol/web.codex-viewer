@@ -43,15 +43,9 @@
             </b-button>
             -->
 
-            <approve-transfer-modal :recordId="recordId" />
-            <privacy-settings-modal
-              :recordId="recordId"
-              :isPrivate="isPrivate"
-              :whitelistedAddresses="whitelistedAddresses"
-            />
-            <record-manage-modal
-              :codexRecord="codexRecord"
-            />
+            <record-manage-modal :codex-record="codexRecord" />
+            <approve-transfer-modal :codex-record="codexRecord" />
+            <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
           </div>
           <div class="mt-3" v-if="isApproved">
             <b-button @click="acceptTransfer">
@@ -153,12 +147,6 @@ export default {
     recordContract() {
       return this.web3.recordContractInstance()
     },
-    isPrivate() {
-      return this.codexRecord.isPrivate
-    },
-    whitelistedAddresses() {
-      return this.codexRecord.whitelistedAddresses
-    },
     isAwaitingApproval() {
       return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
@@ -199,6 +187,9 @@ export default {
       // if they're viewing a record that has just been destroyed, send them
       //  back to their collection
       this.$router.replace({ name: 'collection' })
+    },
+    onSettingsUpdate(newCodexRecord) {
+      this.codexRecord = newCodexRecord
     },
     getRecord() {
       Record.getRecord(this.recordId)
@@ -282,7 +273,7 @@ export default {
   justify-content: center
   background-color: #32194C
 
-  >p
+  > p
     color: white
     padding: 2em
     font-size: 2rem

@@ -6,6 +6,7 @@
         <b-row>
           <b-col class="image">Image</b-col>
           <b-col class="name">Asset Name</b-col>
+          <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
           <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
@@ -14,7 +15,6 @@
         v-if="record.metadata"
         :codex-record="record"
         :key="record.tokenId"
-        :isPrivate="record.isPrivate"
       />
     </div>
     <div v-else>
@@ -48,6 +48,9 @@ export default {
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    user() {
+      return this.$store.state.auth.user
     },
   },
   methods: {
