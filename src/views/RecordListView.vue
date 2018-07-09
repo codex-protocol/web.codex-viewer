@@ -99,7 +99,7 @@ export default {
     addTransferredRecordHandler(codexRecordToAdd) {
 
       // if this was the record created by the giveaway, hide the giveaway card
-      if (codexRecordToAdd.descriptionHash === '0x116510422a2433a90829b58b7d6addc8f686ae562cd9f7d6ab3a8235ce761d96') {
+      if (codexRecordToAdd.metadata.description === this.giveaway.editionDetails.description) {
         this.giveaway = null
       }
 
