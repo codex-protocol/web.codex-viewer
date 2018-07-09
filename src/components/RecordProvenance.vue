@@ -4,7 +4,10 @@
     <div v-if="provenance">
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
-        <div>{{ getEventAddress(row) }}</div>
+        <div>
+          <span class="address-short">{{ formatAddress(getEventAddress(row), true) }}</span>
+          <span class="address-large">{{ formatAddress(getEventAddress(row), false) }}</span>
+        </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <div class="action-buttons">
           <span v-if="row.type === 'modified' && row.codexRecordModifiedEvent.changedData">
@@ -87,6 +90,15 @@ export default {
           return null
       }
     },
+    formatAddress(address, isShort = false) {
+      let formattedAddress = address
+      if (isShort) {
+        const beginning = address.substring(0, 6)
+        const end = address.substring(address.length - 4)
+        formattedAddress = `${beginning}…${end}`
+      }
+      return formattedAddress
+    },
     getEventAddress(row) {
       switch (row.type) {
         case 'created':
@@ -119,6 +131,8 @@ export default {
 
 <style lang="stylus" scoped>
 
+@import "../assets/variables.styl"
+
 .flex
   display: flex
   border-bottom: solid 1px rgba(white, .1)
@@ -126,9 +140,24 @@ export default {
 .flex div
   flex: 1
   text-align: center
+  font-size: 0.75rem
+
+  @media screen and (min-width: $breakpoint-sm)
+    font-size: 1rem
 
   &:nth-child(2)
     flex: 3
+
+.address-short
+
+  @media screen and (min-width: $breakpoint-lg)
+    display: none
+
+.address-large
+  display: none
+
+  @media screen and (min-width: $breakpoint-lg)
+    display: inline-block
 
 .show-modified-details
   padding: 0
