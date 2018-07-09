@@ -1,7 +1,7 @@
 <template>
   <meta-mask-notification-modal
     :id="id"
-    title="Approve tokens"
+    title="Approve contract"
     ok-title="Approve"
     cancel-variant="outline-primary"
     :ok-method="approveTokens"
@@ -10,12 +10,17 @@
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
     </div>
     <slot></slot>
+    <p class="mt-5">
+      <a :href="getAddressUrl()" target="_blank">View contract on Etherscan</a>
+    </p>
   </meta-mask-notification-modal>
 </template>
 
 <script>
-import callContract from '../../util/web3/callContract'
 import EventBus from '../../util/eventBus'
+import callContract from '../../util/web3/callContract'
+import etherscanHelper from '../../util/web3/etherscanHelper'
+
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -39,6 +44,9 @@ export default {
             stateProperty: this.stateProperty,
           })
         })
+    },
+    getAddressUrl() {
+      return etherscanHelper.getAddressUrl(this.contractInstance.address)
     },
   },
   computed: {
