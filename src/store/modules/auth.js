@@ -149,6 +149,10 @@ const actions = {
     })
   },
 
+  addTokensOptimistically({ commit }, optimisticBalance) {
+    commit('updateTokenBalance', optimisticBalance)
+  },
+
   // This is currently used for handling some Metamask state changes
   //  Changing the route this navigates to will require updating how we handle
   //  the state changes.

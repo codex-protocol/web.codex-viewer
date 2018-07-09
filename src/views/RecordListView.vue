@@ -16,9 +16,10 @@
         Create giveaway
       </b-button>
     </app-header>
-    <b-card-group deck class="record-list" v-if="records.length">
+    <b-card-group deck class="record-list">
       <!-- TODO: Better handling of record w/ no metadata -->
       <faucet-marketing-card />
+
       <record-list-item
         v-if="record.metadata"
         v-for="record in records"
@@ -26,7 +27,7 @@
         :key="record.tokenId"
       />
     </b-card-group>
-    <b-card-group deck class="record-list giveaway-container" v-else-if="giveaway">
+    <b-card-group deck class="record-list giveaway-container" v-if="giveaway">
       <b-card
         img-top
         class="giveaway"
@@ -55,9 +56,6 @@
         </p>
       </b-card>
     </b-card-group>
-    <div v-else>
-      You have no Codex Records in your collection!
-    </div>
     <create-record-modal />
   </div>
 </template>

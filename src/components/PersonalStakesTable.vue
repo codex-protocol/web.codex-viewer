@@ -44,12 +44,14 @@
 </template>
 
 <script>
+import formatTokenAmount from '../util/formatTokenAmount'
+
 export default {
   name: 'personal-stakes-table',
   props: ['personalStakes'],
   methods: {
     formatTokenAmount(rawAmount) {
-      return rawAmount.div('1e18').toFixed(3)
+      return formatTokenAmount(rawAmount)
     },
   },
 }
