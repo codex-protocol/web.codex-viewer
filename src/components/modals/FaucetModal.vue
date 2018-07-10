@@ -25,8 +25,17 @@ export default {
   name: 'faucetModal',
   data() {
     return {
+      dripAmount: 100,
       modalVisible: false,
     }
+  },
+  computed: {
+    web3() {
+      return this.$store.state.web3.instance()
+    },
+    balance() {
+      return this.$store.state.auth.balance
+    },
   },
   methods: {
     requestTokens(event) {
@@ -37,6 +46,9 @@ export default {
         .then(() => {
           EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
+
+          // This will update the UI optimistically even though the token transfer may still be pending
+          this.$store.dispatch('addTokensOptimistically', this.balance.add(this.web3.toWei(this.dripAmount, 'ether')))
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)

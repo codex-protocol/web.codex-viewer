@@ -46,11 +46,6 @@ export default {
 @import "../assets/variables.styl"
 
 .record-card
-  width: 25%
-  max-width: 32rem
-  text-align: center
-  margin-bottom: 2em
-
   .card
     border: none
     cursor: pointer
@@ -60,7 +55,7 @@ export default {
     width: 100%
     max-height: 25vw // good enough ¯\_(ツ)_/¯
     min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: contain
+    object-fit: cover
 
   .card-body
     border-top: 1px solid rgba(black, .1)
