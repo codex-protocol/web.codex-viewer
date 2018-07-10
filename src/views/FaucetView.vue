@@ -37,6 +37,7 @@
 
 <script>
 import EventBus from '../util/eventBus'
+import formatTokenAmount from '../util/formatTokenAmount'
 
 import AppHeader from '../components/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
@@ -56,9 +57,8 @@ export default {
     },
   },
   methods: {
-    // @TODO: Abstract this out since it's used in several places
     formatTokenAmount(rawAmount) {
-      return rawAmount.div('1e18').toFixed(3)
+      return formatTokenAmount(rawAmount)
     },
   },
 }
