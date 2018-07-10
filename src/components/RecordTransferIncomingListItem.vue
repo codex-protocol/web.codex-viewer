@@ -104,7 +104,6 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
-          this.isLoading = false
         })
         .finally(() => {
           this.isLoading = false
