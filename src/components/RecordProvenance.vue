@@ -5,8 +5,7 @@
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
         <div>
-          <span class="address-short">{{ formatAddress(getEventAddress(row), true) }}</span>
-          <span class="address-large">{{ formatAddress(getEventAddress(row), false) }}</span>
+          <hash-formatter :data="getEventAddress(row)" />
         </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <div class="action-buttons">
@@ -50,12 +49,16 @@
 </template>
 
 <script>
+import HashFormatter from './HashFormatter'
 import { timeSince } from '../util/dateHelpers'
 import getTxUrl from '../util/web3/getTxUrl'
 
 export default {
   name: 'record-provenance',
   props: ['provenance'],
+  components: {
+    HashFormatter,
+  },
   data() {
     return {
       modifiedDetails: null,
@@ -89,15 +92,6 @@ export default {
         default:
           return null
       }
-    },
-    formatAddress(address, isShort = false) {
-      let formattedAddress = address
-      if (isShort) {
-        const beginning = address.substring(0, 6)
-        const end = address.substring(address.length - 4)
-        formattedAddress = `${beginning}…${end}`
-      }
-      return formattedAddress
     },
     getEventAddress(row) {
       switch (row.type) {
