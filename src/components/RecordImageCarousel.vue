@@ -13,11 +13,8 @@
     >
       <b-carousel
         controls
-        v-model="slide"
         :interval="0"
         class="fixed-size-carousel"
-        @sliding-start="onSlideStart"
-        @sliding-end="onSlideEnd"
       >
 
         <b-carousel-slide :img-src="mainImageUri"></b-carousel-slide>
@@ -46,22 +43,11 @@ export default {
   props: ['codexRecord'],
   data() {
     return {
-      slide: 0,
-      sliding: null,
       missingImage,
     }
   },
-  methods: {
-    onSlideStart(slide) {
-      this.sliding = true
-    },
-    onSlideEnd(slide) {
-      this.sliding = false
-    },
-  },
   computed: {
     mainImageUri() {
-      console.log('foo', this.codexRecord.metadata)
       return (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
     },
   },
@@ -103,7 +89,7 @@ export default {
   text-align: center
   align-items: center
   justify-content: center
-  background-color: #32194C
+  background-color: $color-secondary
 
   > p
     color: white
