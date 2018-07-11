@@ -29,7 +29,7 @@
       Get more CODX
     </b-button>
 
-    <p>Your balance: {{ formatTokenAmount(userState.balance) }} CODX</p>
+    <p>Your balance: {{ formattedBalance }} CODX</p>
 
     <faucet-modal />
   </div>
@@ -55,10 +55,8 @@ export default {
     userState() {
       return this.$store.state.auth
     },
-  },
-  methods: {
-    formatTokenAmount(rawAmount) {
-      return formatTokenAmount(rawAmount)
+    formattedBalance() {
+      return formatTokenAmount(this.userState.balance)
     },
   },
 }

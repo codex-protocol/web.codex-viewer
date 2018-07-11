@@ -49,14 +49,14 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('socket:address-approved:owner', this.addOutgoingRecordHandler)
-    EventBus.$on('socket:address-approved:approved', this.addIncomingRecordHandler)
-    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:address-approved:owner', this.addOutgoingRecordHandler)
+    EventBus.$on('socket:codex-record:address-approved:approved', this.addIncomingRecordHandler)
+    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
   beforeDestroy() {
-    EventBus.$off('socket:address-approved:owner', this.addOutgoingRecordHandler)
-    EventBus.$off('socket:address-approved:approved', this.addIncomingRecordHandler)
-    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:address-approved:owner', this.addOutgoingRecordHandler)
+    EventBus.$off('socket:codex-record:address-approved:approved', this.addIncomingRecordHandler)
+    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
   created() {
     EventBus.$emit('events:view-transfers-page')

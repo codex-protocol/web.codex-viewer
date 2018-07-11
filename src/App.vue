@@ -16,6 +16,7 @@ import axios from 'axios'
 import 'freshchat-widget'
 
 import config from './util/config'
+import EventBus from './util/eventBus'
 import AppSideBar from './components/AppSideBar'
 import AppFooter from './components/AppFooter'
 import { Web3Errors } from './store/modules/web3'
@@ -31,13 +32,23 @@ export default {
     ToastContainer,
   },
   created() {
+
     this.initializeApi()
 
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
+
         if (this.authToken) {
           this.$store.dispatch('updateUserState', this.authToken)
         }
+
+        EventBus.$on('socket:codex-coin:transferred', () => {
+          this.$store.dispatch('updateUserState')
+        })
+
+        EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
+          this.$store.dispatch('updateUserState')
+        })
       })
   },
   data() {

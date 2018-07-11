@@ -41,10 +41,10 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('socket:record-transferred:new-owner', this.recordTransferredHandler)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.recordTransferredHandler)
   },
   beforeDestroy() {
-    EventBus.$off('socket:record-transferred:new-owner', this.recordTransferredHandler)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.recordTransferredHandler)
   },
   computed: {
     web3() {

@@ -161,12 +161,12 @@ export default {
     this.getRecord()
   },
   mounted() {
-    EventBus.$on('socket:record-modified', this.recordModifiedHandler)
-    EventBus.$on('socket:record-destroyed', this.recordDestroyedHandler)
+    EventBus.$on('socket:codex-record:modified', this.recordModifiedHandler)
+    EventBus.$on('socket:codex-record:destroyed', this.recordDestroyedHandler)
   },
   beforeDestroy() {
-    EventBus.$off('socket:record-modified', this.recordModifiedHandler)
-    EventBus.$off('socket:record-destroyed', this.recordDestroyedHandler)
+    EventBus.$off('socket:codex-record:modified', this.recordModifiedHandler)
+    EventBus.$off('socket:codex-record:destroyed', this.recordDestroyedHandler)
   },
   watch: {
     $route: 'getRecord',
