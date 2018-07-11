@@ -7,6 +7,7 @@
     size="lg"
     :ok-method="updateMetadata"
     :on-clear="clearModal"
+    :requires-tokens="true"
   >
     <b-form-group
       label="Name"
@@ -278,7 +279,9 @@ export default {
       this.removeAddedImage(uuid)
     },
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      if (this.$refs.defaultModalFocus) {
+        this.$refs.defaultModalFocus.focus()
+      }
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))

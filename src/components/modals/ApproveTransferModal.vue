@@ -7,6 +7,7 @@
     :ok-method="approveTransfer"
     :on-shown="focusModal"
     :on-clear="clearModal"
+    :requires-tokens="true"
   >
     <b-form-group
       label="Type or paste wallet address"
@@ -64,7 +65,9 @@ export default {
   },
   methods: {
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      if (this.$refs.defaultModalFocus) {
+        this.$refs.defaultModalFocus.focus()
+      }
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
