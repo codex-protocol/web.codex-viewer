@@ -2,41 +2,50 @@
   <div>
     <app-header title="CODX Faucet" />
 
-    <p>
-      Welcome to the CodexCoin (CODX) Faucet.
-      In the blockchain space, a faucet is an application that issues tokens to requesting users for free.
-    </p>
-    <p>
-      Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
-      After requesting a drip from the faucet, CodexCoin will be sent to the MetaMask account you are currently logged in to.
-    </p>
-    <p>
-      Make sure to get some CodexCoin from the faucet!
-      Right now fees are turned off on the protocol,
-      but later this week we'll enable fees and you'll be required to have CodexCoin to transact with the protocol.
-    </p>
-    <p v-if="!userState.user">
-      You need to be logged in before you can request tokens from the faucet!
-      Login using the button on the side.
-    </p>
+    <div class="content">
+      <p>
+        Welcome to the CodexCoin (CODX) Faucet.
+        In the blockchain space, a faucet is an application that issues tokens to requesting users for free.
+      </p>
+      <p>
+        Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
+        After requesting a drip from the faucet, CodexCoin will be sent to the MetaMask account you are currently logged in to.
+        You can request 1 drip every 24h.
+      </p>
+      <p>
+        Make sure to get some CodexCoin from the faucet!
+        Right now fees are turned off on the protocol,
+        but later this week we'll enable fees and you'll be required to have CodexCoin to transact with the protocol.
+      </p>
+      <p v-if="!userState.user">
+        You need to be logged in before you can request tokens from the faucet!
+        Login using the button on the side.
+      </p>
+      <div v-else>
+        <hr />
+        <p v-if="!userState.user.canRequestFaucetTokens">
+          You'll be able to request more CODX in {{ nextRequestIn }}
+        </p>
+        <b-button
+          class="mb-3"
+          variant="primary"
+          v-b-modal.faucetModal
+          :disabled="!this.userState.user.canRequestFaucetTokens"
+        >
+          Get more CODX
+        </b-button>
 
-    <b-button
-      class="mb-3"
-      variant="primary"
-      v-b-modal.faucetModal
-      :disabled="!userState.user"
-    >
-      Get more CODX
-    </b-button>
+        <p>Your balance: {{ formattedBalance }} CODX</p>
 
-    <p>Your balance: {{ formattedBalance }} CODX</p>
-
-    <faucet-modal />
+        <faucet-modal />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import EventBus from '../util/eventBus'
+import { timeSince } from '../util/dateHelpers'
 import formatTokenAmount from '../util/formatTokenAmount'
 
 import AppHeader from '../components/AppHeader'
@@ -58,10 +67,24 @@ export default {
     formattedBalance() {
       return formatTokenAmount(this.userState.balance)
     },
+    nextRequestIn() {
+      const lastRequestedAt = new Date(this.userState.user.faucetLastRequestedAt)
+      const nextDay = new Date(lastRequestedAt.getTime() - (86400 * 1000))
+      return timeSince(nextDay)
+    },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
 
+.content
+  max-width: 50%
+
+hr
+  border-color: $color-primary
+  width: 50%
+  margin-top: 2rem
+  margin-bottom: 2rem
 </style>
