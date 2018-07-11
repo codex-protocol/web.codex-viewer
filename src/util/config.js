@@ -31,16 +31,13 @@ const etherScanUrl = (() => {
 })()
 
 export default {
+
   showFaucet: true,
+  showCodexQuestsMarketing: true,
+  showCodexGalleryInSideBar: true,
 
   showManageTokensPage: process.env.TARGET_ENV === 'development',
-
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
-
-  showCodexQuestsMarketing: true,
-
-  // @TODO: Navigation to this page is fine for now, but don't surface it in the side bar until the feature is ready
-  showCodexGalleryInSideBar: process.env.TARGET_ENV !== 'production',
 
   apiUrl,
   etherScanUrl,
