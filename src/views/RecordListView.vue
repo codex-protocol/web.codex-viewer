@@ -146,8 +146,4 @@ export default {
   display: flex
   flex-wrap: wrap
 
-  > div
-    width: 25%
-    text-align: center
-    margin-bottom: 2em
 </style>
