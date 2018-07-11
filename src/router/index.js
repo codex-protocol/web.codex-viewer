@@ -95,6 +95,10 @@ const router = new Router({
       },
     },
 
+    // gallery routes
+    { name: 'galleries', path: '/galleries', component: GalleryListView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'gallery', path: '/galleries/:galleryShareCode', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
+
     // other non-application routes
     // @TODO: Deprecate /coming-soon after /extensions has shipped
     {
@@ -149,13 +153,6 @@ if (config.showManageTokensPage) {
 if (config.showCodexQuestsMarketing) {
   router.addRoutes([
     { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView, meta: { allowUnauthenticatedUsers: true } },
-  ])
-}
-
-if (config.showCodexGalleryInSideBar) {
-  router.addRoutes([
-    { name: 'galleries', path: '/galleries', component: GalleryListView, meta: { allowUnauthenticatedUsers: true } },
-    { name: 'gallery', path: '/galleries/:galleryShareCode', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
   ])
 }
 
