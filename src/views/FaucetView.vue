@@ -1,15 +1,19 @@
 <template>
-  <div>
-    <app-header title="CODX Faucet" />
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="CODX Faucet" />
 
-    <div>
-      <p>Your balance: {{ formatTokenAmount(userState.balance) }} CODX</p>
-      <b-button variant="primary" v-b-modal.faucetModal>
-        Get more CODX
-      </b-button>
+        <div>
+          <p>Your balance: {{ formatTokenAmount(userState.balance) }} CODX</p>
+          <b-button variant="primary" v-b-modal.faucetModal>
+            Get more CODX
+          </b-button>
+        </div>
+
+        <faucet-modal />
+      </div>
     </div>
-
-    <faucet-modal />
   </div>
 </template>
 

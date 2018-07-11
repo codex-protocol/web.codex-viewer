@@ -109,6 +109,10 @@ export default {
   //  while inside of a modal... (maybe?)
   z-index: 1050
 
+  @media screen and (max-width: $breakpoint-sm)
+    width: 100%
+    position: fixed
+
   .toast
     right: 0
     opacity: .9

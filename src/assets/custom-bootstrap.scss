@@ -47,6 +47,10 @@ $grid-gutter-width:                 2rem;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
+.container-fluid {
+  max-width: 1140px;
+}
+
 .modal-dialog {
   color: $color-light;
 }
