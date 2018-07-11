@@ -55,6 +55,10 @@ $grid-gutter-width:                 2rem;
   color: $color-light;
 }
 
+.modal-body {
+  text-align: initial;
+}
+
 .form-control,
 .custom-file-label {
   border: none;
@@ -115,6 +119,10 @@ hr {
 
 .card-header > .fixed-size-carousel {
   height: 100%;
+
+  .carousel-item > img {
+    object-fit: cover;
+  }
 }
 
 .carousel-item:focus {

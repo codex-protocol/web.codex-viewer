@@ -51,7 +51,7 @@
 <script>
 import HashFormatter from './HashFormatter'
 import { timeSince } from '../util/dateHelpers'
-import getTxUrl from '../util/web3/getTxUrl'
+import etherscanHelper from '../util/web3/etherscanHelper'
 
 export default {
   name: 'record-provenance',
@@ -108,7 +108,7 @@ export default {
       }
     },
     getTransactionUrl(txHash) {
-      return getTxUrl(txHash)
+      return etherscanHelper.getTxUrl(txHash)
     },
     showModifiedDetailsModal(row) {
       this.modifiedDetailsModalVisible = true

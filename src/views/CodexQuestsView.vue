@@ -45,7 +45,8 @@
 
             <h2>July 9th - Tokens</h2>
             <p>
-              Grab some CODX from the faucet and stake some tokens to receive a discount on any protocol operations after fees are turned on later this week.
+              Grab some CODX from the faucet so that you are prepared for when protocol fees are turned on later this week.
+              After you have some tokens, send a screenshot of your non-zero balance to codex-quests@codexprotocol.com as evidence of you completing the quest.
             </p>
 
             <h2>July 11th - Gallery</h2>
@@ -55,7 +56,7 @@
               Create a Codex Record (receive a bonus of $5 in CODX for sharing your own artwork) and transfer it to address <a href="https://rinkeby.etherscan.io/address/0x61E69543d7858AFE535241A6e1DdD22A11ae47B4" target="_blank">0x61E69543d7858AFE535241A6e1DdD22A11ae47B4</a>.
             </p>
             <p>
-              Address 0x61E69543d7858AFE535241A6e1DdD22A11ae47B4 is going to be our first Codex Gallery. Any Codex Records owned by this account will be made public, and shared at <b-link to="/gallery">The Codex Gallery</b-link>.
+              Address 0x61E69543d7858AFE535241A6e1DdD22A11ae47B4 is going to be our first Codex Gallery. Any Codex Records owned by this account will be made public, and shared at <b-link to="/galleries/codex">The Codex Gallery</b-link>.
             </p>
             <p>
               This means that by the end of our Beta period, we'll have a unique gallery composed of all the artists &amp; collectors in our community.
@@ -90,9 +91,6 @@ export default {
 .content
 
   @media screen and (min-width: $breakpoint-lg)
-    max-width: 50%
-
-  @media screen and (min-width: $breakpoint-xl)
     max-width: 50%
 
 .schedule

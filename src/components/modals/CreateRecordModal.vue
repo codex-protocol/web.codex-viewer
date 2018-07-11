@@ -9,6 +9,7 @@
     :on-shown="focusModal"
     :ok-method="createMetaData"
     :on-clear="clearModal"
+    :requires-tokens="true"
   >
     <div class="flex-container">
       <div>
@@ -94,7 +95,9 @@ export default {
   },
   methods: {
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      if (this.$refs.defaultModalFocus) {
+        this.$refs.defaultModalFocus.focus()
+      }
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
