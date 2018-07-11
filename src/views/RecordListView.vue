@@ -78,16 +78,16 @@ export default {
     //  handler for both
     //
     // the same concept applies for outgoing transfers and destroyed records
-    EventBus.$on('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$on('socket:record-destroyed', this.removeTransferredRecordHandler)
-    EventBus.$on('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$on('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
   beforeDestroy() {
-    EventBus.$off('socket:mint-confirmed', this.addTransferredRecordHandler)
-    EventBus.$off('socket:record-destroyed', this.removeTransferredRecordHandler)
-    EventBus.$off('socket:record-transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$off('socket:record-transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
   created() {
     this.getRecords()

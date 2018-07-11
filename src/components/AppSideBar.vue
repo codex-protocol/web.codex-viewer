@@ -87,12 +87,12 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on('socket:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$on('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+    EventBus.$on('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
   },
   beforeDestroy() {
-    EventBus.$off('socket:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$off('socket:record-transferred:new-owner', this.updateIncomingTransfersCount)
+    EventBus.$off('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
   },
   methods: {
     logout() {

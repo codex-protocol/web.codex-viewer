@@ -150,8 +150,12 @@ const actions = {
     })
   },
 
-  addTokensOptimistically({ commit }, optimisticBalance) {
+  handleFaucetRequest({ commit }, optimisticBalance) {
     commit('updateTokenBalance', optimisticBalance)
+    commit('updateUser', {
+      canRequestFaucetTokens: false,
+      faucetLastRequestedAt: (new Date()).toISOString(),
+    })
   },
 
   hideSetup({ commit }) {
@@ -194,6 +198,12 @@ const mutations = {
   setUser(currentState, newUser) {
     logMutation('setUser', newUser)
     currentState.user = newUser
+  },
+
+  updateUser(currentState, newProperties) {
+    logMutation('updateUser', newProperties)
+
+    Object.assign(currentState.user, newProperties)
   },
 
   clearUserState(currentState) {

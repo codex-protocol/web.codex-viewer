@@ -17,45 +17,54 @@
     :hide-header-close="preventClose"
     :no-close-on-backdrop="preventClose"
   >
-    <slot v-if="currentStep === 0"></slot>
+    <slot v-if="currentStep === 0 && !willTransactionFail"></slot>
 
-    <div v-else>
+    <div class="text-center" v-else>
 
-      <div class="text-center">
+      <div>
         <img class="icon" src="../../assets/images/metamask.png" />
       </div>
 
       <div v-if="metamaskError">
-        <p class="text-center">
+        <p>
           There was a problem sending your transaction:
         </p>
-        <pre class="text-center metamask-error">{{metamaskError}}</pre>
+        <pre class="metamask-error">{{metamaskError}}</pre>
+      </div>
+
+      <div v-else-if="willTransactionFail">
+        <p>
+          You haven't finished setting up your account so the transaction will fail.
+        </p>
+        <p>
+          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet</a> and <a href="#" @click="$router.push({ name: 'manage-tokens' })">approve the registry contract.</a>
+        </p>
       </div>
 
       <div v-else>
         <div v-if="currentStep === 1">
-          <p class="text-center">
+          <p>
             When you click "{{ okTitle }}" we will pop up a Metamask dialog.
           </p>
-          <p class="text-center">
+          <p>
             This dialog will ask you to confirm the transaction, including a small ETH cost.
           </p>
-          <p class="text-center">
+          <p>
             The transaction is set with a default gas limit and price. It&rsquo;s fine to keep these defaults.
           </p>
         </div>
 
         <div v-else-if="currentStep === 2">
-          <p class="text-center">
+          <p>
             Please wait while your transaction is sent by MetaMask...
           </p>
         </div>
 
         <div v-else-if="currentStep === 3">
-          <p class="text-center">
+          <p>
             Your transaction has been submitted!
           </p>
-          <p class="text-center">
+          <p>
             It will take a few minutes for your transaction to be mined, but you may now close this dialog.
           </p>
         </div>
@@ -79,6 +88,7 @@ export default {
     'size',
     'onShown',
     'onClear',
+    'requiresTokens',
   ],
   data() {
     return {
@@ -144,10 +154,22 @@ export default {
       return () => {}
     },
     isDisabled() {
+      if (this.currentStep === 1 && this.willTransactionFail) {
+        return true
+      }
+
       return this.okDisabled || false
     },
     modalSize() {
       return this.size || ''
+    },
+    willTransactionFail() {
+      const {
+        balance,
+        registryContractApproved,
+      } = this.$store.state.auth
+
+      return this.requiresTokens && (!registryContractApproved || balance.eq(0))
     },
   },
 }
