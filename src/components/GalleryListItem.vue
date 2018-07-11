@@ -52,7 +52,6 @@ export default {
 
 .gallery-card
   width: 25%
-  max-width: 32rem
   margin-bottom: 2em
 
   .card

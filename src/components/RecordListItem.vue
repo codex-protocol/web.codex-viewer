@@ -46,6 +46,10 @@ export default {
 @import "../assets/variables.styl"
 
 .record-card
+  width: 25%
+  text-align: center
+  margin-bottom: 2em
+
   .card
     border: none
     cursor: pointer

@@ -144,7 +144,6 @@ export default {
 
   > div
     width: 25%
-    max-width: 32rem
     text-align: center
     margin-bottom: 2em
 </style>

@@ -48,7 +48,7 @@
           You haven't finished setting up your account so the transaction will fail.
         </p>
         <p>
-          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet and approve the registry contract.</a>
+          Make sure to <b-link :to="{ name: 'faucet' }">get CODX from the faucet and approve the registry contract.</b-link>
         </p>
       </div>
 
