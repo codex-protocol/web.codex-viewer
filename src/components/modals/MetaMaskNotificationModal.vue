@@ -17,9 +17,20 @@
     :hide-header-close="preventClose"
     :no-close-on-backdrop="preventClose"
   >
-    <slot v-if="currentStep === 0 && !willTransactionFail"></slot>
 
-    <div class="text-center" v-else>
+    <!--
+      @NOTE: we use v-show here instead of v-if so that scoped styles from
+      parent components will still be applied
+
+      since there are some calculations to be done before showing the slot, the
+      time it takes to do so prevents webpack from being able to apply the
+      scoped styles if you use a v-if
+    -->
+    <div v-show="shouldShowMainSlot">
+      <slot></slot>
+    </div>
+
+    <div class="text-center" v-show="!shouldShowMainSlot">
 
       <div>
         <img class="icon" src="../../assets/images/metamask.png" />
@@ -37,7 +48,7 @@
           You haven't finished setting up your account so the transaction will fail.
         </p>
         <p>
-          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet</a> and <a href="#" @click="$router.push({ name: 'manage-tokens' })">approve the registry contract.</a>
+          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet and approve the registry contract.</a>
         </p>
       </div>
 
@@ -154,11 +165,7 @@ export default {
       return () => {}
     },
     isDisabled() {
-      if (this.currentStep === 1 && this.willTransactionFail) {
-        return true
-      }
-
-      return this.okDisabled || false
+      return this.willTransactionFail || this.okDisabled || false
     },
     modalSize() {
       return this.size || ''
@@ -170,6 +177,9 @@ export default {
       } = this.$store.state.auth
 
       return this.requiresTokens && (!registryContractApproved || balance.eq(0))
+    },
+    shouldShowMainSlot() {
+      return this.currentStep === 0 && !this.willTransactionFail
     },
   },
 }

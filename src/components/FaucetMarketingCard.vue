@@ -10,9 +10,9 @@
           variant="success"
         />
         <ul>
-          <li>Participate in the giveaway</li>
-          <li>Get CODX from the faucet</li>
-          <li>Approve the registry contract</li>
+          <li :class="{ 'completed': currentStep >= 1 }">Participate in the giveaway</li>
+          <li :class="{ 'completed': currentStep >= 2 }">Get CODX from the faucet</li>
+          <li :class="{ 'completed': currentStep >= 3 }">Approve the registry contract</li>
         </ul>
         <p>Your balance: {{ formatTokenAmount(balance) }} CODX</p>
       </div>
@@ -86,7 +86,7 @@ export default {
           return 'Get CODX'
 
         case 2:
-          return 'Approve the registry contract'
+          return 'Approve Contract'
 
         case 3:
         default:
@@ -123,8 +123,8 @@ export default {
 @import "../assets/variables.styl"
 
 h2
-  font-size: 1.25rem
   font-weight: bold
+  font-size: 1.25rem
   color: $color-light
 
 .card
@@ -133,21 +133,26 @@ h2
   background-color: rgba(white, .1)
 
 .faucet-card-body
-  text-align: left
-  padding: 1.25rem
   flex: 1
+  text-align: left
+  padding: 1.25rem 1.25rem 0
 
-  .card-body
-    text-align: left
+  p:last-of-type
+    margin-bottom: 0
 
 button
   margin: 1.25rem
+  white-space: normal
 
 ul
   font-size: 1.125rem
 
 li
   margin-bottom: 1rem
+
+  &.completed
+    opacity: .5
+    text-decoration: line-through
 
 .dismiss
   font-size: 0.75rem

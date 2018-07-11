@@ -142,7 +142,7 @@ export default {
   display: flex
   flex-wrap: wrap
 
-  div
+  > div
     width: 25%
     max-width: 32rem
     text-align: center
