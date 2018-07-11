@@ -51,6 +51,10 @@ $grid-gutter-width:                 2rem;
   color: $color-light;
 }
 
+.modal-body {
+  text-align: initial;
+}
+
 .form-control,
 .custom-file-label {
   border: none;

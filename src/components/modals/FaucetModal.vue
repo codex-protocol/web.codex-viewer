@@ -47,8 +47,12 @@ export default {
           EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
 
+          // @NOTE: optimistic updating has been disabled for now since it
+          //  allows the user to submit fee-based transactions that will fail
+          //  until the faucet transaction is actually mined
+          //
           // This will update the UI optimistically even though the token transfer may still be pending
-          this.$store.dispatch('handleFaucetRequest', this.balance.add(this.web3.toWei(this.dripAmount, 'ether')))
+          // this.$store.dispatch('handleFaucetRequest', this.balance.add(this.web3.toWei(this.dripAmount, 'ether')))
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
