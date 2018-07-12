@@ -8,6 +8,7 @@
       <app-footer />
     </div>
     <toast-container />
+    <hubspot-tracking :hubspotId="hubspotId" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import 'freshchat-widget'
 import config from './util/config'
 import EventBus from './util/eventBus'
 import AppSideBar from './components/AppSideBar'
+import HubspotTracking from './components/HubspotTracking'
 import AppFooter from './components/AppFooter'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
@@ -30,6 +32,7 @@ export default {
     AppSideBar,
     AppFooter,
     ToastContainer,
+    HubspotTracking,
   },
   created() {
 
@@ -54,6 +57,7 @@ export default {
   data() {
     return {
       freshChatToken: process.env.FRESHCHAT_API_TOKEN,
+      hubspotId: process.env.HUBSPOT_ID,
     }
   },
   computed: {
