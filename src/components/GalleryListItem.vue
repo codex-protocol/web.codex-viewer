@@ -1,29 +1,30 @@
 <template>
-  <div class="gallery-card" v-if="gallery.codexRecords">
-    <b-card @click.prevent="viewGallery">
-      <b-carousel
-        slot="header"
-        :interval="3000"
-        class="fixed-size-carousel"
-      >
-        <b-carousel-slide
-          :key="codexRecord.id"
-          v-for="codexRecord in gallery.codexRecords"
-          :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-        ></b-carousel-slide>
-      </b-carousel>
-      <div class="card-text">
-        <p>
-          <a href="#" @click.prevent="viewGallery">
-            {{ gallery.name }}
-          </a>
-        </p>
-        <small class="text-muted">
-          {{ gallery.description }}
-        </small>
-      </div>
-    </b-card>
-  </div>
+  <b-card
+    v-if="gallery.codexRecords"
+    @click.prevent="viewGallery"
+  >
+    <b-carousel
+      slot="header"
+      :interval="3000"
+      class="fixed-size-carousel"
+    >
+      <b-carousel-slide
+        :key="codexRecord.id"
+        v-for="codexRecord in gallery.codexRecords"
+        :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+      ></b-carousel-slide>
+    </b-carousel>
+    <div class="card-text">
+      <p>
+        <a href="#" @click.prevent="viewGallery">
+          {{ gallery.name }}
+        </a>
+      </p>
+      <small class="text-muted">
+        {{ gallery.description }}
+      </small>
+    </div>
+  </b-card>
 </template>
 
 <script>
@@ -50,18 +51,30 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.gallery-card
-  width: 25%
-  margin-bottom: 2em
+.card
+  flex: none
+  min-width: 180px
+  border: none
+  cursor: pointer
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border-radius: 0 0 .25rem .25rem
+  background-color: #fff
 
-  .card
-    border: none
-    cursor: pointer
-    border-radius: 0 0 .25rem .25rem
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc((100% * 1/2) - 2rem)
+
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc((100% * 1/3) - 2rem)
+
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc((100% * 1/4) - 2rem)
+
+  @media screen and (min-width: $breakpoint-xl)
+    max-width: calc((100% * 1/5) - 2rem)
 
   .card-header
     padding: 0
-    height: 25vh
 
   .card-body
     a

@@ -1,31 +1,35 @@
 <template>
-  <div>
-    <app-header title="Galleries" />
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Galleries" />
 
-    <div v-if="galleries.length">
-      <b-card-group deck>
-        <gallery-list-item
-          v-if="gallery.codexRecords"
-          v-for="gallery in galleries"
-          :gallery="gallery"
-          :key="gallery.id"
-        />
-        <b-card
-          title="Coming Soon"
-          class="upsell-card"
-        >
-          <p class="card-text">
-            Create your own public galleries!
-          </p>
-          <p class="card-text">
-            Soon you will be able to organize your Collection into public galleries so you can share groups of Codex Records like the one you see here.
-          </p>
-        </b-card>
-      </b-card-group>
-    </div>
+        <div v-if="galleries.length">
+          <b-card-group deck>
+            <gallery-list-item
+              v-if="gallery.codexRecords"
+              v-for="gallery in galleries"
+              :gallery="gallery"
+              :key="gallery.id"
+            />
+            <b-card
+              title="Coming Soon"
+              class="upsell-card"
+            >
+              <p class="card-text">
+                Create your own public galleries!
+              </p>
+              <p class="card-text">
+                Soon you will be able to organize your Collection into public galleries so you can share groups of Codex Records like the one you see here.
+              </p>
+            </b-card>
+          </b-card-group>
+        </div>
 
-    <div v-else>
-      No galleries have been created yet.
+        <div v-else>
+          No galleries have been created yet.
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -70,17 +74,25 @@ export default {
 
 @import "../assets/variables.styl"
 
-.upsell-card
+.card
   flex: none
-  width: 25%
-  text-align: center
-  margin-bottom: 2em
-  background: transparent
-  border: 1px solid $color-light
+  min-width: 180px
+  border: none
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border-radius: 0 0 .25rem .25rem
+  background-color: rgba(white, .1)
 
-  > div
-    display: flex
-    flex-direction: column
-    justify-content: center
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc((100% * 1/2) - 2rem)
+
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc((100% * 1/3) - 2rem)
+
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc((100% * 1/4) - 2rem)
+
+  @media screen and (min-width: $breakpoint-xl)
+    max-width: calc((100% * 1/5) - 2rem)
 
 </style>
