@@ -1,41 +1,47 @@
 <template>
-  <div v-if="gallery">
-    <app-header :hide-network-details="true" :title="gallery.name">
-      <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
-        View Fullscreen
-      </b-button>
-    </app-header>
+  <div
+    v-if="gallery"
+    class="container-fluid"
+  >
+    <div class="row">
+      <div class="col-12">
+        <app-header :hide-network-details="true" :title="gallery.name">
+          <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
+            View Fullscreen
+          </b-button>
+        </app-header>
 
-    <div class="carousel-container" ref="carousel-container">
-      <b-carousel
-        controls
-        slot="header"
-        v-model="slideIndex"
-        class="fixed-size-carousel"
-        :interval="gallery.slideDuration"
-      >
-        <b-carousel-slide
-          :key="codexRecord.id"
-          v-for="codexRecord in gallery.codexRecords"
-          :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-        ></b-carousel-slide>
-      </b-carousel>
+        <div class="carousel-container" ref="carousel-container">
+          <b-carousel
+            controls
+            slot="header"
+            v-model="slideIndex"
+            class="fixed-size-carousel"
+            :interval="gallery.slideDuration"
+          >
+            <b-carousel-slide
+              :key="codexRecord.id"
+              v-for="codexRecord in gallery.codexRecords"
+              :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+            ></b-carousel-slide>
+          </b-carousel>
 
-      <p class="record-info">
-        <a href="#" @click.prevent="viewRecord(currentCodexRecord.tokenId)">
-          {{ currentCodexRecord.metadata.name }}
-        </a>
-      </p>
+          <p class="record-info">
+            <a href="#" @click.prevent="viewRecord(currentCodexRecord.tokenId)">
+              {{ currentCodexRecord.metadata.name }}
+            </a>
+          </p>
+        </div>
+
+        <b-card-group deck class="record-list">
+          <record-list-item
+            v-for="record in gallery.codexRecords"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+        </b-card-group>
+      </div>
     </div>
-
-    <b-card-group deck class="record-list">
-      <record-list-item
-        v-for="record in gallery.codexRecords"
-        :codex-record="record"
-        :key="record.tokenId"
-      />
-    </b-card-group>
-
   </div>
 </template>
 
@@ -102,8 +108,6 @@ export default {
 // a lot of these .carousel-container styles are mainly here for the fullscreen
 //  view
 .carousel-container
-  width: 100%
-  height: 100%
   display: flex
   align-items: center
   flex-direction: column
