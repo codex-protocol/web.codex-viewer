@@ -111,9 +111,12 @@ export default {
   background-color: $color-dark
 
 .carousel
-  width: 50%
-  height: 50vh
-  max-width: 50%
+  padding: 1rem
+
+  @media screen and (min-width: $breakpoint-md)
+    width: 50%
+    height: 50vh
+    max-width: 50%
 
 .record-info
   width: 50%
@@ -124,8 +127,12 @@ export default {
   background-color: rgba(white, .01)
 
 .record-list
-  display: flex
-  flex-wrap: wrap
+  display: none
   margin-top:  4rem
+  padding: 1rem
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    flex-wrap: wrap
 
 </style>
