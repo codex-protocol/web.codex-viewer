@@ -108,6 +108,7 @@ export default {
 // a lot of these .carousel-container styles are mainly here for the fullscreen
 //  view
 .carousel-container
+  width: 100%
   display: flex
   align-items: center
   flex-direction: column
@@ -115,6 +116,7 @@ export default {
   background-color: $color-dark
 
 .carousel
+  width: 100%
   padding: 1rem
 
   @media screen and (min-width: $breakpoint-md)
