@@ -4,7 +4,7 @@
       <b-row v-if="codexRecord.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewRecord">
-            <img :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
+            <img :src="missingImageHelper.getMainImageUri(codexRecord.metadata)" />
           </a>
         </b-col>
         <b-col class="name">
@@ -35,14 +35,14 @@
 <script>
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-privacy-settings-row-item',
   props: ['codexRecord'],
   data() {
     return {
-      missingImage,
+      missingImageHelper,
       isPrivate: this.codexRecord.isPrivate,
       isInGallery: this.codexRecord.isInGallery,
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },

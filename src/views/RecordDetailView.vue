@@ -94,11 +94,11 @@
 
 <script>
 import Record from '../util/api/record'
+import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
-import EventBus from '../util/eventBus'
+import missingImageHelper from '../util/missingImageHelper'
 
-import missingImage from '../assets/images/missing-image.png'
 import RecordProvenance from '../components/RecordProvenance'
 import RecordManageModal from '../components/modals/RecordManageModal'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
@@ -116,10 +116,9 @@ export default {
   },
   data() {
     return {
-      showDetails: false,
-      codexRecord: null,
       error: null,
-      missingImage,
+      codexRecord: null,
+      showDetails: false,
       activeMainImage: null,
     }
   },
@@ -152,8 +151,7 @@ export default {
         this.codexRecord.approvedAddress !== ZeroAddress
     },
     mainImageUri() {
-      return (this.activeMainImage) ||
-        (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
+      return this.activeMainImage || missingImageHelper.getMainImageUri(this.codexRecord.metadata)
     },
   },
   created() {
