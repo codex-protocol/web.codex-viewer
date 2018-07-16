@@ -58,7 +58,7 @@ const actions = {
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.recordContractInstance()
-    const stakeContract = web3.stakeContainerContractInstance()
+    // const stakeContract = web3.stakeContainerContractInstance()
 
 
     // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
@@ -70,16 +70,16 @@ const actions = {
       tokenContract,
     })
 
-    dispatch('getStakeBalances', {
-      account,
-      stakeContract,
-    })
+    // dispatch('getStakeBalances', {
+    //   account,
+    //   stakeContract,
+    // })
 
     dispatch('getApprovalStatus', {
       account,
       tokenContract,
       registryContractAddress: registryContract.address,
-      stakeContractAddress: stakeContract.address,
+      // stakeContractAddress: stakeContract.address,
     })
 
     if (newAuthToken) {
@@ -132,7 +132,7 @@ const actions = {
       account,
       tokenContract,
       registryContractAddress,
-      stakeContractAddress,
+      // stakeContractAddress,
     } = payload
 
     tokenContract.allowance(account, registryContractAddress).then((allowance) => {
@@ -142,12 +142,12 @@ const actions = {
       })
     })
 
-    tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
-      commit('updateApprovalStatus', {
-        allowance,
-        stateProperty: 'stakeContractApproved',
-      })
-    })
+    // tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
+    //   commit('updateApprovalStatus', {
+    //     allowance,
+    //     stateProperty: 'stakeContractApproved',
+    //   })
+    // })
   },
 
   handleFaucetRequest({ commit }, optimisticBalance) {
