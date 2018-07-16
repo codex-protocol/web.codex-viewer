@@ -123,24 +123,14 @@ export default {
 @import "../assets/variables.styl"
 
 .faucet-card
-  flex: none
+  card()
+  margin-left: 0
+  margin-right: 0
   min-width: 180px
-  margin: 1rem 0 1rem 0
-  border-radius: 0 0 .25rem .25rem
 
   @media screen and (min-width: $breakpoint-sm)
     margin-right: 1rem
     margin-left: 1rem
-    max-width: calc((100% * 1/2) - 2rem)
-
-  @media screen and (min-width: $breakpoint-md)
-    max-width: calc((100% * 1/3) - 2rem)
-
-  @media screen and (min-width: $breakpoint-lg)
-    max-width: calc((100% * 1/4) - 2rem)
-
-  @media screen and (min-width: $breakpoint-xl)
-    max-width: calc((100% * 1/5) - 2rem)
 
 .card
   height: 100%
