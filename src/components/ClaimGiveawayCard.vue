@@ -75,6 +75,9 @@ export default {
 .card-body
   border-top: 1px solid rgba(black, .1)
 
+button
+  white-space: normal
+
 .overlay
   top: 0
   left: 0
