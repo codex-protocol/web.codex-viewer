@@ -126,6 +126,7 @@ export default {
   card()
   margin-left: 0
   margin-right: 0
+  width: 100%
   min-width: 180px
 
   @media screen and (min-width: $breakpoint-sm)
