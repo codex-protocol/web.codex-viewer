@@ -23,7 +23,7 @@ export default {
   createNewGiveaway: () => {
     const requestOptions = {
       method: 'post',
-      url: '/giveaways',
+      url: '/admin/giveaways',
     }
 
     return callApi(requestOptions)

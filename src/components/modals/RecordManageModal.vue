@@ -309,8 +309,8 @@ export default {
         this.descriptionHash,
         this.fileHashes,
         additionalDataHelper.encode([
-          '1', // providerId
-          this.providerMetadataId,
+          process.env.METADATA_PROVIDER_ID, // providerId
+          this.providerMetadataId, // providerMetadataId
         ]),
       ]
 

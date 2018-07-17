@@ -203,8 +203,8 @@ export default {
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
         additionalDataHelper.encode([
-          '1', // providerId
-          metadata.id,
+          process.env.METADATA_PROVIDER_ID, // providerId
+          metadata.id, // providerMetadataId
         ]),
       ]
 

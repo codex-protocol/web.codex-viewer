@@ -14,7 +14,7 @@ const state = {
   error: Web3Errors.None,
   recordContractInstance: null,
   tokenContractInstance: null,
-  stakeContainerContractInstance: null,
+  // stakeContainerContractInstance: null,
 }
 
 const getters = {

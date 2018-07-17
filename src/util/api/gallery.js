@@ -38,11 +38,20 @@ export default {
     return callApi(requestOptions)
   },
 
-  updateGallery: (galleryShareCode, galleryData) => {
+  updateGallery: (galleryId, galleryData) => {
     const requestOptions = {
       method: 'put',
-      url: `/users/galleries/${galleryShareCode}`,
+      url: `/users/galleries/${galleryId}`,
       data: galleryData,
+    }
+
+    return callApi(requestOptions)
+  },
+
+  deleteGallery: (galleryId) => {
+    const requestOptions = {
+      method: 'delete',
+      url: `/users/galleries/${galleryId}`,
     }
 
     return callApi(requestOptions)

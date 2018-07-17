@@ -112,20 +112,20 @@ const actions = {
     })
   },
 
-  getStakeBalances({ commit }, payload) {
-    const {
-      account,
-      stakeContract,
-    } = payload
+  // getStakeBalances({ commit }, payload) {
+  //   const {
+  //     account,
+  //     stakeContract,
+  //   } = payload
 
-    stakeContract.getPersonalStakes(account).then((personalStakes) => {
-      commit('updatePersonalStakes', personalStakes)
-    })
+  //   stakeContract.getPersonalStakes(account).then((personalStakes) => {
+  //     commit('updatePersonalStakes', personalStakes)
+  //   })
 
-    stakeContract.totalStakedFor(account).then((stake) => {
-      commit('updateTotalStakedFor', stake)
-    })
-  },
+  //   stakeContract.totalStakedFor(account).then((stake) => {
+  //     commit('updateTotalStakedFor', stake)
+  //   })
+  // },
 
   getApprovalStatus({ commit }, payload) {
     const {
