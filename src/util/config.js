@@ -36,7 +36,7 @@ export default {
   showCodexQuestsMarketing: true,
   showCodexGalleryInSideBar: true,
 
-  showManageTokensPage: process.env.TARGET_ENV === 'development',
+  showManageTokensPage: false,
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
 
   apiUrl,

@@ -70,10 +70,12 @@
 </template>
 
 <script>
+
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
+import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -200,8 +202,10 @@ export default {
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
-        '1', // providerId
-        metadata.id,
+        additionalDataHelper.encode([
+          process.env.METADATA_PROVIDER_ID, // providerId
+          metadata.id, // providerMetadataId
+        ]),
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal

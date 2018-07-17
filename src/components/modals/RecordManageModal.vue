@@ -101,14 +101,16 @@
 </template>
 
 <script>
+
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 import File from '../../util/api/file'
+import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
-import config from '../../util/config'
 import callContract from '../../util/web3/callContract'
+import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -306,8 +308,10 @@ export default {
         this.nameHash,
         this.descriptionHash,
         this.fileHashes,
-        '1',
-        this.providerMetadataId,
+        additionalDataHelper.encode([
+          process.env.METADATA_PROVIDER_ID, // providerId
+          this.providerMetadataId, // providerMetadataId
+        ]),
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
