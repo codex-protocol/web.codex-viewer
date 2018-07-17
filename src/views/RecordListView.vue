@@ -145,5 +145,6 @@ export default {
 .record-list
   display: flex
   flex-wrap: wrap
+  align-items: start
 
 </style>

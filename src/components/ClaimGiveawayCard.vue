@@ -51,29 +51,16 @@ export default {
 @import "../assets/variables.styl"
 
 .card
-  flex: none
+  card()
   min-width: 180px
   text-align: center
-  margin-bottom: 1rem
-  margin-top: 1rem
-  border: none
   cursor: pointer
-  border-radius: 0 0 .25rem .25rem
-
-  @media screen and (min-width: $breakpoint-sm)
-    max-width: calc((100% * 1/2) - 2rem)
-
-  @media screen and (min-width: $breakpoint-md)
-    max-width: calc((100% * 1/3) - 2rem)
-
-  @media screen and (min-width: $breakpoint-lg)
-    max-width: calc((100% * 1/4) - 2rem)
-
-  @media screen and (min-width: $breakpoint-xl)
-    max-width: calc((100% * 1/5) - 2rem)
 
 .card-body
   border-top: 1px solid rgba(black, .1)
+
+button
+  white-space: normal
 
 .overlay
   top: 0

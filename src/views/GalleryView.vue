@@ -1,42 +1,47 @@
 <template>
-  <div v-if="gallery">
-    <app-header :hide-network-details="true" :title="gallery.name">
-      <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
-      <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
-        View Fullscreen
-      </b-button>
-    </app-header>
+  <div
+    v-if="gallery"
+    class="container-fluid"
+  >
+    <div class="row">
+      <div class="col-12">
+        <app-header :hide-network-details="true" :title="gallery.name">
+          <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
+          <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
+            View Fullscreen
+          </b-button>
+        </app-header>
 
-    <div class="carousel-container" ref="carousel-container">
-      <b-carousel
-        controls
-        slot="header"
-        v-model="slideIndex"
-        class="fixed-size-carousel"
-        :interval="gallery.slideDuration"
-      >
-        <b-carousel-slide
-          :key="codexRecord.id"
-          v-for="codexRecord in gallery.codexRecords"
-          :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-        ></b-carousel-slide>
-      </b-carousel>
+        <div class="carousel-container" ref="carousel-container">
+          <b-carousel
+            controls
+            slot="header"
+            v-model="slideIndex"
+            class="fixed-size-carousel"
+            :interval="gallery.slideDuration"
+          >
+            <b-carousel-slide
+              :key="codexRecord.id"
+              v-for="codexRecord in gallery.codexRecords"
+              :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+            ></b-carousel-slide>
+          </b-carousel>
+          <p class="record-info">
+            <a href="#" @click.prevent="viewRecord(currentCodexRecord.tokenId)">
+              {{ currentCodexRecord.metadata.name }}
+            </a>
+          </p>
+        </div>
 
-      <p class="record-info">
-        <a href="#" @click.prevent="viewRecord(currentCodexRecord.tokenId)">
-          {{ currentCodexRecord.metadata.name }}
-        </a>
-      </p>
+        <b-card-group deck class="record-list">
+          <record-list-item
+            v-for="record in gallery.codexRecords"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+        </b-card-group>
+      </div>
     </div>
-
-    <b-card-group deck class="record-list">
-      <record-list-item
-        v-for="record in gallery.codexRecords"
-        :codex-record="record"
-        :key="record.tokenId"
-      />
-    </b-card-group>
-
   </div>
 </template>
 
@@ -105,6 +110,9 @@ export default {
 
 @import "../assets/variables.styl"
 
+.row
+  display: block // turn off default `.row` flex display for fullscreen.
+
 // a lot of these .carousel-container styles are mainly here for the fullscreen
 //  view
 .carousel-container
@@ -117,9 +125,14 @@ export default {
   background-color: $color-dark
 
 .carousel
-  width: 50%
-  height: 50vh
-  max-width: 50%
+  width: 100%
+  height: 100%
+  padding: 1rem
+
+  @media screen and (min-width: $breakpoint-md)
+    width: 50%
+    height: 50vh
+    max-width: 50%
 
 .record-info
   width: 50%
@@ -130,8 +143,12 @@ export default {
   background-color: rgba(white, .01)
 
 .record-list
-  display: flex
-  flex-wrap: wrap
+  display: none
   margin-top:  4rem
+  padding: 1rem
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    flex-wrap: wrap
 
 </style>

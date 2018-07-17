@@ -1,24 +1,28 @@
 <template>
-  <div>
-    <app-header title="Settings &amp; Privacy" />
-    <div class="record-list" v-if="records.length">
-      <b-container class="record-settings-row">
-        <b-row>
-          <b-col class="image">Image</b-col>
-          <b-col class="name">Asset Name</b-col>
-          <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
-          <b-col class="toggle">Details Public</b-col>
-        </b-row>
-      </b-container>
-      <!-- TODO: Better handling of record w/ no metadata -->
-      <record-privacy-settings-row-item v-for="record in records"
-        v-if="record.metadata"
-        :codex-record="record"
-        :key="record.tokenId"
-      />
-    </div>
-    <div v-else>
-      You have no Records in your collection!
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Settings &amp; Privacy" />
+        <div class="record-list" v-if="records.length">
+          <b-container class="record-settings-row">
+            <b-row>
+              <b-col class="image">Image</b-col>
+              <b-col class="name">Asset Name</b-col>
+              <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
+              <b-col class="toggle">Details Public</b-col>
+            </b-row>
+          </b-container>
+          <!-- TODO: Better handling of record w/ no metadata -->
+          <record-privacy-settings-row-item v-for="record in records"
+            v-if="record.metadata"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+        </div>
+        <div v-else>
+          You have no Records in your collection!
+        </div>
+      </div>
     </div>
   </div>
 </template>
