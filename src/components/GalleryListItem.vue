@@ -11,7 +11,7 @@
       <b-carousel-slide
         :key="codexRecord.id"
         v-for="codexRecord in gallery.codexRecords"
-        :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+        :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
       ></b-carousel-slide>
     </b-carousel>
     <div class="card-text">
@@ -29,7 +29,7 @@
 
 <script>
 
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'gallery-list-item',
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       route: { name: 'gallery', params: { galleryShareCode: this.gallery.shareCode } },
-      missingImage,
+      missingImageHelper,
     }
   },
   methods: {

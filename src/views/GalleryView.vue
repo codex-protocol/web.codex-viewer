@@ -23,7 +23,7 @@
             <b-carousel-slide
               :key="codexRecord.id"
               v-for="codexRecord in gallery.codexRecords"
-              :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+              :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
             ></b-carousel-slide>
           </b-carousel>
           <p class="record-info">
@@ -50,6 +50,7 @@ import EventBus from '../util/eventBus'
 import Gallery from '../util/api/gallery'
 import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
+import missingImageHelper from '../util/missingImageHelper'
 
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
@@ -64,6 +65,7 @@ export default {
     return {
       gallery: null,
       slideIndex: 0,
+      missingImageHelper,
       browserSupportsFullscreen: fullscreenHelper.browserSupportsFullscreen,
     }
   },

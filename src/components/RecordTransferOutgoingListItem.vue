@@ -1,6 +1,6 @@
 <template>
   <b-card
-    :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
     img-top
   >
     <div class="approved-overlay" v-if="this.cancelApproved">
@@ -19,7 +19,7 @@
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-outgoing-list-item',
@@ -28,7 +28,7 @@ export default {
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       cancelApproved: false,
-      missingImage,
+      missingImageHelper,
     }
   },
   computed: {
@@ -66,24 +66,8 @@ export default {
 @import "../assets/variables.styl"
 
 .card
-  flex: none
+  card()
   min-width: 180px
-  border: none
-  margin-bottom: 1rem
-  margin-top: 1rem
-  border-radius: 0 0 .25rem .25rem
-
-  @media screen and (min-width: $breakpoint-sm)
-    max-width: calc((100% * 1/2) - 2rem)
-
-  @media screen and (min-width: $breakpoint-md)
-    max-width: calc((100% * 1/3) - 2rem)
-
-  @media screen and (min-width: $breakpoint-lg)
-    max-width: calc((100% * 1/4) - 2rem)
-
-  @media screen and (min-width: $breakpoint-xl)
-    max-width: calc((100% * 1/5) - 2rem)
 
   .approved-overlay
     display: flex

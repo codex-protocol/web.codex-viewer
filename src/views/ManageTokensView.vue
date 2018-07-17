@@ -38,9 +38,9 @@
           This will grant the Codex Viewer permission to spend CODX on your behalf.
         </approve-contract-modal>
 
-        <approve-contract-modal id="approveStakeModal" :contractInstance="stakeContract" stateProperty="stakeContractApproved">
+        <!-- <approve-contract-modal id="approveStakeModal" :contractInstance="stakeContract" stateProperty="stakeContractApproved">
           This will allow you to stake CODX.
-        </approve-contract-modal>
+        </approve-contract-modal> -->
 
         <stake-tokens-modal />
         <unstake-tokens-modal :unstake="true" />
@@ -83,9 +83,9 @@ export default {
     stakeContractApproved() {
       return this.userState.stakeContractApproved
     },
-    stakeContract() {
-      return this.$store.state.web3.stakeContainerContractInstance()
-    },
+    // stakeContract() {
+    //   return this.$store.state.web3.stakeContainerContractInstance()
+    // },
     recordContract() {
       return this.$store.state.web3.recordContractInstance()
     },

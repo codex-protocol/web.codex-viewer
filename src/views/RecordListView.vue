@@ -37,17 +37,16 @@
 </template>
 
 <script>
+import config from '../util/config'
 import EventBus from '../util/eventBus'
 import Record from '../util/api/record'
 import Giveaway from '../util/api/giveaway'
-import config from '../util/config'
-import missingImage from '../assets/images/missing-image.png'
 
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
-import FaucetMarketingCard from '../components/FaucetMarketingCard'
-import ClaimGiveawayCard from '../components/ClaimGiveawayCard'
 import GiveawayInfoCard from '../components/GiveawayInfoCard'
+import ClaimGiveawayCard from '../components/ClaimGiveawayCard'
+import FaucetMarketingCard from '../components/FaucetMarketingCard'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -63,7 +62,6 @@ export default {
   data() {
     return {
       records: [],
-      missingImage,
       giveaway: null,
       showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
@@ -129,6 +127,7 @@ export default {
         .then((giveaways) => {
           // For now, just select the first giveaway that is available
           this.giveaway = giveaways[0]
+          console.log('giveaway', this.giveaway)
         })
     },
     createGiveaway() {

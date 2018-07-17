@@ -2,7 +2,7 @@
   <b-card
     v-if="giveaway"
     img-top
-    :img-src="giveaway.editionDetails.mainImage ? giveaway.editionDetails.mainImage.uri : missingImage"
+    :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
   >
     <div class="overlay" v-if="isLoading">
       <img class="spinner" src="../assets/images/spinner.svg" />
@@ -20,6 +20,7 @@
 <script>
 import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'claim-giveaway-card',
@@ -27,6 +28,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      missingImageHelper,
       disableGiveawayButton: false,
     }
   },

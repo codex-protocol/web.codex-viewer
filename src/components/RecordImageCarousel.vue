@@ -36,19 +36,14 @@
 </template>
 
 <script>
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-image-carousel',
   props: ['codexRecord'],
-  data() {
-    return {
-      missingImage,
-    }
-  },
   computed: {
     mainImageUri() {
-      return (this.codexRecord.metadata.mainImage ? this.codexRecord.metadata.mainImage.uri : missingImage)
+      return this.activeMainImage || missingImageHelper.getMainImageUri(this.codexRecord.metadata)
     },
   },
 }

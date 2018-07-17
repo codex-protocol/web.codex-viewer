@@ -1,9 +1,8 @@
 <template>
   <b-card
     v-if="!codexRecord.isIgnored"
-    :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
+    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
     img-top
-    :class="{ 'is-loading': this.isLoading }"
   >
     <div class="accepted-overlay" v-if="this.transferAccepted">
       <p>Transfer Accepted</p>
@@ -23,7 +22,7 @@
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-incoming-list-item',
@@ -33,7 +32,7 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
-      missingImage,
+      missingImageHelper,
     }
   },
   mounted() {

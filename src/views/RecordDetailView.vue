@@ -100,10 +100,9 @@ export default {
   },
   data() {
     return {
-      showDetails: false,
-      codexRecord: null,
       error: null,
-      activeMainImage: null,
+      codexRecord: null,
+      showDetails: false,
     }
   },
   computed: {
@@ -156,8 +155,6 @@ export default {
         return
       }
       this.codexRecord = updatedCodexRecord
-      // Reset the primary displayed image to the main image
-      this.activeMainImage = null
     },
     recordDestroyedHandler(destroyedCodexRecord) {
       if (destroyedCodexRecord.tokenId !== this.recordId) {
@@ -199,9 +196,6 @@ export default {
     },
     toggleShowDetails() {
       this.showDetails = !this.showDetails
-    },
-    setMainImage(uri) {
-      this.activeMainImage = uri
     },
     copyShareLink() {
       copyToClipboard(window.location.href, 'Share link copied to clipboard!')
