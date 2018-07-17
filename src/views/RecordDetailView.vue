@@ -11,6 +11,7 @@
             </div>
             <div class="col-12 col-md-7">
               <div>
+
                 <div v-if="codexRecord.metadata">
                   <h1>{{ codexRecord.metadata.name }}</h1>
                   <div class="description">{{ codexRecord.metadata.description }}</div>
@@ -18,18 +19,17 @@
                 <div v-else>
                   <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
                 </div>
-                <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
-                <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
-                <div class="mt-3 action-buttons" v-if="isOwner">
-                  <b-button class="mr-2" variant="primary" v-b-modal.recordManageModal>
+
+                <div class="owner-action-buttons action-buttons" v-if="isOwner">
+                  <b-button variant="primary" v-b-modal.recordManageModal>
                     Manage
                   </b-button>
 
-                  <b-button class="mr-2" variant="primary" v-b-modal.approveTransferModal>
+                  <b-button variant="primary" v-b-modal.approveTransferModal>
                     Transfer
                   </b-button>
 
-                  <b-button class="mr-2" variant="primary" v-b-modal.recordPrivacySettings>
+                  <b-button variant="primary" v-b-modal.recordPrivacySettings>
                     Settings
                   </b-button>
 
@@ -43,11 +43,19 @@
                   <approve-transfer-modal :codex-record="codexRecord" />
                   <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
                 </div>
-                <div class="mt-3" v-if="isApproved">
-                  <b-button @click="acceptTransfer">
-                    Accept Record transfer
+
+                <div class="public-action-buttons action-buttons">
+                  <b-button @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
+                  <b-button @click="toggleShowDetails">Toggle Details</b-button>
+                </div>
+
+                <div class="approved-action-buttons action-buttons" v-if="isApproved">
+                  <b-button variant="primary" @click="acceptTransfer">
+                    Accept Transfer
                   </b-button>
                 </div>
+
+                <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
               </div>
             </div>
           </div>
@@ -68,10 +76,10 @@
 
 <script>
 import Record from '../util/api/record'
+import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
-import EventBus from '../util/eventBus'
-
+import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
 import RecordManageModal from '../components/modals/RecordManageModal'
@@ -195,6 +203,10 @@ export default {
     setMainImage(uri) {
       this.activeMainImage = uri
     },
+    copyShareLink() {
+      copyToClipboard(window.location.href, 'Share link copied to clipboard!')
+      this.$refs['copy-share-link-button'].focus()
+    },
   },
 }
 </script>
@@ -204,18 +216,19 @@ export default {
 @import "../assets/variables.styl"
 
 .description
+  margin-bottom: 1rem
   white-space: pre-wrap
 
 .action-buttons
   display: flex
-  flex-direction: column
+  flex-wrap: wrap
 
   button
+    margin-right: .5rem
     margin-bottom: 1rem
 
-  @media screen and (min-width: $breakpoint-sm)
-    flex-direction: row
+    @media screen and (max-width: $breakpoint-md)
+      width: 100%
+      margin-right: 0
 
-    button
-      margin-bottom: 1rem
 </style>

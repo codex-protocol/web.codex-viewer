@@ -151,11 +151,12 @@ body
   font-family: $font-family-sans-serif
 
 #app
-  display: flex
   width: 100%
+  display: flex
+  background-color: $color-dark
 
   &.with-background
-    background: url(assets/images/pattern-dark.jpeg)
+    background-image: url(assets/images/pattern-dark.jpeg)
 
 .main-content-wrapper
   display: flex

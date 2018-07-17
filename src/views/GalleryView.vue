@@ -1,6 +1,7 @@
 <template>
   <div v-if="gallery">
     <app-header :hide-network-details="true" :title="gallery.name">
+      <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
       <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
         View Fullscreen
       </b-button>
@@ -42,6 +43,7 @@
 <script>
 import EventBus from '../util/eventBus'
 import Gallery from '../util/api/gallery'
+import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
 
 import AppHeader from '../components/AppHeader'
@@ -78,6 +80,10 @@ export default {
   methods: {
     viewFullscreen() {
       fullscreenHelper.requestFullscreen(this.$refs['carousel-container'])
+    },
+    copyShareLink() {
+      copyToClipboard(window.location.href, 'Share link copied to clipboard!')
+      this.$refs['copy-share-link-button'].focus()
     },
     viewRecord(tokenId) {
       this.$router.push({ name: 'record-detail', params: { recordId: tokenId } })
