@@ -24,6 +24,10 @@ $breakpoint-md = 768px
 $breakpoint-lg = 992px
 $breakpoint-xl = 1200px
 
+// Dimensions
+$side-nav-width = 14rem
+$bottom-nav-height = 4rem
+
 card()
   flex: none
   margin-bottom: 1rem
@@ -34,11 +38,10 @@ card()
   @media screen and (min-width: $breakpoint-sm)
     max-width: calc((100% * 1/2) - 2rem)
 
-  @media screen and (min-width: $breakpoint-md)
-    max-width: calc((100% * 1/3) - 2rem)
+  // We skip the medium breakpoint as that is where the navigation switches.
 
   @media screen and (min-width: $breakpoint-lg)
-    max-width: calc((100% * 1/4) - 2rem)
+    max-width: calc((100% * 1/3) - 2rem)
 
   @media screen and (min-width: $breakpoint-xl)
-    max-width: calc((100% * 1/5) - 2rem)
+    max-width: calc((100% * 1/4) - 2rem)

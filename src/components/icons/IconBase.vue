@@ -34,6 +34,8 @@ const getViewBox = (iconName) => {
     case 'medium':
     case 'twitter':
       return '0 0 512 512'
+    case 'menu':
+      return '0 0 448 512'
 
     default:
       return '0 0 18 18'

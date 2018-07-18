@@ -122,15 +122,19 @@ export default {
 @import "../assets/variables.styl"
 
 nav
-  width: 14rem
-  min-height: 100%
-  min-width: @width
-  max-width: @width
-  overflow-y: auto
-  background-color: rgba(white, .05)
-
-  display: flex
+  display: none
   flex-direction: column
+  background-color: rgba(white, .05)
+  width: 100%
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    width: $side-nav-width
+    min-height: 100%
+    min-width: @width
+    max-width: @width
+    overflow-y: auto
+    padding-top: 0
 
 a
   padding: 1rem
@@ -163,6 +167,26 @@ a
   flex-grow: 1
   display: flex
   flex-direction: column
+  align-items: center
+
+  @media screen and (min-width: $breakpoint-md)
+    align-items: normal
+
+  a
+    text-align: center
+    width: 100%
+    border-bottom: 1px solid $color-primary
+
+    &:first-of-type
+      border-top: 1px solid $color-primary
+
+    @media screen and (min-width: $breakpoint-md)
+      text-align: left
+      width: auto
+      border: none
+
+      &:first-of-type
+        border: none
 
 .badge
   margin-left: .25em

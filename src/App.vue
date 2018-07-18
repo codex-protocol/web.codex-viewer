@@ -1,7 +1,19 @@
 <template>
-  <div id="app" :class="{ 'with-background': this.useBackground() }">
-    <!-- @TODO: put back during mobile work -->
-    <!-- <app-side-bar v-if="!hideSideBar" /> -->
+  <div id="app" :class="{
+    'with-background': this.useBackground(),
+    'show-nav': showNav,
+  }">
+    <span class="hamburger" @click="toggleNav">
+      <icon-base
+        iconName="menu"
+        width="28"
+        height="32"
+        class="icon-menu"
+      >
+        <icon-hamburger />
+      </icon-base>
+    </span>
+    <app-side-bar v-if="!hideSideBar" />
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view />
@@ -20,6 +32,8 @@ import config from './util/config'
 import EventBus from './util/eventBus'
 import AppSideBar from './components/AppSideBar'
 import AppFooter from './components/AppFooter'
+import IconBase from './components/icons/IconBase'
+import IconHamburger from './components/icons/IconHamburger'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
@@ -31,6 +45,8 @@ export default {
     AppSideBar,
     AppFooter,
     ToastContainer,
+    IconBase,
+    IconHamburger,
   },
   created() {
 
@@ -55,6 +71,7 @@ export default {
   data() {
     return {
       freshChatToken: process.env.FRESHCHAT_API_TOKEN,
+      showNav: false,
     }
   },
   computed: {
@@ -108,6 +125,9 @@ export default {
           return false
       }
     },
+    toggleNav() {
+      this.showNav = !this.showNav
+    },
   },
   watch: {
     web3Error(error) {
@@ -158,11 +178,39 @@ body
   &.with-background
     background-image: url(assets/images/pattern-dark.jpeg)
 
+  // On smaller screens, handle the toggle of showing the side menu
+  &.show-nav
+
+    nav
+      display: flex
+
+    .main-content-wrapper
+      display: none
+
+    // On larger screens always show the side menu and content
+    @media screen and (min-width: $breakpoint-md)
+      nav
+      .main-content-wrapper
+        display: flex
+
+.hamburger
+  color: $color-primary
+  position: fixed
+  right: 20px
+  top: 10px
+  z-index: 10
+  padding: 10px
+  cursor: pointer
+
+  @media screen and (min-width: $breakpoint-md)
+    display: none
+
 .main-content-wrapper
   display: flex
   flex-direction: column
   min-height: 100vh
   width: 100%
+  padding-bottom: $bottom-nav-height
 
 .main-content
   flex: 1
