@@ -15,7 +15,7 @@
     "install-and-link": "rm -rf node_modules && npm install && npm run link-all"
   },
   "dependencies": {
-    "@codex-protocol/ethereum-service": "latest",
+    "@codex-protocol/ethereum-service": "1.0.13",
     "axios": "^0.18.0",
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "bootstrap": "^4.1.1",
