@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import User from '../../util/api/user'
 import EventBus from '../../util/eventBus'
 import SocketService from '../../util/socket'
+import config from '../../util/config'
 
 // If an auth token is present on page load, then add it to all future API requests
 let cachedAuthToken = window.localStorage.getItem('authToken')
@@ -56,26 +57,28 @@ const actions = {
 
     const { web3 } = rootState
     const { account } = web3
-    const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.recordContractInstance()
     const stakeContract = web3.stakeContractInstance()
 
-    dispatch('getTokenBalance', {
-      account,
-      tokenContract,
-    })
+    if (config.tokensEnabled) {
+      const tokenContract = web3.tokenContractInstance()
+      dispatch('getTokenBalance', {
+        account,
+        tokenContract,
+      })
 
-    dispatch('getStakeBalances', {
-      account,
-      stakeContract,
-    })
+      dispatch('getStakeBalances', {
+        account,
+        stakeContract,
+      })
 
-    dispatch('getApprovalStatus', {
-      account,
-      tokenContract,
-      registryContractAddress: registryContract.address,
-      stakeContractAddress: stakeContract.address,
-    })
+      dispatch('getApprovalStatus', {
+        account,
+        tokenContract,
+        registryContractAddress: registryContract.address,
+        stakeContractAddress: stakeContract.address,
+      })
+    }
 
     if (newAuthToken) {
       commit('setAuthToken', newAuthToken)

@@ -6,6 +6,7 @@ import {
   getCodexCoinContract,
   getStakeContract,
 } from '../../util/web3/getContract'
+import config from '../../util/config'
 
 const state = {
   instance: null,
@@ -30,7 +31,7 @@ const actions = {
 
         const web3 = result.web3()
 
-        return Promise.all([
+        const contractsToRegister = [
           dispatch('registerContract', {
             web3,
             registrationFunction: getCodexRecordContract,
@@ -38,15 +39,22 @@ const actions = {
           }),
           dispatch('registerContract', {
             web3,
-            registrationFunction: getCodexCoinContract,
-            propertyName: 'tokenContractInstance',
-          }),
-          dispatch('registerContract', {
-            web3,
             registrationFunction: getStakeContract,
             propertyName: 'stakeContractInstance',
           }),
-        ])
+        ]
+
+        if (config.tokensEnabled) {
+          contractsToRegister.push([
+            dispatch('registerContract', {
+              web3,
+              registrationFunction: getCodexCoinContract,
+              propertyName: 'tokenContractInstance',
+            }),
+          ])
+        }
+
+        return Promise.all(contractsToRegister)
 
       })
       .catch((error) => {

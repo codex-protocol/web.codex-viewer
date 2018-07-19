@@ -1,4 +1,5 @@
 import contract from 'truffle-contract'
+import config from '../config'
 
 /* eslint-disable global-require, import/no-unresolved, import/no-dynamic-require */
 
@@ -13,7 +14,12 @@ const expectedNetworkId = (() => {
   }
 })()
 
-const codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
+let codexCoinJson
+
+if (config.tokensEnabled) {
+  codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
+}
+
 const codexRecordJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecord.json`)
 const codexRecordProxyJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecordProxy.json`)
 const stakeContractJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContract.json`)
