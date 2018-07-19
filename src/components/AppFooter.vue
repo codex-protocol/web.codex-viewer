@@ -67,11 +67,6 @@ export default {
   align-items: center
   flex-direction: column
   font-size: 1rem
-  // @TODO: Figure out font sizing for mobile
-  // font-size: 1.375rem
-
-  // @media screen and (min-width: $breakpoint-md)
-  //   font-size: 1rem
 
   .links
   .icons
