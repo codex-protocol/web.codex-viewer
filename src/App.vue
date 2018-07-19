@@ -13,7 +13,7 @@
         <icon-hamburger />
       </icon-base>
     </span>
-    <app-side-bar v-if="!hideSideBar" />
+    <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view />
@@ -127,6 +127,9 @@ export default {
     },
     toggleNav() {
       this.showNav = !this.showNav
+    },
+    hideNav() {
+      this.showNav = false
     },
   },
   watch: {

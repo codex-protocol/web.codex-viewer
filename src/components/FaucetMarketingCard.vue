@@ -147,6 +147,9 @@ export default {
   p:last-of-type
     margin-bottom: 0
 
+  ul
+    list-style-position: inside
+
 h2
   font-weight: bold
   font-size: 1.25rem
