@@ -4,34 +4,37 @@
       <img src="../assets/logos/codex/gold.svg">
     </div>
     <div class="button-container" v-if="isAuthenticated">
-      <b-link to="/collection">
+      <b-link to="/collection" @click.prevent="hideNav">
         <img src="../assets/icons/collection.svg">Collection
       </b-link>
-      <b-link to="/transfers">
+      <b-link to="/transfers" @click.prevent="hideNav">
         <img src="../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
-      <b-link to="/codex-quests">
+      <b-link to="/codex-quests" @click.prevent="hideNav">
         <img src="../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
-      <b-link v-if="showManageTokensPage" to="/manage-tokens">
+      <b-link v-if="showManageTokensPage" to="/manage-tokens" @click.prevent="hideNav">
         <img src="../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
-      <b-link v-if="showFaucet" to="/faucet">
+      <b-link v-if="showFaucet" to="/faucet" @click.prevent="hideNav">
         <img src="../assets/icons/faucet.svg">Faucet
       </b-link>
-      <b-link to="/extensions">
+      <b-link to="/extensions" @click.prevent="hideNav">
         <img src="../assets/icons/star.svg">Extensions
       </b-link>
-      <b-link to="/galleries" v-if="showCodexGallery">
+      <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
         <img src="../assets/icons/gallery.svg">Galleries
       </b-link>
-      <b-link to="/settings">
+      <b-link to="/settings" @click.prevent="hideNav">
         <img src="../assets/icons/settings.svg">Settings
       </b-link>
       <b-link @click.prevent="logout">
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
+      <div class="address">
+        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="web3.account" /> ({{ web3.network }})</div>
+      </div>
     </div>
 
     <!--
@@ -44,16 +47,16 @@
         bootsrap highlights the button as if it were the active route for some
         reason, so we'll just use "/home" which will redirect to "/" anyway
       -->
-      <b-link to="/home">
+      <b-link to="/home" @click.prevent="hideNav">
         <img src="../assets/icons/home.svg">Home
       </b-link>
-      <b-link to="/codex-quests">
+      <b-link to="/codex-quests" @click.prevent="hideNav">
         <img src="../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
-      <b-link to="/galleries" v-if="showCodexGallery">
+      <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
         <img src="../assets/icons/gallery.svg">Galleries
       </b-link>
-      <b-link to="/login">
+      <b-link to="/login" @click.prevent="hideNav">
         <img src="../assets/icons/logout.svg">Login
       </b-link>
     </div>
@@ -61,13 +64,17 @@
 </template>
 
 <script>
-
+import HashFormatter from './HashFormatter'
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import config from '../util/config'
 
 export default {
   name: 'app-side-bar',
+  props: ['hideNetworkDetails', 'hideNav'],
+  components: {
+    HashFormatter,
+  },
   data() {
     return {
       numberOfIncomingTransfers: 0,
@@ -79,6 +86,12 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated
+    },
+    web3() {
+      return this.$store.state.web3
+    },
+    showNetworkDetails() {
+      return !this.hideNetworkDetails && this.web3.account
     },
   },
   created() {
@@ -96,6 +109,7 @@ export default {
   },
   methods: {
     logout() {
+      this.hideNav()
       EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
     },
@@ -122,15 +136,19 @@ export default {
 @import "../assets/variables.styl"
 
 nav
-  width: 14rem
-  min-height: 100%
-  min-width: @width
-  max-width: @width
-  overflow-y: auto
-  background-color: rgba(white, .05)
-
-  display: flex
+  display: none
   flex-direction: column
+  background-color: rgba(white, .05)
+  width: 100%
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    width: $side-nav-width
+    min-height: 100%
+    min-width: @width
+    max-width: @width
+    overflow-y: auto
+    padding-top: 0
 
 a
   padding: 1rem
@@ -163,9 +181,37 @@ a
   flex-grow: 1
   display: flex
   flex-direction: column
+  align-items: center
+
+  @media screen and (min-width: $breakpoint-md)
+    align-items: normal
+
+  a
+    text-align: center
+    width: 100%
+    border-bottom: 1px solid $color-primary
+
+    &:first-of-type
+      border-top: 1px solid $color-primary
+
+    @media screen and (min-width: $breakpoint-md)
+      text-align: left
+      width: auto
+      border: none
+
+      &:first-of-type
+        border: none
 
 .badge
   margin-left: .25em
   border-radius: .25em
+
+.network-details
+  padding: 1rem
+  word-break: break-word
+
+.address
+  text-align: center
+  padding: 2rem 0
 
 </style>

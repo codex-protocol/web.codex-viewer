@@ -1,24 +1,16 @@
 <template>
   <div class="header">
-    <h1 :class="{ 'show-network-details': showNetworkDetails }">{{ title }}</h1>
-    <div class="network-details" v-if="showNetworkDetails">{{ web3.account }} ({{ web3.network }})</div>
-    <div class="spacer"></div>
-    <slot></slot>
+    <h1>{{ title }}</h1>
+    <div class="buttons">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'app-header',
-  props: ['hideNetworkDetails', 'title'],
-  computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-    showNetworkDetails() {
-      return !this.hideNetworkDetails && this.web3.account
-    },
-  },
+  props: ['title'],
 }
 </script>
 
@@ -26,32 +18,38 @@ export default {
 @import "../assets/variables.styl"
 
 .header
-  height: 2.5rem
   font-size: 2.5rem
-  margin-bottom: 2rem
+  margin-top: 1rem
+  margin-bottom: 1rem
   color: $color-primary
 
   display: flex
-  align-items: center
+  flex-direction: column
 
   h1
     font-size: 1em
     font-weight: bold
     line-height: 1em
+    margin-bottom: 1rem
     font-family: $font-family-serif
 
-    &.show-network-details
-      margin: 0 .5em 0 0
-      padding-right: .5em
-      border-right: 1px solid $color-primary
+  .buttons
+      display: flex
+      flex-direction: column
 
-  .network-details
-    font-size: .4em
-    word-wrap: break-word
-
-  .spacer
-    flex-grow: 1
+      @media screen and (min-width: $breakpoint-sm)
+        flex-direction: row
 
   button
-    margin-left: 1em
+    margin-right: 1rem
+    margin-bottom: 1rem
+    width: 100%
+
+    &:last-of-type
+      margin-bottom: 0
+
+    @media screen and (min-width: $breakpoint-sm)
+      width: auto
+      margin-bottom: 0
+
 </style>

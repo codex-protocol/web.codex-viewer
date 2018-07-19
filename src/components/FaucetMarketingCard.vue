@@ -122,14 +122,21 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-h2
-  font-weight: bold
-  font-size: 1.25rem
-  color: $color-light
+.faucet-card
+  card()
+  margin-left: 0
+  margin-right: 0
+  width: 100%
+  min-width: 180px
+
+  @media screen and (min-width: $breakpoint-sm)
+    margin-right: 1rem
+    margin-left: 1rem
 
 .card
   height: 100%
-  border-radius: .25rem
+  margin: 0
+  border: none
   background-color: rgba(white, .1)
 
 .faucet-card-body
@@ -140,12 +147,21 @@ h2
   p:last-of-type
     margin-bottom: 0
 
+  ul
+    list-style-position: inside
+
+h2
+  font-weight: bold
+  font-size: 1.25rem
+  color: $color-light
+
 button
   margin: 1.25rem
   white-space: normal
 
 ul
   font-size: 1.125rem
+  padding: 0
 
 li
   margin-bottom: 1rem

@@ -1,21 +1,25 @@
 <template>
-  <div>
-    <app-header title="Coming Soon" />
-    <h5 class="mb-5">Upcoming extensions and features</h5>
-    <b-card-group deck>
-      <div class="feature-card" v-for="feature in features" :key="feature.description">
-        <a
-          :href="feature.url"
-          target="_blank"
-          @click="clickPartner(feature.url)"
-        >
-          <b-card>
-            <img :src="feature.image" />
-            <p class="card-text" slot="footer">{{ feature.description }}</p>
-          </b-card>
-        </a>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Coming Soon" />
+        <h5 class="mb-5">Upcoming extensions and features</h5>
+        <b-card-group deck>
+          <div class="deck-item" v-for="feature in features" :key="feature.description">
+            <a
+              :href="feature.url"
+              target="_blank"
+              @click="clickPartner(feature.url)"
+            >
+              <b-card>
+                <img :src="feature.image" />
+                <p class="card-text" slot="footer">{{ feature.description }}</p>
+              </b-card>
+            </a>
+          </div>
+        </b-card-group>
       </div>
-    </b-card-group>
+    </div>
   </div>
 </template>
 
@@ -83,11 +87,31 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.feature-card
-  width: 30%
-  margin-bottom: 2rem
+.card-deck
+  display: flex
+  flex-wrap: wrap
+  margin-left: 0
+  margin-right: 0
+
+.deck-item
+  flex: none
+  min-width: 240px
+  margin-bottom: 1rem
+  margin-top: 1rem
+  border: none
+  cursor: pointer
+  border-radius: 0 0 .25rem .25rem
   font-weight: bold
   color: $color-dark
+
+  @media screen and (min-width: $breakpoint-sm)
+    max-width: calc(100% * 1/2)
+
+  @media screen and (min-width: $breakpoint-md)
+    max-width: calc(100% * 1/3)
+
+  @media screen and (min-width: $breakpoint-lg)
+    max-width: calc(100% * 1/4)
 
   a
     text-decoration: none
@@ -104,6 +128,10 @@ export default {
   display: flex
   flex-direction: column
   justify-content: center
+
+.card-footer
+  padding-top: 1rem
+  height: 12rem
 
 img
   width: 100%

@@ -47,6 +47,10 @@ $grid-gutter-width:                 2rem;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
+.container-fluid {
+  max-width: 1140px;
+}
+
 .modal-dialog {
   color: $color-light;
 }
@@ -123,4 +127,26 @@ hr {
 
 .carousel-item:focus {
   outline: none;
+}
+
+// Modals
+.modal-body {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.modal .close {
+  font-size: 3rem;
+  margin-top: -2.6rem;
+}
+
+@include media-breakpoint-up(sm) {
+
+  .modal-body {
+    padding: 0 2rem 2rem 2rem;
+  }
+
+  .modal .close {
+    font-size: 1.5rem;
+    margin-top: -2rem;
+  }
 }

@@ -1,21 +1,20 @@
 <template>
-  <div class="giveaway" v-if="giveaway">
-    <b-card
-      img-top
-      :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
+  <b-card
+    v-if="giveaway"
+    img-top
+    :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
+  >
+    <div class="overlay" v-if="isLoading">
+      <img class="spinner" src="../assets/images/spinner.svg" />
+    </div>
+    <b-button
+      variant="secondary"
+      @click="acceptGiveaway"
+      :disabled="disableGiveawayButton"
     >
-      <div class="overlay" v-if="isLoading">
-        <img class="spinner" src="../assets/images/spinner.svg" />
-      </div>
-      <b-button
-        variant="secondary"
-        @click="acceptGiveaway"
-        :disabled="disableGiveawayButton"
-      >
-        Create Record
-      </b-button>
-    </b-card>
-  </div>
+      Create Record
+    </b-button>
+  </b-card>
 </template>
 
 <script>
@@ -53,18 +52,17 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.giveaway
-  position: relative
+.card
+  card()
+  min-width: 180px
+  text-align: center
+  cursor: pointer
 
-  .card
-    height: 100%
-    border: none
-    border-radius: 0 0 .25rem .25rem
+.card-body
+  border-top: 1px solid rgba(black, .1)
 
-  .card-body
-    display: flex
-    align-items: center
-    justify-content: center
+button
+  white-space: normal
 
 .overlay
   top: 0

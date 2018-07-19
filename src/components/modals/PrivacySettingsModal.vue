@@ -52,7 +52,7 @@
       <b-form-text>
         Wallet Address
       </b-form-text>
-      <b-input-group>
+      <b-input-group class="grant-access">
         <b-form-input
           id="address"
           type="text"
@@ -68,8 +68,8 @@
       <div class="mt-4">
         <div v-if="whitelistedAddresses.length > 0">
           <div v-for="address in whitelistedAddresses" :key="address">
-            <span>{{ address }}</span>
-            <span class="close" v-on:click="removeWhitelistedAddress(address)">x</span>
+            <hash-formatter :data="address" />
+            <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </div>
         <div v-else>
@@ -85,12 +85,16 @@
 
 <script>
 
+import HashFormatter from '../HashFormatter'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
 export default {
   name: 'privacy-settings-modal',
   props: ['codexRecord', 'onUpdated'],
+  components: {
+    HashFormatter,
+  },
   data() {
     return {
       modalVisible: false,
@@ -181,8 +185,29 @@ export default {
 
 <style lang="stylus" scoped>
 
+@import "../../assets/variables.styl"
+
+.grant-access
+  display: flex
+  flex-direction: column
+
+  input
+    width: 100%
+    margin-bottom: 1rem
+
+  @media screen and (min-width: $breakpoint-sm)
+    flex-direction: row
+
+    input
+      width: auto
+      margin-bottom: 0
+      margin-right: 1rem
+
 .close
   position: relative
-  margin-top: -3px
+  margin-top: -15px !important
+
+  @media screen and (min-width: $breakpoint-sm)
+    margin-top: -3px !important
 
 </style>

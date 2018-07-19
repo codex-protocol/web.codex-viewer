@@ -163,10 +163,6 @@ router.beforeEach((to, from, next) => {
   const isErrorPage = /^\/error\//.test(to.path)
 
   if (!isErrorPage) {
-    if (is.mobile() || is.tablet()) {
-      return next('/error/unsupported-device')
-    }
-
     // @TODO: move this logic to the login page instead?
     // @NOTE: is.chrome() is true in the Brave browser since it's Chromium-based
     if (!is.firefox() && !is.chrome() && !is.opera()) {

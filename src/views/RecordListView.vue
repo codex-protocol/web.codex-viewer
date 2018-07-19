@@ -1,34 +1,38 @@
 <template>
-  <div>
-    <app-header title="Collection">
-      <b-button
-        variant="primary"
-        v-b-modal.createRecordModal
-      >
-        Add New Asset
-      </b-button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-header title="Collection">
+          <b-button
+            variant="primary"
+            v-b-modal.createRecordModal
+          >
+            Add New Asset
+          </b-button>
 
-      <b-button
-        variant="outline-primary"
-        @click="createGiveaway"
-        v-if="showCreateGiveawayButton && !giveaway"
-      >
-        Create giveaway
-      </b-button>
-    </app-header>
-    <b-card-group deck class="record-list">
-      <faucet-marketing-card :giveaway="giveaway" v-if="!hideSetup && !giveaway" />
-      <claim-giveaway-card :giveaway="giveaway" />
-      <giveaway-info-card :giveaway="giveaway" />
+          <b-button
+            variant="outline-primary"
+            @click="createGiveaway"
+            v-if="showCreateGiveawayButton && !giveaway"
+          >
+            Create giveaway
+          </b-button>
+        </app-header>
+        <b-card-group deck class="record-list">
+          <faucet-marketing-card :giveaway="giveaway" v-if="!hideSetup && !giveaway" />
+          <claim-giveaway-card :giveaway="giveaway" />
+          <giveaway-info-card :giveaway="giveaway" />
 
-      <record-list-item
-        v-if="record.metadata"
-        v-for="record in records"
-        :codex-record="record"
-        :key="record.tokenId"
-      />
-    </b-card-group>
-    <create-record-modal />
+          <record-list-item
+            v-if="record.metadata"
+            v-for="record in records"
+            :codex-record="record"
+            :key="record.tokenId"
+          />
+        </b-card-group>
+        <create-record-modal />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -123,6 +127,7 @@ export default {
         .then((giveaways) => {
           // For now, just select the first giveaway that is available
           this.giveaway = giveaways[0]
+          console.log('giveaway', this.giveaway)
         })
     },
     createGiveaway() {
@@ -139,9 +144,6 @@ export default {
 .record-list
   display: flex
   flex-wrap: wrap
+  align-items: start
 
-  > div
-    width: 25%
-    text-align: center
-    margin-bottom: 2em
 </style>

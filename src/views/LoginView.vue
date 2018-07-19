@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-12 col-md-6 primary">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
         <h1 v-html="pageContent.title"></h1>
         <div class="lead" v-html="pageContent.description"></div>
@@ -15,7 +15,7 @@
         </b-button>
         <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
-      <div class="col-sm-7 secondary">
+      <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
@@ -158,8 +158,11 @@ export default {
     display: flex
     align-items: center
 
-  .row
-    width: 100%
+  .primary
+    margin-bottom: 2rem
+
+    @media screen and (min-width: $breakpoint-md)
+      margin-bottom: 0
 
   .secondary
     text-align: right
@@ -177,10 +180,11 @@ export default {
   .lead
     margin-bottom: 3rem
 
-  .btn-primary
-    min-width: calc(50% - 0.5rem)
-
   .login-art img
     width: 100%
+    margin-top: 3rem
+
+    @media screen and (min-width: $breakpoint-md)
+      margin-top: 0
 
 </style>

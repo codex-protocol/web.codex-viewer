@@ -1,95 +1,77 @@
 <template>
-  <div>
-    <div v-if="codexRecord">
-      <div class="flex">
-        <div class="record-image">
-          <div class="record-image-wrap">
-            <b-img
-              fluid
-              v-if="codexRecord.metadata"
-              :src="mainImageUri"
-            />
-            <div class="private-img" v-else>
-              <p>This Codex Record is private</p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div v-if="codexRecord">
+          <div class="row">
+            <div class="col-12 col-md-5">
+              <record-image-carousel
+                :codexRecord="codexRecord"
+              />
+            </div>
+            <div class="col-12 col-md-7">
+              <div>
+
+                <div v-if="codexRecord.metadata">
+                  <h1>{{ codexRecord.metadata.name }}</h1>
+                  <div class="description">{{ codexRecord.metadata.description }}</div>
+                </div>
+                <div v-else>
+                  <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
+                </div>
+
+                <div class="owner-action-buttons action-buttons" v-if="isOwner">
+                  <b-button variant="primary" v-b-modal.recordManageModal>
+                    Manage
+                  </b-button>
+
+                  <b-button variant="primary" v-b-modal.approveTransferModal>
+                    Transfer
+                  </b-button>
+
+                  <b-button variant="primary" v-b-modal.recordPrivacySettings>
+                    Settings
+                  </b-button>
+
+                  <!-- @FIXME: Not wired up yet
+                  <b-button variant="primary" v-if="this.isAwaitingApproval">
+                    Remove Approver
+                  </b-button>
+                  -->
+
+                  <record-manage-modal :codex-record="codexRecord" />
+                  <approve-transfer-modal :codex-record="codexRecord" />
+                  <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+                </div>
+
+                <div class="public-action-buttons action-buttons">
+                  <b-button @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
+                  <b-button @click="toggleShowDetails">Toggle Details</b-button>
+                </div>
+
+                <div class="approved-action-buttons action-buttons" v-if="isApproved">
+                  <b-button variant="primary" @click="acceptTransfer">
+                    Accept Transfer
+                  </b-button>
+                </div>
+
+                <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
+              </div>
             </div>
           </div>
+          <record-provenance :provenance="codexRecord.provenance" />
         </div>
-        <div class="top vertical">
-          <div v-if="codexRecord.metadata">
-            <h1>{{ codexRecord.metadata.name }}</h1>
-            <div class="description">{{ codexRecord.metadata.description }}</div>
-          </div>
-          <div v-else>
-            <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
-          </div>
-          <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
-          <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
-          <div class="mt-3" v-if="isOwner">
-            <b-button class="mr-3" variant="primary" v-b-modal.recordManageModal>
-              Manage
-            </b-button>
 
-            <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
-              Transfer
-            </b-button>
-
-            <b-button class="mr-3" variant="primary" v-b-modal.recordPrivacySettings>
-              Settings
-            </b-button>
-
-            <!-- @FIXME: Not wired up yet
-            <b-button variant="primary" v-if="this.isAwaitingApproval">
-              Remove Approver
-            </b-button>
-            -->
-
-            <record-manage-modal :codex-record="codexRecord" />
-            <approve-transfer-modal :codex-record="codexRecord" />
-            <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+        <div v-else>
+          <div v-if="error">
+            <p>There was an error loading Record with id {{ this.recordId }}</p>
+            <p>{{ this.error }}</p>
           </div>
-          <div class="mt-3" v-if="isApproved">
-            <b-button @click="acceptTransfer">
-              Accept Record transfer
-            </b-button>
-          </div>
+          <div v-else>Loading...</div>
         </div>
-      </div>
-      <div
-        v-if="codexRecord.metadata && codexRecord.metadata.images.length"
-        class="record-extra-images mb-5"
-      >
-        <b-img
-          class="record-extra-image"
-          thumbnail
-          fluid
-          :src="codexRecord.metadata.mainImage.uri"
-          @click.prevent="setMainImage(codexRecord.metadata.mainImage.uri)"
-          alt="Thumbnail"
-        />
-        <b-img
-          v-if="codexRecord.metadata.images"
-          v-for="image in codexRecord.metadata.images"
-          v-bind:key="image.id"
-          ref="images"
-          class="record-extra-image"
-          thumbnail
-          fluid
-          :src="image.uri"
-          @click.prevent="setMainImage(image.uri)"
-          alt="Thumbnail"
-        />
-      </div>
-      <record-provenance :provenance="codexRecord.provenance" />
-    </div>
-
-    <div v-else>
-      <div v-if="error">
-        <p>There was an error loading Record with id {{ this.recordId }}</p>
-        <p>{{ this.error }}</p>
-      </div>
-      <div v-else>Loading...</div>
-    </div>
-  </div>
+      </div> <!-- col-12 -->
+    </div> <!-- row -->
+  </div> <!-- container-fluid -->
 </template>
 
 <script>
@@ -97,10 +79,11 @@ import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
-import missingImageHelper from '../util/missingImageHelper'
+import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
 import RecordManageModal from '../components/modals/RecordManageModal'
+import RecordImageCarousel from '../components/RecordImageCarousel'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
@@ -113,13 +96,13 @@ export default {
     RecordProvenance,
     RecordBlockchainDetails,
     RecordManageModal,
+    RecordImageCarousel,
   },
   data() {
     return {
       error: null,
       codexRecord: null,
       showDetails: false,
-      activeMainImage: null,
     }
   },
   computed: {
@@ -150,9 +133,6 @@ export default {
       return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
     },
-    mainImageUri() {
-      return this.activeMainImage || missingImageHelper.getMainImageUri(this.codexRecord.metadata)
-    },
   },
   created() {
     EventBus.$emit('events:view-record-page')
@@ -175,8 +155,6 @@ export default {
         return
       }
       this.codexRecord = updatedCodexRecord
-      // Reset the primary displayed image to the main image
-      this.activeMainImage = null
     },
     recordDestroyedHandler(destroyedCodexRecord) {
       if (destroyedCodexRecord.tokenId !== this.recordId) {
@@ -219,60 +197,32 @@ export default {
     toggleShowDetails() {
       this.showDetails = !this.showDetails
     },
-    setMainImage(uri) {
-      this.activeMainImage = uri
+    copyShareLink() {
+      copyToClipboard(window.location.href, 'Share link copied to clipboard!')
+      this.$refs['copy-share-link-button'].focus()
     },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
-.flex
-  display: flex
-  flex-direction: row
-  align-items: baseline
 
-.top
-  flex-grow: 1
-  align-self: flex-start
-
-.vertical
-  display: flex
-  flex-direction: column
-  align-items: baseline
-
-.record-image
-  margin: 0 2rem 2rem 0
-
-  .record-image-wrap
-    display: flex
-    align-items: start
-    width: 25rem
-    height: 25rem
-
-.record-extra-images
-  display: inline-block
-
-.record-extra-image
-  max-width: 10rem
-
-  &:hover
-    cursor: pointer
+@import "../assets/variables.styl"
 
 .description
+  margin-bottom: 1rem
   white-space: pre-wrap
 
-.private-img
-  width: 320px
-  height: 320px
+.action-buttons
   display: flex
-  text-align: center
-  align-items: center
-  justify-content: center
-  background-color: #32194C
+  flex-wrap: wrap
 
-  > p
-    color: white
-    padding: 2em
-    font-size: 2rem
+  button
+    margin-right: .5rem
+    margin-bottom: 1rem
+
+    @media screen and (max-width: $breakpoint-md)
+      width: 100%
+      margin-right: 0
+
 </style>

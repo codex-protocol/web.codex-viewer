@@ -1,29 +1,30 @@
 <template>
-  <div class="gallery-card" v-if="gallery.codexRecords">
-    <b-card @click.prevent="viewGallery">
-      <b-carousel
-        slot="header"
-        :interval="3000"
-        class="fixed-size-carousel"
-      >
-        <b-carousel-slide
-          :key="codexRecord.id"
-          v-for="codexRecord in gallery.codexRecords"
-          :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
-        ></b-carousel-slide>
-      </b-carousel>
-      <div class="card-text">
-        <p>
-          <a href="#" @click.prevent="viewGallery">
-            {{ gallery.name }}
-          </a>
-        </p>
-        <small class="text-muted">
-          {{ gallery.description }}
-        </small>
-      </div>
-    </b-card>
-  </div>
+  <b-card
+    v-if="gallery.codexRecords"
+    @click.prevent="viewGallery"
+  >
+    <b-carousel
+      slot="header"
+      :interval="3000"
+      class="fixed-size-carousel"
+    >
+      <b-carousel-slide
+        :key="codexRecord.id"
+        v-for="codexRecord in gallery.codexRecords"
+        :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+      ></b-carousel-slide>
+    </b-carousel>
+    <div class="card-text">
+      <p>
+        <a href="#" @click.prevent="viewGallery">
+          {{ gallery.name }}
+        </a>
+      </p>
+      <small class="text-muted">
+        {{ gallery.description }}
+      </small>
+    </div>
+  </b-card>
 </template>
 
 <script>
@@ -50,18 +51,14 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.gallery-card
-  width: 25%
-  margin-bottom: 2em
-
-  .card
-    border: none
-    cursor: pointer
-    border-radius: 0 0 .25rem .25rem
+.card
+  card()
+  min-width: 180px
+  cursor: pointer
+  background-color: #fff
 
   .card-header
     padding: 0
-    height: 25vh
 
   .card-body
     a

@@ -1,17 +1,17 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-12 col-md-6 primary">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
         <h1>Codex Viewer (Beta)</h1>
         <div class="lead">Create and manage blockchain identities for your unique assets.</div>
-        <div class="button-container mb-5">
+        <div class="mb-5">
           <b-button variant="primary" @click="login">Get Started</b-button>
           <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
         </div>
         <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
-      <div class="col-sm-7 secondary">
+      <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
@@ -58,8 +58,11 @@ export default {
     display: flex
     align-items: center
 
-  .row
-    width: 100%
+  .primary
+    margin-bottom: 2rem
+
+    @media screen and (min-width: $breakpoint-md)
+      margin-bottom: 0
 
   .secondary
     text-align: right
@@ -80,13 +83,17 @@ export default {
   .btn-primary
     margin-right: 1rem
 
-  .button-container
-    display: flex
-    flex-direction: row
+  .btn
+    margin-bottom: 1rem
 
-    button
-      width: 50%
+    @media screen and (min-width: $breakpoint-md)
+      margin-bottom: 0
 
   .login-art img
     width: 100%
+    margin-top: 3rem
+
+    @media screen and (max-width: $breakpoint-md)
+      margin-top: 0
+
 </style>

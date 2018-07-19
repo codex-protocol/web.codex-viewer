@@ -38,7 +38,7 @@
             required
             id="imageFile"
             accept="image/*"
-            placeholder="Upload an image of the piece"
+            placeholder="Upload image file"
             ref="fileInput"
             @input="displayAndUploadFile"
           />
@@ -240,10 +240,19 @@ export default {
 <style lang="stylus" scoped>
 .flex-container
   display: flex
-  flex-direction: row
+  flex-direction: column
 
-.flex-container > div
-  width: 50%
+  input
+    width: 100%
+
+  @media screen and (min-width: $breakpoint-sm)
+    flex-direction: row
+
+    input
+      width: auto
+
+    > div
+      width: 50%
 
 .image-container
   height: 100%
@@ -252,7 +261,9 @@ export default {
   align-items: center
   justify-content: center
   background-color: rgba(white, .1)
-  border: 1px solid rgba(white, .25)
+
+  @media screen and (min-width: $breakpoint-sm)
+    border: 1px solid rgba(white, .25)
 
   img
     max-width: 100%
