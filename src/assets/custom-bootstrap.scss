@@ -139,6 +139,24 @@ hr {
   margin-top: -2.6rem;
 }
 
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-footer button {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.modal-footer > :not(:first-child) {
+  margin-left: 0;
+}
+
+.modal-footer > :not(:last-child) {
+  margin-right: 0;
+}
+
 @include media-breakpoint-up(sm) {
 
   .modal-body {
@@ -148,5 +166,22 @@ hr {
   .modal .close {
     font-size: 1.5rem;
     margin-top: -2rem;
+  }
+
+  .modal-footer {
+    flex-direction: row;
+  }
+
+  .modal-footer > :not(:first-child) {
+    margin-left: 0.25rem;
+  }
+
+  .modal-footer > :not(:last-child) {
+    margin-right: 0.25rem;
+  }
+
+  .modal-footer button {
+    width: auto;
+    margin-bottom: 0;
   }
 }

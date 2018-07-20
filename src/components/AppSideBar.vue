@@ -11,7 +11,7 @@
         <img src="../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
-      <b-link to="/codex-quests" @click.prevent="hideNav">
+      <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
         <img src="../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens" @click.prevent="hideNav">
@@ -81,6 +81,7 @@ export default {
       showFaucet: config.showFaucet,
       showManageTokensPage: config.showManageTokensPage,
       showCodexGallery: config.showCodexGalleryInSideBar,
+      showCodexQuests: config.showCodexQuestsMarketing,
     }
   },
   computed: {

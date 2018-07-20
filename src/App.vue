@@ -3,7 +3,7 @@
     'with-background': this.useBackground(),
     'show-nav': showNav,
   }">
-    <span class="hamburger" @click="toggleNav">
+    <span v-if="!hideSideBar" class="hamburger" @click="toggleNav">
       <icon-base
         iconName="menu"
         width="28"
@@ -172,6 +172,12 @@ body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: $font-family-sans-serif
+
+// this will properly rotate images with EXIF data (i.e. photos taken on a
+//  phone) in FireFox - unfortunately it doesn't work in Chrome, so such images
+//  can't be properly rotated without significant effor ¯\_(ツ)_/¯
+img
+  image-orientation: from-image
 
 #app
   width: 100%

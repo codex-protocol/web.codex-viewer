@@ -16,14 +16,14 @@ const expectedNetworkId = (() => {
 const codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
 const codexRecordJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecord.json`)
 const codexRecordProxyJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecordProxy.json`)
-// const stakeContainerJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContainer.json`)
+const stakeContractJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContract.json`)
 
 /* eslint-enable global-require, import/no-unresolved, import/no-dynamic-require */
 
 const contracts = {
   codexRecord: null,
   codexCoin: null,
-  stakeContainer: null,
+  stakeContract: null,
 }
 
 const getContract = (contractProperty, json, address, provider) => {
@@ -54,17 +54,17 @@ const getCodexCoinContract = (web3) => {
   )
 }
 
-// const getStakeContainerContract = (web3) => {
-//   return getContract(
-//     'stakeContainer',
-//     stakeContainerJson,
-//     stakeContainerJson.address,
-//     web3.currentProvider
-//   )
-// }
+const getStakeContract = (web3) => {
+  return getContract(
+    'stakeContract',
+    stakeContractJson,
+    stakeContractJson.address,
+    web3.currentProvider
+  )
+}
 
 export {
   getCodexRecordContract,
   getCodexCoinContract,
-  // getStakeContainerContract,
+  getStakeContract,
 }

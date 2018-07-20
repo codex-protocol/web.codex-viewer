@@ -17,7 +17,7 @@ const initialState = () => {
     user: null,
     balance: new BigNumber(0),
     authToken: cachedAuthToken,
-    totalStakedFor: new BigNumber(0),
+    creditBalance: new BigNumber(0),
     personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
@@ -58,28 +58,23 @@ const actions = {
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.recordContractInstance()
-    // const stakeContract = web3.stakeContainerContractInstance()
-
-
-    // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
-    //  contract to get events on when balances/stakes change. (We can update it
-    //  on the UI optimistically but that has its own set of challenges)
+    const stakeContract = web3.stakeContractInstance()
 
     dispatch('getTokenBalance', {
       account,
       tokenContract,
     })
 
-    // dispatch('getStakeBalances', {
-    //   account,
-    //   stakeContract,
-    // })
+    dispatch('getStakeBalances', {
+      account,
+      stakeContract,
+    })
 
     dispatch('getApprovalStatus', {
       account,
       tokenContract,
       registryContractAddress: registryContract.address,
-      // stakeContractAddress: stakeContract.address,
+      stakeContractAddress: stakeContract.address,
     })
 
     if (newAuthToken) {
@@ -112,27 +107,27 @@ const actions = {
     })
   },
 
-  // getStakeBalances({ commit }, payload) {
-  //   const {
-  //     account,
-  //     stakeContract,
-  //   } = payload
+  getStakeBalances({ commit }, payload) {
+    const {
+      account,
+      stakeContract,
+    } = payload
 
-  //   stakeContract.getPersonalStakes(account).then((personalStakes) => {
-  //     commit('updatePersonalStakes', personalStakes)
-  //   })
+    stakeContract.getPersonalStakes(account).then((personalStakes) => {
+      commit('updatePersonalStakes', personalStakes)
+    })
 
-  //   stakeContract.totalStakedFor(account).then((stake) => {
-  //     commit('updateTotalStakedFor', stake)
-  //   })
-  // },
+    stakeContract.creditBalanceOf(account).then((balance) => {
+      commit('updateCreditBalance', balance)
+    })
+  },
 
   getApprovalStatus({ commit }, payload) {
     const {
       account,
       tokenContract,
       registryContractAddress,
-      // stakeContractAddress,
+      stakeContractAddress,
     } = payload
 
     tokenContract.allowance(account, registryContractAddress).then((allowance) => {
@@ -142,12 +137,12 @@ const actions = {
       })
     })
 
-    // tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
-    //   commit('updateApprovalStatus', {
-    //     allowance,
-    //     stateProperty: 'stakeContractApproved',
-    //   })
-    // })
+    tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'stakeContractApproved',
+      })
+    })
   },
 
   handleFaucetRequest({ commit }, optimisticBalance) {
@@ -231,10 +226,10 @@ const mutations = {
     currentState.personalStakes = newPersonalStakes
   },
 
-  updateTotalStakedFor(currentState, newStake) {
-    logMutation('updateTotalStakedFor', newStake)
+  updateCreditBalance(currentState, newBalance) {
+    logMutation('updateCreditBalance', newBalance)
 
-    currentState.totalStakedFor = newStake
+    currentState.creditBalance = newBalance
   },
 
   updateApprovalStatus(currentState, payload) {

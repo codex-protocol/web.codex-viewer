@@ -11,7 +11,6 @@
             </div>
             <div class="col-12 col-md-7">
               <div>
-
                 <div v-if="codexRecord.metadata">
                   <h1>{{ codexRecord.metadata.name }}</h1>
                   <div class="description">{{ codexRecord.metadata.description }}</div>
@@ -208,6 +207,10 @@ export default {
 <style lang="stylus" scoped>
 
 @import "../assets/variables.styl"
+
+h1
+  padding-top: 1rem
+  line-height: 1em
 
 .description
   margin-bottom: 1rem

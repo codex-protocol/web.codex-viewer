@@ -162,10 +162,14 @@ router.beforeEach((to, from, next) => {
   //  otherwise navigating to an error page will result in an endless loop
   const isErrorPage = /^\/error\//.test(to.path)
 
+  const requireAuthentication = to.matched.some((route) => {
+    return !route.meta.allowUnauthenticatedUsers
+  })
+
   if (!isErrorPage) {
     // @TODO: move this logic to the login page instead?
     // @NOTE: is.chrome() is true in the Brave browser since it's Chromium-based
-    if (is.desktop() && !is.firefox() && !is.chrome() && !is.opera()) {
+    if (requireAuthentication && is.desktop() && !is.firefox() && !is.chrome() && !is.opera()) {
       return next('/error/unsupported-browser')
     }
   }
@@ -174,10 +178,6 @@ router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     return next('/')
   }
-
-  const requireAuthentication = to.matched.some((route) => {
-    return !route.meta.allowUnauthenticatedUsers
-  })
 
   if (requireAuthentication && !store.getters.isAuthenticated) {
     return next('/login')
