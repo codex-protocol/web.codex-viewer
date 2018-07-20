@@ -19,8 +19,7 @@ const apiUrl = (() => {
 const etherScanUrl = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production':
-      // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
-      return 'https://rinkeby.etherscan.io/'
+      return 'https://etherscan.io/'
 
     case 'staging':
       return 'https://ropsten.etherscan.io/'
@@ -32,12 +31,11 @@ const etherScanUrl = (() => {
 
 export default {
 
-  showFaucet: true,
-  showCodexQuestsMarketing: true,
-  showCodexGalleryInSideBar: true,
-
-  showManageTokensPage: process.env.TARGET_ENV === 'development',
+  showManageTokensPage: process.env.TARGET_ENV !== 'production',
+  showCodexQuestsMarketing: false,
+  showFaucet: process.env.TARGET_ENV !== 'production',
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
+  showCodexGalleryInSideBar: process.env.TARGET_ENV !== 'production',
 
   apiUrl,
   etherScanUrl,

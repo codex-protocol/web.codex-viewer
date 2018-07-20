@@ -66,6 +66,7 @@ export default {
   display: flex
   align-items: center
   flex-direction: column
+  font-size: 1rem
 
   .links
   .icons
@@ -84,14 +85,10 @@ export default {
     a
       font-size: .8em
       text-align: center
+      width: 100%
 
-    // @NOTE: 550px is about where the FreshChat icon starts to overlap the
-    //  footer links
-    @media(max-width: 550px)
-      flex-wrap: wrap
-
-      a
-        width: 100%
+      @media(min-width: $breakpoint-md)
+        width: auto
 
   .icons
     max-width: 10rem

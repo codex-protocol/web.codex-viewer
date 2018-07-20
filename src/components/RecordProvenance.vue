@@ -4,7 +4,9 @@
     <div v-if="provenance">
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
-        <div>{{ getEventAddress(row) }}</div>
+        <div>
+          <hash-formatter :data="getEventAddress(row)" />
+        </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <div class="action-buttons">
           <span v-if="row.type === 'modified' && row.codexRecordModifiedEvent.changedData">
@@ -47,12 +49,16 @@
 </template>
 
 <script>
+import HashFormatter from './HashFormatter'
 import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 
 export default {
   name: 'record-provenance',
   props: ['provenance'],
+  components: {
+    HashFormatter,
+  },
   data() {
     return {
       modifiedDetails: null,
@@ -63,12 +69,6 @@ export default {
     getTimeSince(createdAt) {
       return `${timeSince(new Date(createdAt))} ago`
     },
-    // @NOTE: on 2018-06-15 all provenance event types were made past-tense to
-    //  be consistent, since some were present-tense and some were past-tense
-    //
-    // @TODO: remove the "present-tense" versions of these events when mainnet
-    //  launch happens (or when staging / beta DBs have thier records updated
-    //  to use the past tense versions)
     getEventDescription(eventType) {
       switch (eventType) {
         case 'created':
@@ -119,6 +119,8 @@ export default {
 
 <style lang="stylus" scoped>
 
+@import "../assets/variables.styl"
+
 .flex
   display: flex
   border-bottom: solid 1px rgba(white, .1)
@@ -126,9 +128,24 @@ export default {
 .flex div
   flex: 1
   text-align: center
+  font-size: 0.75rem
+
+  @media screen and (min-width: $breakpoint-sm)
+    font-size: 1rem
 
   &:nth-child(2)
     flex: 3
+
+.address-short
+
+  @media screen and (min-width: $breakpoint-lg)
+    display: none
+
+.address-large
+  display: none
+
+  @media screen and (min-width: $breakpoint-lg)
+    display: inline-block
 
 .show-modified-details
   padding: 0

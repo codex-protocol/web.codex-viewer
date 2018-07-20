@@ -1,27 +1,25 @@
 <template>
-  <div class="record-card">
-    <b-card
-      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-      img-top
-    >
-      <div class="approved-overlay" v-if="this.cancelApproved">
-        <p>Transfer Cancelled</p>
-        <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
-      </div>
-      <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
-      <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
-      <p class="action-buttons">
-        <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
-      </p>
-    </b-card>
-  </div>
+  <b-card
+    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    img-top
+  >
+    <div class="approved-overlay" v-if="this.cancelApproved">
+      <p>Transfer Cancelled</p>
+      <b-button variant="secondary" @click.prevent="viewRecord">View Asset</b-button>
+    </div>
+    <p class="name"><a href="#" @click.prevent="viewRecord">{{ codexRecord.metadata.name }}</a></p>
+    <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
+    <p class="action-buttons">
+      <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
+    </p>
+  </b-card>
 </template>
 
 <script>
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-outgoing-list-item',
@@ -30,7 +28,7 @@ export default {
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       cancelApproved: false,
-      missingImage,
+      missingImageHelper,
     }
   },
   computed: {
@@ -67,14 +65,9 @@ export default {
 
 @import "../assets/variables.styl"
 
-.record-card
-  width: 25%
-  max-width: 32rem
-  margin-bottom: 2em
-
-  .card
-    border: none
-    border-radius: 0 0 .25rem .25rem
+.card
+  card()
+  min-width: 180px
 
   .approved-overlay
     display: flex
@@ -90,12 +83,6 @@ export default {
 
     p
       font-weight: 600
-
-  img
-    width: 100%
-    max-height: 25vw // good enough ¯\_(ツ)_/¯
-    min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: cover
 
   a
     font-weight: bold

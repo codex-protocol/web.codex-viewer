@@ -12,23 +12,14 @@
         {{ formatTokenAmount(property) }} CODX
       </div>
 
-      <div class="table-header">Perceived amount</div>
-      <div
-        v-for="(property, index) in personalStakes[2]"
-        :style="{ order: index }"
-        :key="'perceivedAmount' + index"
-      >
-        {{ formatTokenAmount(property) }} CODX
-      </div>
-
       <div class="table-header addresses">Staked for</div>
       <div
         class="addresses"
-        v-for="(property, index) in personalStakes[3]"
+        v-for="(property, index) in personalStakes[2]"
         :style="{ order: index }"
         :key="'stakedFor' + index"
       >
-        {{ property }}
+        <hash-formatter :data="property" />
       </div>
 
       <div class="table-header">Unlock date</div>
@@ -45,10 +36,15 @@
 
 <script>
 import formatTokenAmount from '../util/formatTokenAmount'
+import HashFormatter from './HashFormatter'
+
 
 export default {
   name: 'personal-stakes-table',
   props: ['personalStakes'],
+  components: {
+    HashFormatter,
+  },
   methods: {
     formatTokenAmount(rawAmount) {
       return formatTokenAmount(rawAmount)
@@ -64,7 +60,7 @@ export default {
   text-align: center
 
   div
-    width: 20%
+    width: 30%
 
   .addresses
     width: 40%

@@ -1,23 +1,22 @@
 <template>
-  <div class="record-card" v-if="codexRecord.metadata">
-    <b-card
-      @click.prevent="viewRecord"
-      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
-      img-top
-    >
-      <p>
-        <a href="#" @click.prevent="viewRecord">
-          {{ codexRecord.metadata.name }}
-        </a>
-      </p>
-      <small>#{{ codexRecord.tokenId }}</small>
-    </b-card>
-  </div>
+  <b-card
+    v-if="codexRecord.metadata"
+    @click.prevent="viewRecord"
+    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    img-top
+  >
+    <p>
+      <a href="#" @click.prevent="viewRecord">
+        {{ codexRecord.metadata.name }}
+      </a>
+    </p>
+    <small>#{{ codexRecord.tokenId }}</small>
+  </b-card>
 </template>
 
 <script>
 
-import missingImage from '../assets/images/missing-image.png'
+import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-list-item',
@@ -31,7 +30,7 @@ export default {
 
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
-      missingImage,
+      missingImageHelper,
     }
   },
   methods: {
@@ -45,30 +44,20 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.record-card
-  width: 25%
+.card
+  card()
+  min-width: 180px
   text-align: center
-  margin-bottom: 2em
+  cursor: pointer
 
-  .card
-    border: none
-    cursor: pointer
-    border-radius: 0 0 .25rem .25rem
+.card-body
+  border-top: 1px solid rgba(black, .1)
 
-  img
-    width: 100%
-    max-height: 25vw // good enough ¯\_(ツ)_/¯
-    min-height: 25vh // good enough ¯\_(ツ)_/¯
-    object-fit: cover
+  a
+    font-weight: bold
+    color: $color-dark
 
-  .card-body
-    border-top: 1px solid rgba(black, .1)
-
-    a
-      font-weight: bold
-      color: $color-dark
-
-    small
-      color: $color-light-gray
+  small
+    color: $color-light-gray
 
 </style>

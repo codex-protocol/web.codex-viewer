@@ -7,7 +7,7 @@ import contract from 'truffle-contract'
 //  ordering the imports or something), so we'll just duplicate that logic here
 const expectedNetworkId = (() => {
   switch (process.env.TARGET_ENV) {
-    case 'production': return '4' // @TODO: change back to '1' when out of beta and on mainnet
+    case 'production': return '1'
     case 'staging': return '3'
     default: return '5777'
   }
@@ -16,14 +16,14 @@ const expectedNetworkId = (() => {
 const codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
 const codexRecordJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecord.json`)
 const codexRecordProxyJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecordProxy.json`)
-const stakeContainerJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContainer.json`)
+const stakeContractJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContract.json`)
 
 /* eslint-enable global-require, import/no-unresolved, import/no-dynamic-require */
 
 const contracts = {
   codexRecord: null,
   codexCoin: null,
-  stakeContainer: null,
+  stakeContract: null,
 }
 
 const getContract = (contractProperty, json, address, provider) => {
@@ -54,11 +54,11 @@ const getCodexCoinContract = (web3) => {
   )
 }
 
-const getStakeContainerContract = (web3) => {
+const getStakeContract = (web3) => {
   return getContract(
-    'stakeContainer',
-    stakeContainerJson,
-    stakeContainerJson.address,
+    'stakeContract',
+    stakeContractJson,
+    stakeContractJson.address,
     web3.currentProvider
   )
 }
@@ -66,5 +66,5 @@ const getStakeContainerContract = (web3) => {
 export {
   getCodexRecordContract,
   getCodexCoinContract,
-  getStakeContainerContract,
+  getStakeContract,
 }

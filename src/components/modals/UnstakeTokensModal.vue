@@ -75,7 +75,7 @@ export default {
       return this.unstakeAmount
     },
     stakeContract() {
-      return this.web3.stakeContainerContractInstance()
+      return this.web3.stakeContractInstance()
     },
   },
 }

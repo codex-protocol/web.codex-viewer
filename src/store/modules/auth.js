@@ -17,7 +17,7 @@ const initialState = () => {
     user: null,
     balance: new BigNumber(0),
     authToken: cachedAuthToken,
-    totalStakedFor: new BigNumber(0),
+    creditBalance: new BigNumber(0),
     personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
@@ -58,12 +58,7 @@ const actions = {
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.recordContractInstance()
-    const stakeContract = web3.stakeContainerContractInstance()
-
-
-    // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
-    //  contract to get events on when balances/stakes change. (We can update it
-    //  on the UI optimistically but that has its own set of challenges)
+    const stakeContract = web3.stakeContractInstance()
 
     dispatch('getTokenBalance', {
       account,
@@ -122,8 +117,8 @@ const actions = {
       commit('updatePersonalStakes', personalStakes)
     })
 
-    stakeContract.totalStakedFor(account).then((stake) => {
-      commit('updateTotalStakedFor', stake)
+    stakeContract.creditBalanceOf(account).then((balance) => {
+      commit('updateCreditBalance', balance)
     })
   },
 
@@ -231,10 +226,10 @@ const mutations = {
     currentState.personalStakes = newPersonalStakes
   },
 
-  updateTotalStakedFor(currentState, newStake) {
-    logMutation('updateTotalStakedFor', newStake)
+  updateCreditBalance(currentState, newBalance) {
+    logMutation('updateCreditBalance', newBalance)
 
-    currentState.totalStakedFor = newStake
+    currentState.creditBalance = newBalance
   },
 
   updateApprovalStatus(currentState, payload) {

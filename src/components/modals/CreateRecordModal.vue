@@ -38,7 +38,7 @@
             required
             id="imageFile"
             accept="image/*"
-            placeholder="Upload an image of the piece"
+            placeholder="Upload image file"
             ref="fileInput"
             @input="displayAndUploadFile"
           />
@@ -70,10 +70,12 @@
 </template>
 
 <script>
+
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
+import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -200,8 +202,10 @@ export default {
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
-        '1', // providerId
-        metadata.id,
+        additionalDataHelper.encode([
+          process.env.METADATA_PROVIDER_ID, // providerId
+          metadata.id, // providerMetadataId
+        ]),
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
@@ -236,10 +240,19 @@ export default {
 <style lang="stylus" scoped>
 .flex-container
   display: flex
-  flex-direction: row
+  flex-direction: column
 
-.flex-container > div
-  width: 50%
+  input
+    width: 100%
+
+  @media screen and (min-width: $breakpoint-sm)
+    flex-direction: row
+
+    input
+      width: auto
+
+    > div
+      width: 50%
 
 .image-container
   height: 100%
@@ -248,7 +261,9 @@ export default {
   align-items: center
   justify-content: center
   background-color: rgba(white, .1)
-  border: 1px solid rgba(white, .25)
+
+  @media screen and (min-width: $breakpoint-sm)
+    border: 1px solid rgba(white, .25)
 
   img
     max-width: 100%
