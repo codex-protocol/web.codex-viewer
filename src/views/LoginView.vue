@@ -184,7 +184,7 @@ export default {
     width: 100%
     margin-top: 3rem
 
-    @media screen and (min-width: $breakpoint-md)
+    @media screen and (max-width: $breakpoint-md)
       margin-top: 0
 
 </style>
