@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import config from '../../util/config'
+
 export default {
   name: 'meta-mask-notification-modal',
   props: [
@@ -176,7 +178,7 @@ export default {
         registryContractApproved,
       } = this.$store.state.auth
 
-      return this.requiresTokens && (!registryContractApproved || balance.eq(0))
+      return config.showFaucet && this.requiresTokens && (!registryContractApproved || balance.eq(0))
     },
     shouldShowMainSlot() {
       return this.currentStep === 0 && !this.willTransactionFail
