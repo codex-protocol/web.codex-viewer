@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 col-md-6 primary">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
-        <h1>Codex Viewer (Beta)</h1>
+        <h1>Codex Viewer</h1>
         <div class="lead">Create and manage blockchain identities for your unique assets.</div>
         <div class="mb-5">
           <b-button variant="primary" @click="login">Get Started</b-button>

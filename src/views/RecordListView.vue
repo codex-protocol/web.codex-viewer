@@ -71,7 +71,7 @@ export default {
       return this.$store.state.web3.account
     },
     hideSetup() {
-      return this.$store.state.auth.hideSetup
+      return !config.showFaucet || this.$store.state.auth.hideSetup
     },
   },
   mounted() {

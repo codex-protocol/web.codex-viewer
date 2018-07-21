@@ -1,7 +1,7 @@
 <template>
   <b-card v-if="giveaway">
     <p>
-      The first {{ giveaway.numberOfEditions }} users to participate in the Beta will receive an edition of this piece created by our designer Seb!
+      The first {{ giveaway.numberOfEditions }} users to use the Codex Viewer will receive an edition of this piece created by our designer Seb!
     </p>
     <p>
       Click the 'Create Record' button to the left to claim yours.
