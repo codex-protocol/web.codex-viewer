@@ -50,7 +50,7 @@
       <b-link to="/home" @click.prevent="hideNav">
         <img src="../assets/icons/home.svg">Home
       </b-link>
-      <b-link to="/codex-quests" @click.prevent="hideNav">
+      <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
         <img src="../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
