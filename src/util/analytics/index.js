@@ -1,14 +1,16 @@
-import { logTrack } from './log'
+import debug from 'debug'
+
 import { googleTrack } from './google'
 import events from './events'
 
-const provider = process.env.ANALYTICS_PROVIDER
+const logger = debug('app:util:analytics')
+const provider = process.env.VUE_APP_ANALYTICS_PROVIDER
 
 const analytics = {
   track(category, action, label, self) {
     switch (provider) {
       case 'log':
-        logTrack(`Event:${category}:${action}:${label}`)
+        logger(`Tracking the event ${category}:${action}:${label}`)
         break
       case 'google':
         googleTrack(category, action, label, self)

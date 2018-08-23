@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import Raven from 'raven-js'
 
 import missingImageHelper from '../util/missingImageHelper'
 
@@ -23,9 +24,10 @@ export default {
   props: ['codexRecord'],
   data() {
 
-    // TODO: Need a way to render records in collection w/ no metadata (e.g., one was created in a different Provider)
     if (!this.codexRecord.metadata) {
-      console.warn('found Record with no metadata', this.codexRecord)
+      Raven.captureMessage('found Record with no metadata', this.codexRecord, {
+        level: 'warning',
+      })
     }
 
     return {

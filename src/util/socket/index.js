@@ -1,8 +1,11 @@
 import io from 'socket.io-client'
+import debug from 'debug'
 
 import EventBus from '../eventBus'
 import config from '../config'
 import eventToastHandlers from './eventToastHandlers'
+
+const logger = debug('app:socket')
 
 export default {
 
@@ -31,7 +34,7 @@ export default {
 
       this.socket.on('user-event', (event) => {
 
-        console.info('socket event received:', event)
+        logger('socket event received:', event)
         EventBus.$emit(`socket:${event.name}`, event.data)
 
         const eventAction = eventToastHandlers[event.name]

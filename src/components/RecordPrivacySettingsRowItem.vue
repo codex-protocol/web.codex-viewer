@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import Raven from 'raven-js'
+
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import missingImageHelper from '../util/missingImageHelper'
@@ -87,7 +89,7 @@ export default {
       return Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
-          console.error('Could not update Record:', error)
+          Raven.captureException(error)
           this.reset()
         })
     },

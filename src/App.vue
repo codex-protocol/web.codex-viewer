@@ -16,7 +16,8 @@
     <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
     <div class="main-content-wrapper">
       <div class="main-content">
-        <router-view />
+        <router-view v-if="web3.isLoaded" />
+        <loading-overlay type="global" v-else />
       </div>
       <app-footer />
     </div>
@@ -25,28 +26,33 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import 'freshchat-widget'
+import axios from 'axios'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-import AppSideBar from './components/AppSideBar'
-import AppFooter from './components/AppFooter'
-import IconBase from './components/icons/IconBase'
-import IconHamburger from './components/icons/IconHamburger'
+
 import { Web3Errors } from './store/modules/web3'
+
+import AppFooter from './components/AppFooter'
+import AppSideBar from './components/AppSideBar'
+import IconBase from './components/icons/IconBase'
+import LoadingOverlay from './components/LoadingOverlay'
 import ToastContainer from './components/ToastContainer'
+import IconHamburger from './components/icons/IconHamburger'
 
 import './util/analytics'
 
 export default {
   name: 'App',
   components: {
-    AppSideBar,
-    AppFooter,
-    ToastContainer,
     IconBase,
+    AppFooter,
+    AppSideBar,
     IconHamburger,
+    ToastContainer,
+    LoadingOverlay,
   },
   created() {
 
@@ -55,7 +61,21 @@ export default {
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
 
-        if (this.authToken) {
+        // @TODO: evaluate what happens when a bogus auth token is set in the
+        //  route params
+        if (this.$route.query.authToken) {
+          this.$store.dispatch('updateUserState', this.$route.query.authToken)
+            .then(() => {
+
+              const query = Object.assign({}, this.$route.query)
+              delete query.authToken
+
+              return this.$router.replace({
+                name: this.$route.meta.ifAuthenticatedRedirectTo || this.$route.name,
+                query,
+              })
+            })
+        } else if (this.authToken) {
           this.$store.dispatch('updateUserState', this.authToken)
         }
 
@@ -70,7 +90,7 @@ export default {
   },
   data() {
     return {
-      freshChatToken: process.env.FRESHCHAT_API_TOKEN,
+      freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
     }
   },
@@ -165,7 +185,6 @@ body
   margin: 0
   padding: 0
   width: 100%
-  height: 100%
 
 body
   font-size: 1em
@@ -215,10 +234,10 @@ img
     display: none
 
 .main-content-wrapper
-  display: flex
-  flex-direction: column
-  min-height: 100vh
   width: 100%
+  display: flex
+  min-height: 100vh
+  flex-direction: column
   padding-bottom: $bottom-nav-height
 
 .main-content
@@ -230,50 +249,50 @@ img
 // <input type="checkbox"> toggle
 // https://danklammer.com/articles/simple-css-toggle-switch/
 .toggle-checkbox
-    opacity: 1
-    z-index: 0
-    -webkit-appearance: none
-    appearance: none
-    width: 62px
-    height: 32px
-    display: inline-block
-    position: relative
-    border-radius: 50px
-    overflow: hidden
-    outline: none
-    border: 3px solid $color-gray
-    cursor: pointer
+  opacity: 1
+  z-index: 0
+  -webkit-appearance: none
+  appearance: none
+  width: 62px
+  height: 32px
+  display: inline-block
+  position: relative
+  border-radius: 50px
+  overflow: hidden
+  outline: none
+  border: 3px solid $color-gray
+  cursor: pointer
+  background-color: transparent
+  transition: border-color ease 0.3s
+
+  &::before
+    content: ""
+    display: block
+    position: absolute
+    z-index: 2
+    width: 22px
+    height: 22px
+    background: $color-gray
+    left: 2px
+    top: 2px
+    border-radius: 50%
+    font: 10px/28px Helvetica
+    text-transform: uppercase
+    font-weight: bold
+    text-indent: -22px
+    word-spacing: 37px
+    color: $color-light
+    text-shadow: -1px -1px rgba(0,0,0,0.15)
+    white-space: nowrap
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2)
+    transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
+
+  &:checked
     background-color: transparent
-    transition: border-color ease 0.3s
+    border-color: $color-success
 
-    &:before
-      content: ""
-      display: block
-      position: absolute
-      z-index: 2
-      width: 22px
-      height: 22px
-      background: $color-gray
-      left: 2px
-      top: 2px
-      border-radius: 50%
-      font: 10px/28px Helvetica
-      text-transform: uppercase
-      font-weight: bold
-      text-indent: -22px
-      word-spacing: 37px
-      color: $color-light
-      text-shadow: -1px -1px rgba(0,0,0,0.15)
-      white-space: nowrap
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2)
-      transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
-
-    &:checked
-      background-color: transparent
-      border-color: $color-success
-
-      &:before
-        left: 32px
-        background: $color-success
+    &::before
+      left: 32px
+      background: $color-success
 // End CSS Checkbox toggle
 </style>

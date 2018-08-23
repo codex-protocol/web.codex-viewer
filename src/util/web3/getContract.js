@@ -6,7 +6,7 @@ import contract from 'truffle-contract'
 //  work with the dynamic imports (probably a conflict in how webpack is
 //  ordering the imports or something), so we'll just duplicate that logic here
 const expectedNetworkId = (() => {
-  switch (process.env.TARGET_ENV) {
+  switch (process.env.VUE_APP_TARGET_ENV) {
     case 'production': return '1'
     case 'staging': return '3'
     default: return '5777'

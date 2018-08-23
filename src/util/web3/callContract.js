@@ -20,11 +20,6 @@ function callContract(func, args, web3) {
         }
       )
     })
-    .catch((error) => {
-      console.error('Error calling contract', error)
-
-      throw error
-    })
 }
 
 export default callContract

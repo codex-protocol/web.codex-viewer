@@ -84,10 +84,13 @@
 </template>
 
 <script>
+import debug from 'debug'
 
 import HashFormatter from '../HashFormatter'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
+
+const logger = debug('app:component:privacy-settings-modal')
 
 export default {
   name: 'privacy-settings-modal',
@@ -176,7 +179,7 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
-          console.error('Could not update Record:', error)
+          logger('Could not update Record:', error)
         })
     },
   },

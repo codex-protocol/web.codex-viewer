@@ -150,26 +150,6 @@ if (config.showCodexQuestsMarketing) {
 
 router.beforeEach((to, from, next) => {
 
-  // @TODO: evaluate what happens when a bogus auth token is set in the
-  //  route params
-  if (to.query.authToken) {
-    // @TODO: remove this once "application wide" race condition is fixed
-    return store.dispatch('registerWeb3', router)
-      .then(() => {
-        return store.dispatch('updateUserState', to.query.authToken)
-          .then(() => {
-
-            const query = Object.assign({}, to.query)
-            delete query.authToken
-
-            return next({
-              name: to.meta.ifAuthenticatedRedirectTo || to.name,
-              query,
-            })
-          })
-      })
-  }
-
   if (to.meta.ifAuthenticatedRedirectTo && store.getters.isAuthenticated) {
     return next({ name: to.meta.ifAuthenticatedRedirectTo })
   }

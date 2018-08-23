@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import Raven from 'raven-js'
+
 import config from '../../util/config'
 
 export default {
@@ -138,6 +140,8 @@ export default {
               this.goToStep(this.currentStep + 1)
             })
             .catch((error) => {
+              Raven.captureException(error)
+
               this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
               this.goToStep(this.currentStep - 1)
             })

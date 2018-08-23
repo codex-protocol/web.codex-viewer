@@ -1,5 +1,5 @@
-// if there's no GA_ID, just return a noop
-const googleTrack = !process.env.GA_ID ? Function.prototype : (category, action, label, self) => {
+// if there's no VUE_APP_GA_ID, just return a noop
+const googleTrack = !process.env.VUE_APP_GA_ID ? Function.prototype : (category, action, label, self) => {
   self.$ga.event(category, action, label)
 }
 

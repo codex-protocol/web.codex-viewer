@@ -4,9 +4,7 @@
     img-top
     :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
   >
-    <div class="overlay" v-if="isLoading">
-      <img class="spinner" src="../assets/images/spinner.svg" />
-    </div>
+    <loading-overlay :show="isLoading" type="dark" />
     <b-button
       variant="secondary"
       @click="acceptGiveaway"
@@ -18,6 +16,9 @@
 </template>
 
 <script>
+
+import LoadingOverlay from './LoadingOverlay'
+
 import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'
 import missingImageHelper from '../util/missingImageHelper'
@@ -25,6 +26,9 @@ import missingImageHelper from '../util/missingImageHelper'
 export default {
   name: 'claim-giveaway-card',
   props: ['giveaway'],
+  components: {
+    LoadingOverlay,
+  },
   data() {
     return {
       isLoading: false,
@@ -63,24 +67,6 @@ export default {
 
 button
   white-space: normal
-
-.overlay
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 998
-  display: flex
-  position: absolute
-  align-items: center
-  justify-content: center
-  background-color: rgba(255, 255, 255, .75)
-
-.spinner
-  width: 8em
-  height: 8em
-  z-index: 999
-  animation: spin 1s linear infinite reverse
 
 @keyframes spin
   from

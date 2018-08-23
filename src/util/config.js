@@ -3,7 +3,7 @@
 
 const apiUrl = (() => {
 
-  switch (process.env.TARGET_ENV) {
+  switch (process.env.VUE_APP_TARGET_ENV) {
     case 'production':
       return 'https://codex-registry-api-mainnet.codexprotocol.com'
 
@@ -17,7 +17,7 @@ const apiUrl = (() => {
 })()
 
 const etherScanUrl = (() => {
-  switch (process.env.TARGET_ENV) {
+  switch (process.env.VUE_APP_TARGET_ENV) {
     case 'production':
       return 'https://etherscan.io/'
 
@@ -31,11 +31,11 @@ const etherScanUrl = (() => {
 
 export default {
 
-  showManageTokensPage: process.env.TARGET_ENV !== 'production',
+  showManageTokensPage: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCodexQuestsMarketing: false,
-  showFaucet: process.env.TARGET_ENV !== 'production',
-  showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
-  showCodexGalleryInSideBar: process.env.TARGET_ENV !== 'production',
+  showFaucet: process.env.VUE_APP_TARGET_ENV !== 'production',
+  showCreateGiveawayButton: process.env.VUE_APP_TARGET_ENV !== 'production',
+  showCodexGalleryInSideBar: process.env.VUE_APP_TARGET_ENV !== 'production',
 
   apiUrl,
   etherScanUrl,

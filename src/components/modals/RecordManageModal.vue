@@ -319,7 +319,7 @@ export default {
         this.descriptionHash,
         this.fileHashes,
         additionalDataHelper.encode([
-          process.env.METADATA_PROVIDER_ID, // providerId
+          process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
           this.providerMetadataId, // providerMetadataId
         ]),
       ]

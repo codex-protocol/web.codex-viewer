@@ -127,7 +127,6 @@ export default {
         .then((giveaways) => {
           // For now, just select the first giveaway that is available
           this.giveaway = giveaways[0]
-          console.log('giveaway', this.giveaway)
         })
     },
     createGiveaway() {

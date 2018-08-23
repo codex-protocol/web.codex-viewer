@@ -45,12 +45,16 @@
 
 <script>
 import is from 'is_js'
+import debug from 'debug'
+
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors } from '../store/modules/web3'
 import { ExpectedNetworkId, Networks } from '../util/constants/web3'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'
+
+const logger = debug('app:component:login-view')
 
 export default {
   name: 'login-view',
@@ -96,7 +100,7 @@ export default {
         // result.error will be populated if the user rejects the signature
         //  prompt
         if (error || result.error) {
-          console.error(error || result.error)
+          logger(error || result.error)
           return
         }
 
