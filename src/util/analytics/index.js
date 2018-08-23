@@ -13,6 +13,7 @@ const analytics = {
         logger(`Tracking the event ${category}:${action}:${label}:${value}`)
         break
       case 'google':
+        logger(`Sending Google the event: ${category}:${action}:${label}:${value}`)
         googleTrack(category, action, label, value, self)
         break
       default:
