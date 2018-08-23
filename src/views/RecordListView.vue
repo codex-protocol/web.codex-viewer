@@ -94,7 +94,7 @@ export default {
   created() {
     this.getRecords()
     this.getGiveaways()
-    EventBus.$emit('events:view-collection-page')
+    EventBus.$emit('events:view-collection-page', this)
   },
   methods: {
     // add the record to the collection if it was just transferred

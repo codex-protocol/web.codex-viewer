@@ -55,12 +55,12 @@ export default {
       const amount = this.web3.instance().toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
 
-      EventBus.$emit('events:click-unstake-tokens')
+      EventBus.$emit('events:click-unstake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.unstake, input, this.web3)
         .then(() => {
-          EventBus.$emit('events:unstake-tokens', { amount })
+          EventBus.$emit('events:unstake-tokens', this)
         })
     },
     clearModal() {

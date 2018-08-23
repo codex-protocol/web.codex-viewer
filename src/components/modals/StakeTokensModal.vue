@@ -54,12 +54,12 @@ export default {
       const amount = this.web3.instance().toWei(this.stakeAmount, 'ether')
       const input = [amount, '0x0']
 
-      EventBus.$emit('events:click-stake-tokens')
+      EventBus.$emit('events:click-stake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.stake, input, this.web3)
         .then(() => {
-          EventBus.$emit('events:stake-tokens', { amount })
+          EventBus.$emit('events:stake-tokens', this)
         })
     },
     clearModal() {

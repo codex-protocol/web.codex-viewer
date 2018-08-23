@@ -134,7 +134,7 @@ export default {
     },
   },
   created() {
-    EventBus.$emit('events:view-record-page')
+    EventBus.$emit('events:view-record-page', this)
     this.getRecord()
   },
   mounted() {
@@ -187,7 +187,7 @@ export default {
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-          EventBus.$emit('events:accept-transfer')
+          EventBus.$emit('events:accept-transfer', this)
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)

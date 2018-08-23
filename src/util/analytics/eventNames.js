@@ -44,7 +44,7 @@ const actionsLabels = {
 
   'events:view-collection-page': {
     action: 'View',
-    label: 'Collection PAge',
+    label: 'Collection Page',
   },
 
   'events:view-record-page': {

@@ -36,16 +36,16 @@ export default {
   },
   methods: {
     login() {
-      EventBus.$emit('events:click-home-login')
+      EventBus.$emit('events:click-home-login', this)
       this.$router.push({ name: 'login' })
     },
     aboutCodex() {
-      EventBus.$emit('events:click-about-codex')
+      EventBus.$emit('events:click-about-codex', this)
       window.location = 'https://www.codexprotocol.com'
     },
   },
   created() {
-    EventBus.$emit('events:viewer:view-home-page')
+    EventBus.$emit('events:viewer:view-home-page', this)
   },
 }
 </script>

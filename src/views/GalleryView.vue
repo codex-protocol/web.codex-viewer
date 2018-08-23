@@ -71,7 +71,7 @@ export default {
   },
   created() {
     this.getGallery()
-    EventBus.$emit('events:view-gallery-page')
+    EventBus.$emit('events:view-gallery-page', this)
   },
   watch: {
     $route: 'getGallery',

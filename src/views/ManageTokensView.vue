@@ -70,7 +70,7 @@ export default {
     UnstakeTokensModal,
   },
   created() {
-    EventBus.$emit('events:view-tokens-page')
+    EventBus.$emit('events:view-tokens-page', this)
   },
   computed: {
     web3() {

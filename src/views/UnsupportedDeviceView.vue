@@ -55,7 +55,7 @@ export default {
       if (deviceDetails[key] === false) delete deviceDetails[key]
     })
 
-    EventBus.$emit('events:unsupported-device', deviceDetails)
+    EventBus.$emit('events:unsupported-device', this)
 
   },
 }

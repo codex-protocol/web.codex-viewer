@@ -46,7 +46,7 @@ export default {
   },
   created() {
     // @TODO: add the same socket event handlers as the collection page here too?
-    EventBus.$emit('events:view-settings-page')
+    EventBus.$emit('events:view-settings-page', this)
     this.getRecords()
   },
   computed: {

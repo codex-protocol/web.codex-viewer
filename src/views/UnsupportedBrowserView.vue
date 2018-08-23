@@ -105,7 +105,7 @@ export default {
       if (deviceDetails[key] === false) delete deviceDetails[key]
     })
 
-    EventBus.$emit('events:unsupported-browser', deviceDetails)
+    EventBus.$emit('events:unsupported-browser', this)
 
   },
 }

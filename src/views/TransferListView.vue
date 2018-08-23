@@ -67,7 +67,7 @@ export default {
     EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
   created() {
-    EventBus.$emit('events:view-transfers-page')
+    EventBus.$emit('events:view-transfers-page', this)
     this.fetchData(this.transferDirection)
   },
   computed: {

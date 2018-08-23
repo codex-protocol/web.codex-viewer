@@ -73,13 +73,13 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     approveTransfer() {
-      EventBus.$emit('events:record-click-transfer')
+      EventBus.$emit('events:record-click-transfer', this)
       const input = [this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
-          EventBus.$emit('events:record-transfer')
+          EventBus.$emit('events:record-transfer', this)
         })
     },
   },

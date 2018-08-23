@@ -70,13 +70,13 @@ export default {
       ]
 
       this.isLoading = true
-      EventBus.$emit('events:click-accept-transfer')
+      EventBus.$emit('events:click-accept-transfer', this)
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-          EventBus.$emit('events:accept-transfer')
+          EventBus.$emit('events:accept-transfer', this)
 
           // @NOTE: leave the in the loading state so that they can't click the
           //  buttons while the transaction is waiting to be mined

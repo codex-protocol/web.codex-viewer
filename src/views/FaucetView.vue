@@ -80,7 +80,7 @@ export default {
     ApproveContractModal,
   },
   created() {
-    EventBus.$emit('events:faucet-page')
+    EventBus.$emit('events:faucet-page', this)
   },
   computed: {
     userState() {

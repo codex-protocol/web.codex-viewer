@@ -39,11 +39,11 @@ export default {
     AppHeader,
   },
   created() {
-    EventBus.$emit('events:view-coming-soon-page')
+    EventBus.$emit('events:view-coming-soon-page', this)
   },
   methods: {
     clickPartner(url) {
-      EventBus.$emit('events:click-partner-link', { url })
+      EventBus.$emit('events:click-partner-link', this)
     },
   },
   data() {

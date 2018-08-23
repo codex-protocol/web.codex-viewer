@@ -40,7 +40,7 @@ export default {
   methods: {
     requestTokens(event) {
       event.preventDefault()
-      EventBus.$emit('events:faucet-request')
+      EventBus.$emit('events:faucet-request', this)
 
       Faucet.getDripFromFaucet()
         .then(() => {

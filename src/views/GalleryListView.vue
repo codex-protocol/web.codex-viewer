@@ -54,7 +54,7 @@ export default {
   },
   created() {
     this.getGalleries()
-    EventBus.$emit('events:view-gallery-list-page')
+    EventBus.$emit('events:view-gallery-list-page', this)
   },
   methods: {
     getGalleries() {

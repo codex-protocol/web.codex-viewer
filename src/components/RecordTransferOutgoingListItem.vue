@@ -44,12 +44,12 @@ export default {
       this.$router.push(this.route)
     },
     cancelTransfer() {
-      EventBus.$emit('events:click-cancel-transfer')
+      EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
       callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
-          EventBus.$emit('events:cancel-transfer')
+          EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           this.cancelApproved = true
         })

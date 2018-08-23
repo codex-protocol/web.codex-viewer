@@ -111,7 +111,7 @@ export default {
   methods: {
     logout() {
       this.hideNav()
-      EventBus.$emit('events:click-logout-button')
+      EventBus.$emit('events:click-logout-button', this)
       this.$store.dispatch('logout', this.$router)
     },
     // @TODO: instead of requesting these independently of
