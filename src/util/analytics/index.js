@@ -1,17 +1,17 @@
 import { logTrack } from './log'
-import { mixpanelTrack } from './mixpanel'
+import { googleTrack } from './google'
 import events from './events'
 
 const provider = process.env.ANALYTICS_PROVIDER
 
 const analytics = {
-  track(event, params) {
+  track(category, action, label, self) {
     switch (provider) {
       case 'log':
-        logTrack(event, params)
+        logTrack(`Event:${category}:${action}:${label}`)
         break
-      case 'mixpanel':
-        mixpanelTrack(event, params)
+      case 'google':
+        googleTrack(category, action, label, self)
         break
       default:
         break

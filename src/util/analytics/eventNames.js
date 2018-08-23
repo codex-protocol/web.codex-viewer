@@ -1,41 +1,144 @@
 // IMPORTANT: Do not change the values. These are used for analytics tracking and need
 //  to stay consistent
 
-export default {
-  'events:viewer:view-home-page': 'View Home Page',
-  'events:click-home-login': 'Click Homepage Login Button',
-  'events:click-about-codex': 'Click About Codex',
+const category = 'Codex Viewer'
 
-  'events:viewer:view-login-page': 'View Login Page',
-  'events:click-login-button': 'Click Login Button',
-  'events:click-install-metamask': 'Click Install MetaMask',
-  'events:click-check-metamask': 'Click Check MetaMask',
-  'events:login': 'Login',
-  'events:click-logout-button': 'Click Logout Button',
+const actionsLabels = {
+  'events:viewer:view-home-page': {
+    action: 'View',
+    label: 'Home Page',
+  },
+  'events:click-home-login': {
+    action: 'Click',
+    label: 'Homepage Login Button',
+  },
+  'events:click-about-codex': {
+    action: 'Click',
+    label: 'About Codex',
+  },
 
-  'events:view-collection-page': 'View Collection Page',
+  'events:viewer:view-login-page': {
+    action: 'View',
+    label: 'Login Page',
+  },
+  'events:click-login-button': {
+    action: 'Click',
+    label: 'Login Button',
+  },
+  'events:click-install-metamask': {
+    action: 'Click',
+    label: 'Install Metamask',
+  },
+  'events:click-check-metamask': {
+    action: 'Click',
+    label: 'Check Metamask',
+  },
+  'events:login': {
+    action: 'Web3',
+    label: 'Login',
+  },
+  'events:click-logout-button': {
+    action: 'Click',
+    label: 'Logout Button',
+  },
 
-  'events:view-record-page': 'View Record Page',
-  'events:record-click-transfer': 'Record: Click Transfer',
-  'events:record-transfer': 'Record: Transfer',
+  'events:view-collection-page': {
+    action: 'View',
+    label: 'Collection PAge',
+  },
 
-  'events:view-transfers-page': 'View Transfers Page',
-  'events:click-accept-transfer': 'Click Accept Transfer',
-  'events:accept-transfer': 'Accept Transfer',
-  'events:click-cancel-transfer': 'Click Cancel Transfer',
-  'events:cancel-transfer': 'Cancel Transfer',
+  'events:view-record-page': {
+    action: 'View',
+    label: 'Record Page',
+  },
+  'events:record-click-transfer': {
+    action: 'Click',
+    label: 'Record Transfer',
+  },
+  'events:record-transfer': {
+    action: 'Web3',
+    label: 'Record Transfer',
+  },
 
-  'events:view-settings-page': 'View Settings Page',
+  'events:view-transfers-page': {
+    action: 'View',
+    label: 'Transfers Page',
+  },
+  'events:click-accept-transfer': {
+    action: 'Click',
+    label: 'Accept Transfer',
+  },
+  'events:accept-transfer': {
+    action: 'Web3',
+    label: 'Accept Transfer',
+  },
+  'events:click-cancel-transfer': {
+    action: 'Click',
+    label: 'Cancel Transfer',
+  },
+  'events:cancel-transfer': {
+    action: 'Web3',
+    label: 'Cancel Transfer',
+  },
 
-  'events:view-tokens-page': 'View Tokens Page',
-  'events:click-approve-contract': 'Click Approve Contract',
-  'events:approve-contract': 'Approve Contract',
-  'events:faucet-request': 'Faucet Request',
-  'events:click-stake-tokens': 'Click Stake Tokens',
-  'events:stake-tokens': 'Stake Tokens',
-  'events:click-unstake-tokens': 'Click Unstake Tokens',
-  'events:unstake-tokens': 'Unstake Tokens',
+  'events:view-settings-page': {
+    action: 'View',
+    label: 'Settings Page',
+  },
 
-  'events:view-coming-soon-page': 'View Coming Soon Page',
-  'events:click-partner-link': 'Click Partner Link',
+  'events:view-tokens-page': {
+    action: 'View',
+    label: 'Tokens Page',
+  },
+  'events:click-approve-contract': {
+    action: 'Click',
+    label: 'Approve Contract',
+  },
+  'events:approve-contract': {
+    action: 'Web3',
+    label: 'Approve Contract',
+  },
+  'events:faucet-request': {
+    action: 'Web3',
+    label: 'Faucet Request',
+  },
+  'events:click-stake-tokens': {
+    action: 'Click',
+    label: 'Stake Tokens',
+  },
+  'events:stake-tokens': {
+    action: 'Web3',
+    label: 'Stake Tokens',
+  },
+  'events:click-unstake-tokens': {
+    action: 'Click',
+    label: 'Unstake Tokens',
+  },
+  'events:unstake-tokens': {
+    action: 'Web3',
+    label: 'Unstake Tokens',
+  },
+
+  'events:view-coming-soon-page': {
+    action: 'View',
+    label: 'Coming Soon Page',
+  },
+  'events:click-partner-link': {
+    action: 'Click',
+    label: 'Partner Link',
+  },
+  'events:gallery-page': {
+    action: 'View',
+    label: 'Gallery Page',
+  },
+  'events:faucet-page': {
+    action: 'View',
+    label: 'Faucet Page',
+  },
+  'events:codex-quests-page': {
+    action: 'View',
+    label: 'Codex Quests Page',
+  },
 }
+
+export { category, actionsLabels }

@@ -15,4 +15,5 @@ module.exports = merge(prodEnv, {
   FRESHCHAT_API_TOKEN: `"${process.env.FRESHCHAT_API_TOKEN || ''}"`,
   MIXPANEL_TOKEN: `"${process.env.DEVELOPMENT_MIXPANEL_TOKEN || ''}"`,
   METADATA_PROVIDER_ID: `"${process.env.METADATA_PROVIDER_ID || ''}"`,
+  GA_ID: `"${process.env.GA_ID || ''}"`,
 })

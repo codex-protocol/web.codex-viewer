@@ -1,21 +1,20 @@
 import EventBus from '../eventBus'
-import eventNames from './eventNames'
+import { category, actionsLabels } from './eventNames'
 
 const events = (analytics) => {
 
-  const has = (object, key) => {
-    return object ? hasOwnProperty.call(object, key) : false
-  }
-
   const registerEvent = (event) => {
-    EventBus.$on(event, (params) => {
-      // Strip email
-      if (has(params, 'user')) {
-        delete params.user.email // eslint-disable-line no-param-reassign
-      }
-      analytics.track(eventNames[event], params)
+    EventBus.$on(event, (self) => {
+      analytics.track(
+        category,
+        actionsLabels[event].action,
+        actionsLabels[event].label,
+        self
+      )
     })
   }
+
+  // @NOTE: Registering a new event below requires adding the event to `./eventNames.js`
 
   // Home
   registerEvent('events:viewer:view-home-page')
