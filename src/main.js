@@ -25,10 +25,28 @@ if (process.env.VUE_APP_SENTRY_DSN) {
 Vue.config.productionTip = false
 Vue.use(VueBootstrap)
 
-Vue.use(VueAnalytics, {
-  id: process.env.VUE_APP_GA_ID,
-  router,
-})
+let googleId
+switch (process.env.VUE_APP_TARGET_ENV) {
+  case 'production':
+    googleId = process.env.VUE_APP_PRODUCTION_GA_ID
+    break
+
+  case 'staging':
+    googleId = process.env.VUE_APP_STAGING_GA_ID
+    break
+
+  default:
+    googleId = false
+    break
+}
+
+if (googleId) {
+  Vue.use(VueAnalytics, {
+    id: googleId,
+    router,
+  })
+}
+
 
 // eslint-disable-next-line no-new
 new Vue({
