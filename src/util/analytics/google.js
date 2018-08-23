@@ -15,8 +15,8 @@ switch (process.env.VUE_APP_TARGET_ENV) {
 }
 
 // if there's no VUE_APP_GA_ID, just return a noop
-const googleTrack = !googleId ? Function.prototype : (category, action, label, self) => {
-  self.$ga.event(category, action, label)
+const googleTrack = !googleId ? Function.prototype : (category, action, label, value, self) => {
+  self.$ga.event(category, action, label, value)
 }
 
 export { googleTrack } // eslint-disable-line import/prefer-default-export

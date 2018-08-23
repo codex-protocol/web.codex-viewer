@@ -4,11 +4,12 @@ import { category, actionsLabels } from './eventNames'
 const events = (analytics) => {
 
   const registerEvent = (event) => {
-    EventBus.$on(event, (self) => {
+    EventBus.$on(event, (self, value) => {
       analytics.track(
         category,
         actionsLabels[event].action,
         actionsLabels[event].label,
+        value || '',
         self
       )
     })
@@ -62,13 +63,17 @@ const events = (analytics) => {
   registerEvent('events:click-partner-link')
 
   // Gallery
-  registerEvent('events:gallery-page')
+  registerEvent('events:view-gallery-page')
 
   // Faucet
-  registerEvent('events:faucet-page')
+  registerEvent('events:view-faucet-page')
 
   // Codex Quests
-  registerEvent('events:codex-quests-page')
+  registerEvent('events:view-codex-quests-page')
+
+  // Unsupported Browsers/Devices
+  registerEvent('events:unsupported-browser')
+  registerEvent('events:unsupported-device')
 }
 
 export default events

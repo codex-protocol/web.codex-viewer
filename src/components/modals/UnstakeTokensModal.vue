@@ -60,7 +60,7 @@ export default {
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.unstake, input, this.web3)
         .then(() => {
-          EventBus.$emit('events:unstake-tokens', this)
+          EventBus.$emit('events:unstake-tokens', this, amount)
         })
     },
     clearModal() {

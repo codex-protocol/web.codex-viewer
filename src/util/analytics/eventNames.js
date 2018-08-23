@@ -127,17 +127,26 @@ const actionsLabels = {
     action: 'Click',
     label: 'Partner Link',
   },
-  'events:gallery-page': {
+  'events:view-gallery-page': {
     action: 'View',
     label: 'Gallery Page',
   },
-  'events:faucet-page': {
+  'events:view-faucet-page': {
     action: 'View',
     label: 'Faucet Page',
   },
-  'events:codex-quests-page': {
+  'events:view-codex-quests-page': {
     action: 'View',
     label: 'Codex Quests Page',
+  },
+
+  'events:unsupported-browser': {
+    action: 'Unsupported',
+    label: 'Browser',
+  },
+  'events:unsupported-device': {
+    action: 'Unsupported',
+    label: 'Device',
   },
 }
 

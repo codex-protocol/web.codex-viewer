@@ -79,7 +79,7 @@ export default {
     AppHeader,
   },
   created() {
-    EventBus.$emit('events:codex-quests-page', this)
+    EventBus.$emit('events:view-codex-quests-page', this)
   },
 }
 </script>

@@ -7,13 +7,13 @@ const logger = debug('app:util:analytics')
 const provider = process.env.VUE_APP_ANALYTICS_PROVIDER
 
 const analytics = {
-  track(category, action, label, self) {
+  track(category, action, label, value, self) {
     switch (provider) {
       case 'log':
-        logger(`Tracking the event ${category}:${action}:${label}`)
+        logger(`Tracking the event ${category}:${action}:${label}:${value}`)
         break
       case 'google':
-        googleTrack(category, action, label, self)
+        googleTrack(category, action, label, value, self)
         break
       default:
         break
