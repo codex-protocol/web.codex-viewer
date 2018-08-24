@@ -88,18 +88,25 @@ export default {
       }
     },
     getEventAddress(row) {
+
+      let address = null
+
       switch (row.type) {
         case 'created':
         case 'destroyed':
         case 'transferred':
-          return row.newOwnerAddress
+          address = row.newOwnerAddress
+          break
 
         case 'modified':
-          return row.codexRecordModifiedEvent.modifierAddress
+          address = row.codexRecordModifiedEvent.modifierAddress
+          break
 
-        default:
-          return null
+        default: // do nothing
       }
+
+      return this.$store.getters.getOAuth2ClientNameFromAddress(address)
+
     },
     getTransactionUrl(txHash) {
       return etherscanHelper.getTxUrl(txHash)

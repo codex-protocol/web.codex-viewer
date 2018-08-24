@@ -58,6 +58,8 @@ export default {
 
     this.initializeApi()
 
+    this.$store.dispatch('updateOAuth2Clients')
+
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
 
