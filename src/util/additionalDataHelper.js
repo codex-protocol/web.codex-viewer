@@ -1,11 +1,11 @@
 import { Buffer } from 'buffer/'
 
-export default {
+// this is the delimiter used to separate providerId, providerMetadataId, etc
+//  in additionalData strings sent to CodexRecord.mint() and
+//  CodexRecord.modifyMetadataHashes() contract calls
+const additionalDataDelimeter = '::'
 
-  // this is the delimiter used to separate providerId, providerMetadataId, etc
-  //  in additionalData strings sent to CodexRecord.mint() and
-  //  CodexRecord.modifyMetadataHashes() contract calls
-  additionalDataDelimeter: '::',
+export default {
 
   // this simply returns all arguments passed concatenated in a string delimited
   //  by the additionalDataDelimeter defined above
@@ -22,7 +22,7 @@ export default {
     const additionalData = (Object.prototype.toString.call(args[0]) === '[object Array]') ? args[0] : args
 
     const hexString = Buffer
-      .from(additionalData.join(this.additionalDataDelimiter))
+      .from(additionalData.join(additionalDataDelimeter))
       .toString('hex')
 
     return `0x${hexString}`

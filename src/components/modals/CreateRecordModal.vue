@@ -210,8 +210,13 @@ export default {
     createRecord(metadata) {
 
       const { sha3 } = this.instance
+
+      // @FIXME: SL Code
+      // const account = this.account
+      const account = this.user.address
+
       const input = [
-        this.account,
+        account,
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
@@ -225,15 +230,16 @@ export default {
       // @FIXME: web3 code
       // return callContract(this.recordContract.mint, input)
 
+      // @FIXME: SL Code
       const contractName = 'CodexRecord'
       const methodName = 'mint'
-      // @FIXME: SL Code
       IdProxy.contractCall(contractName, methodName, input)
     },
   },
 
   computed: {
     ...mapState('web3', ['account', 'instance', 'recordContract']),
+    ...mapState('auth', ['user']),
 
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
