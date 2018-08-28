@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer/'
+
 export default {
 
   // this is the delimiter used to separate providerId, providerMetadataId, etc
@@ -19,8 +21,11 @@ export default {
     // allow an array or a list of arguments to be passed in
     const additionalData = (Object.prototype.toString.call(args[0]) === '[object Array]') ? args[0] : args
 
-    // there's no need to hex encode this string since web3 does that internally
-    return additionalData.join(this.additionalDataDelimeter)
+    const hexString = Buffer
+      .from(additionalData.join(this.additionalDataDelimiter))
+      .toString('hex')
+
+    return `0x${hexString}`
   },
 
 }

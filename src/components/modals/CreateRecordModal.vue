@@ -75,8 +75,10 @@ import debug from 'debug'
 
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
+import IdProxy from '../../util/api/idProxy'
 import EventBus from '../../util/eventBus'
-import callContract from '../../util/web3/callContract'
+// @FIXME: web3 code
+// import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -220,7 +222,13 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.mint, input)
+      // @FIXME: web3 code
+      // return callContract(this.recordContract.mint, input)
+
+      const contractName = 'CodexRecord'
+      const methodName = 'mint'
+      // @FIXME: SL Code
+      IdProxy.contractCall(contractName, methodName, input)
     },
   },
 
