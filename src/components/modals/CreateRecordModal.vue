@@ -66,19 +66,18 @@
         </b-form-group>
       </div>
     </div>
+    <web3-helper ref="web3Helper" />
   </meta-mask-notification-modal>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import debug from 'debug'
-
+import Web3Helper from '../Web3Helper'
+import sha3 from '../../util/sha3'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
-import IdProxy from '../../util/api/idProxy'
 import EventBus from '../../util/eventBus'
-// @FIXME: web3 code
-// import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -89,6 +88,7 @@ export default {
 
   components: {
     MetaMaskNotificationModal,
+    Web3Helper,
   },
 
   data() {
@@ -141,7 +141,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.instance.sha3(binaryFileReader.result)
+        this.uploadedFileHash = sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -187,7 +187,6 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.instance
           //
           // metadata.nameHash === sha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
@@ -208,11 +207,6 @@ export default {
     },
 
     createRecord(metadata) {
-
-      const { sha3 } = this.instance
-
-      // @FIXME: SL Code
-      // const account = this.account
       const account = this.user.address
 
       const input = [
@@ -226,19 +220,13 @@ export default {
         ]),
       ]
 
-      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      // @FIXME: web3 code
-      // return callContract(this.recordContract.mint, input)
-
-      // @FIXME: SL Code
       const contractName = 'CodexRecord'
       const methodName = 'mint'
-      IdProxy.contractCall(contractName, methodName, input)
+      return this.$refs.web3Helper.callContract(contractName, methodName, input)
     },
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContract']),
     ...mapState('auth', ['user']),
 
     canSubmit() {
