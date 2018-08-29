@@ -13,11 +13,11 @@ export default {
     logger('INITIALIZE_AUTH action being executed')
 
     EventBus.$on('socket:codex-coin:transferred', () => {
-      dispatch('getTokenBalance')
+      dispatch('FETCH_TOKEN_BALANCE')
     })
 
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-      dispatch('getApprovalStatus')
+      dispatch('FETCH_APPROVAL_STATUSES')
     })
 
     // @TODO: evaluate what happens when a bogus auth token is set in the
@@ -44,6 +44,11 @@ export default {
 
     return User.getUser()
       .then((user) => {
+        if (user.type === 'savvy'
+          && user.address !== rootState.web3.account) {
+          return dispatch('LOGOUT_USER')
+        }
+
         commit('SET_USER', {
           user,
         })
@@ -64,8 +69,8 @@ export default {
 
   // Dispatched after a user has signed a string via web3.
   // This calls the API to retrieve a JWT and the user object.
-  sendAuthRequest({ commit, dispatch }, data) {
-    logger('sendAuthRequest action being executed')
+  SEND_AUTH_REQUEST({ commit, dispatch }, data) {
+    logger('SEND_AUTH_REQUEST action being executed')
 
     const requestOptions = {
       method: 'post',
@@ -102,14 +107,14 @@ export default {
     logger('UPDATE_CONTRACT_STATE action being executed')
 
     return Promise.all([
-      dispatch('getTokenBalance'),
-      dispatch('getStakeBalances'),
-      dispatch('getApprovalStatus'),
+      dispatch('FETCH_TOKEN_BALANCE'),
+      dispatch('FETCH_STAKE_BALANCES'),
+      dispatch('FETCH_APPROVAL_STATUSES'),
     ])
   },
 
-  getTokenBalance({ commit, rootState }) {
-    logger('getTokenBalance action being executed')
+  FETCH_TOKEN_BALANCE({ commit, rootState }) {
+    logger('FETCH_TOKEN_BALANCE action being executed')
 
     const {
       account,
@@ -117,12 +122,12 @@ export default {
     } = rootState.web3
 
     return tokenContract.balanceOf(account).then((balance) => {
-      commit('updateTokenBalance', balance)
+      commit('SET_TOKEN_BALANCE', { balance })
     })
   },
 
-  getStakeBalances({ commit, rootState }) {
-    logger('getStakeBalances action being executed')
+  FETCH_STAKE_BALANCES({ commit, rootState }) {
+    logger('FETCH_STAKE_BALANCES action being executed')
 
     const {
       account,
@@ -131,16 +136,16 @@ export default {
 
     return Promise.all([
       stakeContract.getPersonalStakes(account).then((personalStakes) => {
-        commit('updatePersonalStakes', personalStakes)
+        commit('SET_PERSONAL_STAKES', { personalStakes })
       }),
       stakeContract.creditBalanceOf(account).then((balance) => {
-        commit('updateCreditBalance', balance)
+        commit('SET_CREDIT_BALANCE', { balance })
       }),
     ])
   },
 
-  getApprovalStatus({ commit, rootState }) {
-    logger('getApprovalStatus action being executed')
+  FETCH_APPROVAL_STATUSES({ commit, rootState }) {
+    logger('FETCH_APPROVAL_STATUSES action being executed')
 
     const {
       account,
@@ -151,13 +156,13 @@ export default {
 
     return Promise.all([
       tokenContract.allowance(account, recordContract.address).then((allowance) => {
-        commit('updateApprovalStatus', {
+        commit('SET_APPROVAL_STATUS', {
           allowance,
           stateProperty: 'registryContractApproved',
         })
       }),
       tokenContract.allowance(account, stakeContract.address).then((allowance) => {
-        commit('updateApprovalStatus', {
+        commit('SET_APPROVAL_STATUS', {
           allowance,
           stateProperty: 'stakeContractApproved',
         })
@@ -165,25 +170,17 @@ export default {
     ])
   },
 
-  handleFaucetRequest({ commit }, optimisticBalance) {
-    logger('handleFaucetRequest action being executed')
+  HIDE_SETUP({ commit }) {
+    logger('HIDE_SETUP action being executed')
 
-    commit('updateTokenBalance', optimisticBalance)
-    commit('SET_USER_PROPERTIES', {
-      canRequestFaucetTokens: false,
-      faucetLastRequestedAt: (new Date()).toISOString(),
-    })
-  },
-
-  hideSetup({ commit }) {
-    commit('hideSetup')
+    commit('SET_HIDE_SETUP')
   },
 
   // This is currently used for handling some Metamask state changes
   //  Changing the route this navigates to will require updating how we handle
   //  the state changes.
-  logout({ commit }) {
-    logger('logout action being executed')
+  LOGOUT_USER({ commit }) {
+    logger('LOGOUT_USER action being executed')
 
     commit('CLEAR_USER_STATE')
 

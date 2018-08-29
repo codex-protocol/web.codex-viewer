@@ -48,7 +48,7 @@ export default {
       return callContract(this.tokenContract.approve, input)
         .then(() => {
           EventBus.$emit('events:approve-contract', this)
-          this.$store.commit('auth/updateApprovalStatus', {
+          this.$store.commit('auth/SET_APPROVAL_STATUS', {
             allowance: amount,
             stateProperty: this.stateProperty,
           })

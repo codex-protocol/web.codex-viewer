@@ -4,10 +4,13 @@ import Raven from 'raven-js'
 import { Networks, Web3Errors } from '../../../util/constants/web3'
 
 const logger = debug('app:store:web3:mutations')
+const logMutation = (mutationName, ...args) => {
+  logger(`${mutationName} mutation being executed`, ...args)
+}
 
 export default {
-  registerWeb3Instance(currentState, { result }) {
-    logger('registerWeb3instance mutation being executed', result)
+  SET_INITIAL_STATE(currentState, { result }) {
+    logMutation('SET_INITIAL_STATE', result)
 
     currentState.network = Networks[result.networkId]
 
@@ -27,24 +30,33 @@ export default {
   // @NOTE: If MetaMask stops refreshing the page when the network changes
   //  we'll have to start polling for networkId in addition to account.
   // i.e., basically just dupe the registerWeb3 functionality into the polling mechanism.
-  setPollResult(currentState, { account }) {
-    logger('setPollResult mutation being executed', account)
+  SET_POLL_RESULT(currentState, { account }) {
+    logMutation('SET_POLL_RESULT', account)
 
     currentState.error = Web3Errors.None
     currentState.account = account
   },
 
   SET_CONTRACT(currentState, { propertyName, contract }) {
-    logger('tokenContract mutation being executed for contract', propertyName)
+    logMutation('SET_CONTRACT', propertyName)
 
     currentState[propertyName] = Object.freeze(contract)
   },
 
-  setWeb3Error(currentState, { message, error }) {
-    logger('setWeb3Error mutation being executed', message, error)
-    Raven.captureException(error)
+  SET_ERROR(currentState, { message, error, ignoreInSentry }) {
+    logMutation('SET_ERROR', message, error, ignoreInSentry)
+
+    if (!ignoreInSentry) {
+      Raven.captureException(error)
+    }
 
     currentState.error = error
     currentState.account = null
+  },
+
+  SET_IS_POLLING(currentState, { isPolling }) {
+    logMutation('SET_IS_POLLING')
+
+    currentState.isPolling = isPolling
   },
 }

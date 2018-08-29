@@ -88,16 +88,20 @@ const router = new Router({
     },
 
     // gallery routes
-    { name: 'galleries', path: '/galleries', component: GalleryListView, meta: { allowUnauthenticatedUsers: true } },
-    { name: 'gallery', path: '/galleries/:galleryShareCode', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
+    {
+      name: 'galleries',
+      path: '/galleries',
+      component: GalleryListView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
+    {
+      name: 'gallery',
+      path: '/galleries/:galleryShareCode',
+      component: GalleryView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
 
     // other non-application routes
-    // @TODO: Deprecate /coming-soon after /extensions has shipped
-    {
-      name: 'coming-soon',
-      path: '/coming-soon',
-      component: FeatureListView,
-    },
     {
       name: 'extensions',
       path: '/extensions',

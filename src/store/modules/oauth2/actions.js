@@ -1,8 +1,12 @@
 import axios from 'axios'
+import debug from 'debug'
 import Raven from 'raven-js'
 
+const logger = debug('app:store:oauth2:mutations')
+
 export default {
-  updateOAuth2Clients({ commit }) {
+  FETCH_CLIENTS({ commit }) {
+    logger('FETCH_CLIENTS action being executed')
 
     const requestOptions = {
       url: '/oauth2/clients',
@@ -11,7 +15,9 @@ export default {
 
     return axios(requestOptions)
       .then((response) => {
-        commit('setOAuth2Clients', response.data.result)
+        commit('SET_CLIENTS', {
+          clients: response.data.result,
+        })
       })
       .catch((error) => {
         Raven.captureException(error)

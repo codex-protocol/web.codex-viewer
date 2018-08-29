@@ -6,7 +6,6 @@ import getInitialState from './state'
 import SocketService from '../../../util/socket'
 
 const logger = debug('app:store:auth:mutations')
-
 const logMutation = (mutationName, payload) => {
   logger(`${mutationName} mutation being executed`, payload)
 }
@@ -49,31 +48,26 @@ export default {
     currentState.authToken = null
   },
 
-  updateTokenBalance(currentState, newBalance) {
-    logMutation('updateTokenBalance', newBalance)
+  SET_TOKEN_BALANCE(currentState, { balance }) {
+    logMutation('SET_TOKEN_BALANCE', balance)
 
-    currentState.balance = newBalance
+    currentState.balance = balance
   },
 
-  updatePersonalStakes(currentState, newPersonalStakes) {
-    logMutation('updatePersonalStakes', newPersonalStakes)
+  SET_PERSONAL_STAKES(currentState, { personalStakes }) {
+    logMutation('SET_PERSONAL_STAKES', personalStakes)
 
-    currentState.personalStakes = newPersonalStakes
+    currentState.personalStakes = personalStakes
   },
 
-  updateCreditBalance(currentState, newBalance) {
-    logMutation('updateCreditBalance', newBalance)
+  SET_CREDIT_BALANCE(currentState, balance) {
+    logMutation('SET_CREDIT_BALANCE', balance)
 
-    currentState.creditBalance = newBalance
+    currentState.creditBalance = balance
   },
 
-  updateApprovalStatus(currentState, payload) {
-    const {
-      allowance,
-      stateProperty,
-    } = payload
-
-    logMutation('updateApprovalStatus', payload)
+  SET_APPROVAL_STATUS(currentState, { allowance, stateProperty }) {
+    logMutation('SET_APPROVAL_STATUS', stateProperty)
 
     // The approval exposed in the UI is not a binary operation, but it does
     //  approve the contract's allowance to a high value (2^255).
@@ -84,8 +78,8 @@ export default {
     currentState[stateProperty] = allowance.greaterThan(new BigNumber('10e18'))
   },
 
-  hideSetup(currentState) {
-    logMutation('hideSetup')
+  SET_HIDE_SETUP(currentState) {
+    logMutation('HIDE_SETUP')
 
     currentState.hideSetup = true
 

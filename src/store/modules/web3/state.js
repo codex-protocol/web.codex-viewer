@@ -9,5 +9,6 @@ export default () => {
     recordContract: null,
     tokenContract: null,
     stakeContract: null,
+    isPolling: false,
   }
 }

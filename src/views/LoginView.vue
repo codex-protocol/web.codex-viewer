@@ -6,7 +6,7 @@
         <div v-if="isMobile">
           <h1 v-html="mobilePageContent.title"></h1>
           <div class="lead" v-html="mobilePageContent.description"></div>
-          <div v-if="web3Error === Web3Errors.Unknown">
+          <div v-if="error === Web3Errors.Unknown">
             <a href="http://www.toshi.org/">
               <img src="../assets/images/get-toshi.png" width="200">
             </a>
@@ -98,6 +98,12 @@ export default {
           this.setButton(false)
           break
 
+        case Web3Errors.Locked:
+          title = 'Your account is locked'
+          description = 'Please open your Ethereum wallet and follow the instructions to unlock it'
+          this.setButton(false)
+          break
+
         case Web3Errors.Unknown:
           title = 'Let&rsquo;s get started'
           description = '<p>Please use a DApp browser, such as Toshi.</p>'
@@ -125,7 +131,7 @@ export default {
       let title
       let description
 
-      switch (this.web3Error) {
+      switch (this.error) {
         case Web3Errors.Missing:
           title = 'Let&rsquo;s get started'
           description = '<p>To continue, please install the MetaMask browser extension.</p>'
@@ -170,12 +176,13 @@ export default {
       this.setButton('MetaMask has been installed', this.checkMetamask)
       EventBus.$emit('events:click-install-metamask', this)
     },
+
     checkMetamask() {
       EventBus.$emit('events:click-check-metamask', this)
       window.location.reload(true)
     },
-    web3Login() {
 
+    web3Login() {
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
       EventBus.$emit('events:click-login-button', this)
@@ -199,16 +206,13 @@ export default {
 
         EventBus.$emit('events:login', this)
 
-        const sendAuthRequestOptions = {
+        this.$store.dispatch('auth/SEND_AUTH_REQUEST', {
           userAddress: this.account,
           signedData: result.result.substr(2),
-        }
-
-        this.$store.dispatch('auth/sendAuthRequest', sendAuthRequestOptions)
+        })
           .then(() => {
             this.$router.replace({ name: 'collection' })
           })
-
       })
     },
     setButton(title, method) {

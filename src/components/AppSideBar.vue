@@ -122,7 +122,7 @@ export default {
     logout() {
       this.hideNav()
       EventBus.$emit('events:click-logout-button', this)
-      this.$store.dispatch('auth/logout', this.$router)
+      this.$store.dispatch('auth/LOGOUT_USER')
     },
     // @TODO: instead of requesting these independently of
     //  src/views/TransferListView.vue, the list of transfers should really be

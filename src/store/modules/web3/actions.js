@@ -11,44 +11,47 @@ import {
 const logger = debug('app:store:web3:actions')
 
 export default {
-  registerWeb3({ commit, dispatch }, router) {
-    logger('registerWeb3 action being executed')
+  REGISTER({ commit, dispatch, state }, router) {
+    logger('REGISTER action being executed')
 
     return registerWeb3()
       .then((result) => {
-        commit('registerWeb3Instance', { result, router })
-        return dispatch('registerAllContracts')
+        commit('SET_INITIAL_STATE', { result, router })
+        return dispatch('REGISTER_ALL_CONTRACTS')
       })
       .then(() => {
-        dispatch('pollWeb3')
+        if (!state.isPolling) {
+          commit('SET_IS_POLLING', { isPolling: true })
+          dispatch('POLL_WEB3')
+        }
       })
       .catch((error) => {
-        commit('setWeb3Error', {
-          message: 'Unable to register web3',
+        commit('SET_ERROR', {
+          message: 'Unable to register',
           error,
         })
       })
   },
 
-  registerAllContracts({ dispatch }) {
+  REGISTER_ALL_CONTRACTS({ dispatch }) {
     return Promise.all([
-      dispatch('registerContract', {
+      dispatch('REGISTER_CONTRACT', {
         registrationFunction: getCodexRecordContract,
         propertyName: 'recordContract',
       }),
-      dispatch('registerContract', {
+      dispatch('REGISTER_CONTRACT', {
         registrationFunction: getCodexCoinContract,
         propertyName: 'tokenContract',
       }),
-      dispatch('registerContract', {
+      dispatch('REGISTER_CONTRACT', {
         registrationFunction: getStakeContract,
         propertyName: 'stakeContract',
       }),
     ])
   },
 
-  registerContract({ commit, state }, { registrationFunction, propertyName }) {
-    logger('registerContract action being executed for contract', registrationFunction.name)
+  REGISTER_CONTRACT({ commit, state }, { registrationFunction, propertyName }) {
+    logger('REGISTER_CONTRACT action being executed for contract', registrationFunction.name)
 
     return registrationFunction(state.instance.currentProvider)
       .then((contract) => {
@@ -58,29 +61,33 @@ export default {
         })
       })
       .catch((error) => {
-        commit('setWeb3Error', { message: 'Unable to register the contract', error })
+        commit('SET_ERROR', { message: 'Unable to register the contract', error })
       })
   },
 
-  pollWeb3({ commit, dispatch, state }) {
-    // logger('pollWeb3 action being executed')
-
+  POLL_WEB3({ commit, dispatch, state, rootGetters }) {
     if (state.instance) {
       state.instance.eth.getAccounts((error, accounts) => {
         if (error) {
-          commit('setWeb3Error', {
-            message: 'Error while polling web3',
+          commit('SET_ERROR', {
+            message: 'Error while polling',
             error: Web3Errors.Unknown,
+            ignoreInSentry: true,
           })
         } else if (!accounts.length) {
-          commit('setWeb3Error', {
+          if (rootGetters['auth/isAuthenticated']) {
+            dispatch('auth/LOGOUT_USER', null, { root: true })
+          }
+
+          commit('SET_ERROR', {
             message: 'MetaMask is locked',
             error: Web3Errors.Locked,
+            ignoreInSentry: true,
           })
         } else if (state.account !== accounts[0]) {
-          dispatch('auth/logout', null, { root: true })
+          dispatch('auth/LOGOUT_USER', null, { root: true })
 
-          commit('setPollResult', {
+          commit('SET_POLL_RESULT', {
             account: accounts[0],
           })
         }
@@ -88,7 +95,7 @@ export default {
     }
 
     window.setTimeout(() => {
-      dispatch('pollWeb3')
+      dispatch('POLL_WEB3')
     }, 1000)
   },
 }

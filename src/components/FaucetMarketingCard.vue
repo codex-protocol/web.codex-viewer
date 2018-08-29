@@ -108,7 +108,7 @@ export default {
       }
     },
     hide() {
-      this.$store.dispatch('auth/hideSetup')
+      this.$store.dispatch('auth/HIDE_SETUP')
     },
     formatTokenAmount(rawAmount) {
       return formatTokenAmount(rawAmount)
