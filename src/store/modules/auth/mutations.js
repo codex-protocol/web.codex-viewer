@@ -85,4 +85,13 @@ export default {
 
     window.localStorage.setItem('hideSetup', true)
   },
+
+  SET_ERROR(currentState, { code, message }) {
+    logMutation('SET_ERROR')
+
+    currentState.authError = {
+      code,
+      message,
+    }
+  },
 }

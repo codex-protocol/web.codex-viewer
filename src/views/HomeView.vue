@@ -2,7 +2,11 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 primary">
-        <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
+        <div class="logo">
+          <b-link href="/" replace>
+            <img src="../assets/logos/codex/gold.svg" />
+          </b-link>
+        </div>
         <h1>Codex Viewer</h1>
         <div class="lead">Create and manage blockchain identities for your unique assets.</div>
         <div class="mb-5">

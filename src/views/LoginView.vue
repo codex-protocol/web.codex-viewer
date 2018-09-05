@@ -2,7 +2,11 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 primary">
-        <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
+        <div class="logo">
+          <b-link href="/" replace>
+            <img src="../assets/logos/codex/gold.svg" />
+          </b-link>
+        </div>
         <div v-if="isMobile">
           <h1 v-html="mobilePageContent.title"></h1>
           <div class="lead" v-html="mobilePageContent.description"></div>
@@ -34,8 +38,9 @@
             {{ buttonTitle }}
           </b-button>
         </div>
-        <br>
-        <a :href="oauthLoginUrl"><img src="../assets/images/google-signin@2x.png" width="200"></a>
+        <a :href="oauthLoginUrl">
+          <img src="../assets/images/google-signin@2x.png" width="200">
+        </a>
         <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
@@ -75,7 +80,6 @@ export default {
       buttonMethod: this.web3Login,
       showLoginMarketingCard: config.showCodexQuestsMarketing,
       isMobile: is.mobile(),
-      Web3Errors,
       oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
     }
   },
@@ -85,88 +89,24 @@ export default {
   },
 
   computed: {
+    ...mapState('auth', ['authError']),
     ...mapState('web3', ['account', 'instance', 'error']),
 
-    mobilePageContent() {
-      let title
-      let description
-
-      switch (this.error) {
-        case Web3Errors.Missing:
-          title = 'Let&rsquo;s get started'
-          description = '<p>Please use a DApp browser, such as Toshi or Status.</p>'
-          this.setButton(false)
-          break
-
-        case Web3Errors.Locked:
-          title = 'Your account is locked'
-          description = 'Please open your Ethereum wallet and follow the instructions to unlock it'
-          this.setButton(false)
-          break
-
-        case Web3Errors.Unknown:
-          title = 'Let&rsquo;s get started'
-          description = '<p>Please use a DApp browser, such as Toshi.</p>'
-          this.setButton(false)
-          break
-
-        case Web3Errors.WrongNetwork:
-          title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your DApp browser settings.`
-          this.setButton(false)
-          break
-
-        case Web3Errors.None:
-        default:
-          title = 'Login'
-          description = 'Login to create, view, &amp; transfer Codex Records'
-          this.setButton('Login', this.web3Login)
-          break
-      }
-
-      return { title, description }
-    },
-
     pageContent() {
-      let title
-      let description
-
-      switch (this.error) {
-        case Web3Errors.Missing:
-          title = 'Let&rsquo;s get started'
-          description = '<p>To continue, please install the MetaMask browser extension.</p>'
-          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-          this.setButton('Install MetaMask', this.installMetamask)
-          break
-
-        case Web3Errors.Locked:
-          title = 'Your MetaMask is locked'
-          description = 'Please open your MetaMask browser extension and follow the instructions to unlock it'
-          this.setButton(false)
-          break
-
-        case Web3Errors.Unknown:
-          title = 'Let&rsquo;s get started'
-          description = '<p>To continue, please install the MetaMask browser extension.</p>'
-          description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-          this.setButton('Install MetaMask', this.installMetamask)
-          break
-
-        case Web3Errors.WrongNetwork:
-          title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
-          this.setButton(false)
-          break
-
-        case Web3Errors.None:
-        default:
-          title = 'Login'
-          description = 'Login to create, view, &amp; transfer Codex Records'
-          this.setButton('Login', this.web3Login)
-          break
+      if (this.authError) {
+        return this.handleAuthError(this.authError)
       }
 
-      return { title, description }
+      if (this.error) {
+        return this.handleWeb3Error(this.error)
+      }
+
+      this.setButton('Login', this.web3Login)
+
+      return {
+        title: 'Login',
+        description: 'Login to create, view, &amp; transfer Codex Records',
+      }
     },
   },
 
@@ -215,9 +155,71 @@ export default {
           })
       })
     },
+
     setButton(title, method) {
       this.buttonTitle = title
       this.buttonMethod = method
+    },
+
+    handleAuthError(error) {
+      this.setButton()
+
+      return {
+        title: 'There was a problem logging in',
+        description: error.message
+          || 'We were unable to log you in with your Google account. Please try again later.',
+      }
+    },
+
+    handleWeb3Error(error) {
+      let title
+      let description
+
+      switch (error) {
+        case Web3Errors.Locked:
+          title = 'Your account is locked'
+          description = 'Please open your Ethereum wallet and follow the instructions to unlock it'
+          this.setButton()
+          break
+
+        case Web3Errors.Unknown:
+          title = 'Let&rsquo;s get started'
+
+          if (this.isMobile) {
+            description = '<p>Please use a DApp browser, such as Coinbase Wallet.</p>'
+            this.setButton()
+          } else {
+            description = '<p>To continue, please install the MetaMask browser extension.</p>'
+            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+            this.setButton('Install MetaMask', this.installMetamask)
+          }
+          break
+
+        case Web3Errors.WrongNetwork:
+          title = 'Wrong Ethereum network'
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
+          this.setButton()
+          break
+
+        default:
+        case Web3Errors.Missing:
+          title = 'Let&rsquo;s get started'
+
+          if (this.isMobile) {
+            description = '<p>Please use a DApp browser, such as Coinbase Wallet or Status.</p>'
+            this.setButton()
+          } else {
+            description = '<p>To continue, please install the MetaMask browser extension.</p>'
+            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+            this.setButton('Install MetaMask', this.installMetamask)
+          }
+          break
+      }
+
+      return {
+        title,
+        description,
+      }
     },
   },
 }

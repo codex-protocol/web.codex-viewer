@@ -18,5 +18,6 @@ export default () => {
     registryContractApproved: false,
     stakeContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
+    authError: null,
   }
 }

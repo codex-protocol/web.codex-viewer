@@ -3,17 +3,19 @@
     'with-background': this.useBackground(),
     'show-nav': showNav,
   }">
-    <span v-if="!hideSideBar" class="hamburger" @click="toggleNav">
-      <icon-base
-        iconName="menu"
-        width="28"
-        height="32"
-        class="icon-menu"
-      >
-        <icon-hamburger />
-      </icon-base>
-    </span>
-    <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
+    <template v-if="!hideSideBar">
+      <span class="hamburger" @click="toggleNav">
+        <icon-base
+          iconName="menu"
+          width="28"
+          height="32"
+          class="icon-menu"
+        >
+          <icon-hamburger />
+        </icon-base>
+      </span>
+      <app-side-bar :hideNav="hideNav" />
+    </template>
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="isLoaded" />
@@ -35,6 +37,7 @@ import {
 } from 'vuex'
 
 import config from './util/config'
+import EventBus from './util/eventBus'
 
 import AppFooter from './components/AppFooter'
 import AppSideBar from './components/AppSideBar'
@@ -59,6 +62,14 @@ export default {
 
   created() {
     this.initializeApi()
+
+    EventBus.$on('socket:codex-coin:transferred', () => {
+      this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
+    })
+
+    EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
+      this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
+    })
   },
 
   data() {
@@ -78,14 +89,18 @@ export default {
       })
     }
 
-    this.$store.dispatch('oauth2/FETCH_CLIENTS')
     this.$store.dispatch('web3/REGISTER')
       .then(() => {
         if (this.error) {
-          return this.$store.dispatch('auth/LOGOUT_USER')
+          this.$store.dispatch('auth/LOGOUT_USER')
         }
-
-        return this.$store.dispatch('auth/INITIALIZE_AUTH')
+      })
+      .then(() => {
+        return Promise.all([
+          this.$store.dispatch('oauth2/FETCH_CLIENTS'),
+        ], [
+          this.$store.dispatch('auth/INITIALIZE_AUTH'),
+        ])
       })
       .then(() => {
         this.isLoaded = true
