@@ -27,7 +27,8 @@
     "vue-router": "^3.0.1",
     "vue2-dropzone": "^3.2.2",
     "vuex": "^3.0.1",
-    "vuex-router-sync": "^5.0.0"
+    "vuex-router-sync": "^5.0.0",
+    "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
     "@codex-protocol/eslint-config-vue": "^2.0.0",

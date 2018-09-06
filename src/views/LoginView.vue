@@ -131,7 +131,7 @@ export default {
         method: 'personal_sign',
         params: [
           this.account,
-          this.instance.toHex(personalMessageToSign),
+          this.instance.utils.toHex(personalMessageToSign),
         ],
       }
 
