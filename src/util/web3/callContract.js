@@ -9,7 +9,8 @@ const logger = debug('app:util:call-contract')
 const gasBuffer = 100000
 
 // @TODO: Pull from ethgasstation instead
-const recommendedGasPriceInGwei = 10
+// String or BigNumber required for `toWei`
+const recommendedGasPriceInGwei = '10'
 
 function callContract(func, args) {
   const {
@@ -30,7 +31,7 @@ function callContract(func, args) {
         {
           from: account,
           gas: estimatedGas + gasBuffer,
-          gasPrice: instance.toWei(recommendedGasPriceInGwei, 'gwei'),
+          gasPrice: instance.utils.toWei(recommendedGasPriceInGwei, 'gwei'),
         }
       )
     })

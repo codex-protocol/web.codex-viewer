@@ -55,7 +55,7 @@ export default {
     return User.getUser()
       .then((user) => {
         if (user.type === 'savvy'
-          && user.address !== rootState.web3.account) {
+          && user.address.toLowerCase() !== rootState.web3.account.toLowerCase()) {
           return dispatch('LOGOUT_USER')
         }
 

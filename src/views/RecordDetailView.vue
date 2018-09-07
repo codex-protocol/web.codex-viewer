@@ -132,13 +132,17 @@ export default {
       return (
         this.account &&
         this.authToken &&
-        this.account === this.codexRecord.ownerAddress
+        this.codexRecord.ownerAddress &&
+        this.account.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
       )
     },
 
     isApproved() {
-      return this.account &&
-        this.account === this.codexRecord.approvedAddress
+      return (
+        this.account &&
+        this.codexRecord.approvedAddress &&
+        this.account.toLowerCase() === this.codexRecord.approvedAddress.toLowerCase()
+      )
     },
 
     recordId() {

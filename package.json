@@ -19,6 +19,7 @@
     "debug": "^3.1.0",
     "freshchat-widget": "^1.0.4",
     "is_js": "^0.9.0",
+    "js-sha3": "^0.8.0",
     "raven-js": "^3.26.4",
     "socket.io-client": "^2.1.1",
     "truffle-contract": "^3.0.6",

@@ -40,6 +40,7 @@
           This will grant the Codex Viewer permission to spend CODX on your behalf.
         </approve-contract-modal>
 
+        <!-- @TODO: We've commented out the staking modal. Should we comment out the staking button above? -->
         <!-- <approve-contract-modal id="approveStakeModal" :contract="stakeContract" stateProperty="stakeContractApproved">
           This will allow you to stake CODX.
         </approve-contract-modal> -->

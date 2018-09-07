@@ -108,6 +108,7 @@ import { mapState } from 'vuex'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
+import sha3 from '../../util/sha3'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
@@ -156,17 +157,11 @@ export default {
       fileHashes: this.codexRecord.metadata.fileHashes,
       tokenId: this.codexRecord.tokenId,
       providerMetadataId: this.codexRecord.metadata.id,
-      dropzoneOptions: {
-        url: `${config.apiUrl}/users/files`,
-        paramName: 'files',
-        thumbnailWidth: 150,
-        maxFilesize: 5,
-        addRemoveLinks: true,
-      },
     }
   },
 
   computed: {
+    ...mapState('auth', ['authToken']),
     ...mapState('web3', ['instance', 'recordContract']),
 
     canSubmit() {
@@ -183,6 +178,19 @@ export default {
       }
 
       return 'danger'
+    },
+
+    dropzoneOptions() {
+      return {
+        url: `${config.apiUrl}/users/files`,
+        paramName: 'files',
+        thumbnailWidth: 150,
+        maxFilesize: 5,
+        addRemoveLinks: true,
+        headers: {
+          Authorization: this.authToken,
+        },
+      }
     },
   },
 
@@ -242,7 +250,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return this.instance.sha3(input)
+      return sha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -271,7 +279,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance.sha3(binaryFileReader.result))
+        next(null, sha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)
