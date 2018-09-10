@@ -9,10 +9,8 @@ const registerWeb3 = () => {
       if (typeof window.web3 !== 'undefined') {
         resolve(new Web3(window.web3.currentProvider))
       } else {
-        // @FIXME: Add env var for appropriate provider
-        // Fallback to localhost if no web3 injection. We've configured this to
-        // use the development console's port by default.
-        const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545')
+        const providerUrl = process.env.VUE_APP_PROVIDER
+        const provider = new Web3.providers.HttpProvider(providerUrl)
         resolve(new Web3(provider))
       }
     })
