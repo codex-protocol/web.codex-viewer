@@ -73,7 +73,6 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import sha3 from '../../util/sha3'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
@@ -140,7 +139,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.instance.utils.soliditySha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -186,10 +185,11 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
+          // const { soliditySha3 } = this.instance.utils
           //
-          // metadata.nameHash === sha3(metadata.name)
+          // metadata.nameHash === soliditySha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
+          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : null)
 
           return this.createRecord(metadata)
 
@@ -207,10 +207,12 @@ export default {
 
     createRecord(metadata) {
 
+      const { soliditySha3 } = this.instance.utils
+
       const input = [
         this.account,
-        sha3(metadata.name),
-        metadata.description ? sha3(metadata.description) : '',
+        soliditySha3(metadata.name),
+        metadata.description ? soliditySha3(metadata.description) : '',
         [this.uploadedFileHash],
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId

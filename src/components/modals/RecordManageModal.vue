@@ -108,7 +108,6 @@ import { mapState } from 'vuex'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
-import sha3 from '../../util/sha3'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
@@ -250,7 +249,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return sha3(input)
+      return this.instance.utils.soliditySha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -279,7 +278,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, sha3(binaryFileReader.result))
+        next(null, this.instance.utils.soliditySha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)

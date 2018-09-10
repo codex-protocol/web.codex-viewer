@@ -18,7 +18,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import BigNumber from 'bignumber.js'
 
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
@@ -42,7 +41,7 @@ export default {
   methods: {
     approveTokens() {
       EventBus.$emit('events:click-approve-contract', this)
-      const amount = new BigNumber(2).pow(255)
+      const amount = new this.instance.utils.BN(2).pow(255)
       const input = [this.contract.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
