@@ -163,7 +163,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['instance', 'recordContract']),
+    ...mapState('web3', ['instance']),
 
     canSubmit() {
       return !this.isFileProcessing

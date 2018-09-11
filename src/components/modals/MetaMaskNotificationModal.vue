@@ -158,6 +158,14 @@ export default {
 
         // transaction submitted, waiting for mine
         case 3:
+          if (this.isSimpleUser) {
+            this.okMethod()
+              .catch((error) => {
+                Raven.captureException(error)
+
+                this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
+              })
+          }
           this.preventClose = false
           this.isFooterHidden = true
           break

@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import Web3Helper from '../Web3Helper'
 import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
@@ -89,9 +87,6 @@ export default {
           EventBus.$emit('events:record-transfer', this)
         })
     },
-  },
-  computed: {
-    ...mapState('web3', ['recordContract']),
   },
 }
 </script>

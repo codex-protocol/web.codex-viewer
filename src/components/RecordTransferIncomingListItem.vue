@@ -53,7 +53,6 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['recordContract']),
     ...mapState('auth', ['user']),
   },
 

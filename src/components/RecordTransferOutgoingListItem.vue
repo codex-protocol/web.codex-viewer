@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import Web3Helper from './Web3Helper'
@@ -39,10 +37,6 @@ export default {
       cancelApproved: false,
       missingImageHelper,
     }
-  },
-
-  computed: {
-    ...mapState('web3', ['recordContract']),
   },
 
   methods: {
