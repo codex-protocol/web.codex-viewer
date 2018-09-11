@@ -1,49 +1,43 @@
-// IMPORTANT: web3 injected by MetaMask is version 0.x.x instead of 1.x.x-beta.
-//  Documentation here: https://github.com/ethereum/wiki/wiki/JavaScript-API
+import Web3 from 'web3'
 
 import { ExpectedNetworkId, Web3Errors } from '../../util/constants/web3'
 
 const registerWeb3 = () => {
   return new Promise((resolve, reject) => {
-    if (typeof window.web3 !== 'undefined') {
-      resolve(new window.Web3(window.web3.currentProvider))
-    } else {
-      reject(Web3Errors.Unknown)
-    }
+    // Avoid race conditions with web3 injection
+    window.addEventListener('load', () => {
+      if (typeof window.web3 !== 'undefined') {
+        resolve(new Web3(window.web3.currentProvider))
+      } else {
+        const providerUrl = process.env.VUE_APP_PROVIDER
+        const provider = new Web3.providers.HttpProvider(providerUrl)
+        resolve(new Web3(provider))
+      }
+    })
   })
-    .then((localWeb3) => {
-      return new Promise((resolve, reject) => {
-        localWeb3.version.getNetwork((error, networkId) => {
-          if (error) {
-            reject(Web3Errors.Unknown)
-            return
+    .then((web3) => {
+      return web3.eth.net.getId()
+        .then((networkId) => {
+          const networkIdStr = String(networkId)
+          if (networkIdStr !== ExpectedNetworkId) {
+            throw Web3Errors.WrongNetwork
           }
-
-          if (networkId !== ExpectedNetworkId) {
-            reject(Web3Errors.WrongNetwork)
-            return
-          }
-
           const returnValue = Object.assign({}, {
-            web3: localWeb3,
+            web3,
             networkId,
           })
-          resolve(returnValue)
+          return returnValue
         })
-      })
     })
     .then((state) => {
-      return new Promise((resolve, reject) => {
-        state.web3.eth.getAccounts((error, accounts) => {
-          if (error) {
-            reject(Web3Errors.Unknown)
-            return
-          }
-
+      return state.web3.eth.getAccounts()
+        .then((accounts) => {
           const returnValue = Object.assign({}, state, { accounts })
-          resolve(returnValue)
+          return returnValue
         })
-      })
+        .catch((error) => {
+          return Web3Errors.Unknown
+        })
     })
 }
 

@@ -58,7 +58,7 @@ export default {
 
     stakeTokens() {
 
-      const amount = this.instance.toWei(this.stakeAmount, 'ether')
+      const amount = this.instance.utils.toWei(this.stakeAmount, 'ether')
       const input = [amount, '0x0']
 
       EventBus.$emit('events:click-stake-tokens', this)

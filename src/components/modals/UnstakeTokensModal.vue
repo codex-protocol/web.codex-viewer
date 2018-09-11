@@ -57,7 +57,7 @@ export default {
     },
     unstakeTokens() {
 
-      const amount = this.instance.toWei(this.unstakeAmount, 'ether')
+      const amount = this.instance.utils.toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
 
       EventBus.$emit('events:click-unstake-tokens', this)

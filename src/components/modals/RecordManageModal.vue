@@ -156,17 +156,11 @@ export default {
       fileHashes: this.codexRecord.metadata.fileHashes,
       tokenId: this.codexRecord.tokenId,
       providerMetadataId: this.codexRecord.metadata.id,
-      dropzoneOptions: {
-        url: `${config.apiUrl}/users/files`,
-        paramName: 'files',
-        thumbnailWidth: 150,
-        maxFilesize: 5,
-        addRemoveLinks: true,
-      },
     }
   },
 
   computed: {
+    ...mapState('auth', ['authToken']),
     ...mapState('web3', ['instance', 'recordContract']),
 
     canSubmit() {
@@ -183,6 +177,19 @@ export default {
       }
 
       return 'danger'
+    },
+
+    dropzoneOptions() {
+      return {
+        url: `${config.apiUrl}/users/files`,
+        paramName: 'files',
+        thumbnailWidth: 150,
+        maxFilesize: 5,
+        addRemoveLinks: true,
+        headers: {
+          Authorization: this.authToken,
+        },
+      }
     },
   },
 
@@ -242,7 +249,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return this.instance.sha3(input)
+      return this.instance.utils.soliditySha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -271,7 +278,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance.sha3(binaryFileReader.result))
+        next(null, this.instance.utils.soliditySha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)

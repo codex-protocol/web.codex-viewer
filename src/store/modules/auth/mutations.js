@@ -60,7 +60,7 @@ export default {
     currentState.personalStakes = personalStakes
   },
 
-  SET_CREDIT_BALANCE(currentState, balance) {
+  SET_CREDIT_BALANCE(currentState, { balance }) {
     logMutation('SET_CREDIT_BALANCE', balance)
 
     currentState.creditBalance = balance
