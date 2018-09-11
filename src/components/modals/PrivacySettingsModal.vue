@@ -114,7 +114,6 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('web3', ['account']),
 
     isPublic: {
       get: function getIsPublic() {
@@ -147,7 +146,7 @@ export default {
       if (
         addressToAdd !== null &&
         !this.whitelistedAddresses.includes(addressToAdd) &&
-        addressToAdd.toLowerCase() !== this.account.toLowerCase()
+        addressToAdd.toLowerCase() !== this.user.address.toLowerCase()
       ) {
         this.whitelistedAddresses.push(addressToAdd)
       }

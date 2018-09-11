@@ -14,8 +14,7 @@ export default {
       const { user } = store.state.auth
       switch (user.type) {
         case 'simple':
-          IdProxy.contractCall(contractName, functionName, args)
-          return
+          return IdProxy.contractCall(contractName, functionName, args)
         case 'savvy':
           if (contractName === 'CodexRecord') {
             return callContract(recordContract[functionName], args)

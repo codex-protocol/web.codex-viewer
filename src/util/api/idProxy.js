@@ -1,8 +1,7 @@
 import callApi from './callApi'
 
-// @TODO: use config values
-const defaultGasLimit = 300000
-const defaultGasPrice = 21000000000 // 21 gwei
+const defaultGasLimit = process.env.VUE_APP_DEFAULT_GAS_LIMIT
+const defaultGasPrice = process.env.VUE_APP_DEFAULT_GAS_PRICE
 
 export default {
 

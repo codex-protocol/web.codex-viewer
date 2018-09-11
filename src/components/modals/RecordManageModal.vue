@@ -100,6 +100,7 @@
         v-on:vdropzone-queue-complete="onQueueComplete"
       />
     </b-form-group>
+    <web3-helper ref="web3Helper" />
   </meta-mask-notification-modal>
 </template>
 
@@ -111,8 +112,8 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
+import Web3Helper from '../Web3Helper'
 import EventBus from '../../util/eventBus'
-import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -126,6 +127,7 @@ export default {
   components: {
     vueDropzone: vue2Dropzone,
     MetaMaskNotificationModal,
+    Web3Helper,
   },
 
   data() {
@@ -356,8 +358,10 @@ export default {
         ]),
       ]
 
+      const contractName = 'CodexRecord'
+      const methodName = 'modifyMetadataHashes'
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input)
+      return this.$refs.web3Helper.callContract(contractName, methodName, input)
     },
   },
 }

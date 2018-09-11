@@ -14,6 +14,7 @@
       <b-button variant="secondary" @click.prevent="acceptTransfer" :disabled="this.isLoading">Accept</b-button>
       <b-button variant="outline-primary" @click.prevent="ignoreTransfer" :disabled="this.isLoading">Ignore</b-button>
     </p>
+    <web3-helper ref="web3Helper" />
   </b-card>
 </template>
 
@@ -22,13 +23,17 @@ import { mapState } from 'vuex'
 
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import callContract from '../util/web3/callContract'
+import Web3Helper from './Web3Helper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-incoming-list-item',
 
   props: ['codexRecord'],
+
+  components: {
+    Web3Helper,
+  },
 
   data() {
     return {
@@ -48,7 +53,8 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'recordContract']),
+    ...mapState('web3', ['recordContract']),
+    ...mapState('auth', ['user']),
   },
 
   methods: {
@@ -68,14 +74,16 @@ export default {
     acceptTransfer() {
       const input = [
         this.codexRecord.ownerAddress,
-        this.account,
+        this.user.address,
         this.codexRecord.tokenId,
       ]
 
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      callContract(this.recordContract.safeTransferFrom, input)
+      const contractName = 'CodexRecord'
+      const methodName = 'transferFrom'
+      return this.$refs.web3Helper.callContract(contractName, methodName, input)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

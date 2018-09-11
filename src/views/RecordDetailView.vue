@@ -70,6 +70,7 @@
         </div>
       </div> <!-- col-12 -->
     </div> <!-- row -->
+    <web3-helper ref="web3Helper" />
   </div> <!-- container-fluid -->
 </template>
 
@@ -79,7 +80,7 @@ import { mapState } from 'vuex'
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import callContract from '../util/web3/callContract'
+import Web3Helper from '../components/Web3Helper'
 import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
@@ -99,6 +100,7 @@ export default {
     RecordBlockchainDetails,
     RecordManageModal,
     RecordImageCarousel,
+    Web3Helper,
   },
 
   data() {
@@ -198,7 +200,9 @@ export default {
         this.recordId,
       ]
 
-      callContract(this.recordContract.safeTransferFrom, input)
+      const contractName = 'CodexRecord'
+      const methodName = 'transferFrom'
+      return this.$refs.web3Helper.callContract(contractName, methodName, input)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)
