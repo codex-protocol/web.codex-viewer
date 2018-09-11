@@ -125,23 +125,23 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['account', 'recordContract']),
+    ...mapState('auth', ['user', 'authToken']),
+    ...mapState('web3', ['recordContract']),
 
     isOwner() {
       return (
-        this.account &&
+        this.user &&
         this.authToken &&
         this.codexRecord.ownerAddress &&
-        this.account.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
+        this.user.address.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
       )
     },
 
     isApproved() {
       return (
-        this.account &&
+        this.user &&
         this.codexRecord.approvedAddress &&
-        this.account.toLowerCase() === this.codexRecord.approvedAddress.toLowerCase()
+        this.user.address.toLowerCase() === this.codexRecord.approvedAddress.toLowerCase()
       )
     },
 
@@ -194,7 +194,7 @@ export default {
     acceptTransfer() {
       const input = [
         this.codexRecord.ownerAddress,
-        this.account,
+        this.user.address,
         this.recordId,
       ]
 

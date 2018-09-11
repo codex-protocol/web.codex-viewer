@@ -33,7 +33,7 @@
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
       <div class="address">
-        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="account" /> ({{ network }})</div>
+        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="address" /> ({{ network }})</div>
       </div>
     </div>
 
@@ -87,7 +87,6 @@ export default {
     return {
       numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
-      showManageTokensPage: config.showManageTokensPage,
       showCodexGallery: config.showCodexGalleryInSideBar,
       showCodexQuests: config.showCodexQuestsMarketing,
     }
@@ -110,11 +109,20 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'network']),
+    ...mapState('web3', ['network']),
+    ...mapState('auth', ['user']),
     ...mapGetters('auth', ['isAuthenticated']),
 
+    address() {
+      return this.user.address
+    },
+
     showNetworkDetails() {
-      return !this.hideNetworkDetails && this.account
+      return !this.hideNetworkDetails && this.user && this.user.address
+    },
+
+    showManageTokensPage() {
+      return this.user && this.user.type === 'savvy' && config.showManageTokensPage
     },
   },
 
