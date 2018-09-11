@@ -11,7 +11,7 @@
     :size="modalSize"
     v-model="modalVisible"
     v-on:shown="shown"
-    v-on:ok.prevent="goToStep(currentStep + 1)"
+    v-on:ok.prevent="nextStep"
 
     :no-close-on-esc="preventClose"
     :hide-header-close="preventClose"
@@ -32,7 +32,7 @@
 
     <div class="text-center" v-show="!shouldShowMainSlot">
 
-      <div>
+      <div v-if="!isSimpleUser">
         <img class="icon" src="../../assets/images/metamask.png" />
       </div>
 
@@ -120,6 +120,13 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
       if (typeof this.onClear === 'function') this.onClear()
     },
+    nextStep() {
+      if (!this.isSimpleUser) {
+        this.goToStep(this.currentStep + 1)
+      } else {
+        this.goToStep(3)
+      }
+    },
     goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
@@ -165,7 +172,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved']),
+    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
 
     shown() {
       return this.onShown || this.noop
@@ -175,6 +182,9 @@ export default {
     },
     isDisabled() {
       return this.willTransactionFail || this.okDisabled || false
+    },
+    isSimpleUser() {
+      return this.user && this.user.type === 'simple'
     },
     modalSize() {
       return this.size || ''
