@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import store from '../store'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import contractHelper from '../util/contractHelper'
@@ -44,7 +43,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      return contractHelper('CodexRecord', 'approve', input, store.state)
+      return contractHelper('CodexRecord', 'approve', input, this.$store.state)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

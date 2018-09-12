@@ -108,7 +108,6 @@ import { mapState } from 'vuex'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
-import store from '../../store'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
@@ -358,7 +357,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, store.state)
+      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store.state)
     },
   },
 }

@@ -72,7 +72,6 @@
 <script>
 import { mapState } from 'vuex'
 import debug from 'debug'
-import store from '../../store'
 import contractHelper from '../../util/contractHelper'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
@@ -222,7 +221,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'mint', input, store.state)
+      return contractHelper('CodexRecord', 'mint', input, this.$store.state)
     },
   },
 

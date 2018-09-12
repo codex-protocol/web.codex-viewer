@@ -76,7 +76,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import store from '../store'
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
@@ -206,7 +205,7 @@ export default {
       //
       // see checkAndCallSafeTransfer() in:
       //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
-      return contractHelper('CodexRecord', 'transferFrom', input, store.state)
+      return contractHelper('CodexRecord', 'transferFrom', input, this.$store.state)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)
