@@ -78,11 +78,8 @@ export default {
       EventBus.$emit('events:record-click-transfer', this)
       const input = [this.toEthAddress, this.codexRecord.tokenId]
 
-      const contractName = 'CodexRecord'
-      const methodName = 'approve'
-
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return this.$refs.web3Helper.callContract(contractName, methodName, input)
+      return this.$refs.web3Helper.callContract('CodexRecord', 'approve', input)
         .then(() => {
           EventBus.$emit('events:record-transfer', this)
         })

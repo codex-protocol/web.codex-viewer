@@ -222,9 +222,8 @@ export default {
         ]),
       ]
 
-      const contractName = 'CodexRecord'
-      const methodName = 'mint'
-      return this.$refs.web3Helper.callContract(contractName, methodName, input)
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
+      return this.$refs.web3Helper.callContract('CodexRecord', 'mint', input)
     },
   },
 

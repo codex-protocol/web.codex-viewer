@@ -358,10 +358,8 @@ export default {
         ]),
       ]
 
-      const contractName = 'CodexRecord'
-      const methodName = 'modifyMetadataHashes'
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return this.$refs.web3Helper.callContract(contractName, methodName, input)
+      return this.$refs.web3Helper.callContract('CodexRecord', 'modifyMetadataHashes', input)
     },
   },
 }

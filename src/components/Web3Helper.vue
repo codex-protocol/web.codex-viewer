@@ -3,7 +3,7 @@
 
 import store from '../store'
 import callContract from '../util/web3/callContract'
-import IdProxy from '../util/api/idProxy'
+import IdProxy from '../util/api/identityProxy'
 
 export default {
   name: 'web3-helper',

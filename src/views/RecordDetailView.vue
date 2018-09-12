@@ -200,9 +200,15 @@ export default {
         this.recordId,
       ]
 
-      const contractName = 'CodexRecord'
-      const methodName = 'transferFrom'
-      return this.$refs.web3Helper.callContract(contractName, methodName, input)
+      // @FIXME: we can't actually use safeTransferFrom here because it has some
+      //  checks to make sure if you're transferring to a contract that it supports
+      //  the ERC721 interface, which our IdentityProxy contracts do not
+      //
+      // instead, we'll just use transferFrom
+      //
+      // see checkAndCallSafeTransfer() in:
+      //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
+      return this.$refs.web3Helper.callContract('CodexRecord', 'transferFrom', input)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

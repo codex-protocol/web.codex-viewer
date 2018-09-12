@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Raven from 'raven-js'
 
 import config from '../../util/config'
@@ -181,6 +181,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapGetters('auth', ['isSimpleUser']),
 
     shown() {
       return this.onShown || this.noop
@@ -190,9 +191,6 @@ export default {
     },
     isDisabled() {
       return this.willTransactionFail || this.okDisabled || false
-    },
-    isSimpleUser() {
-      return this.user && this.user.type === 'simple'
     },
     modalSize() {
       return this.size || ''

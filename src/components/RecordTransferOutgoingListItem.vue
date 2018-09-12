@@ -48,9 +48,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      const contractName = 'CodexRecord'
-      const methodName = 'approve'
-      return this.$refs.web3Helper.callContract(contractName, methodName, input)
+      return this.$refs.web3Helper.callContract('CodexRecord', 'approve', input)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
