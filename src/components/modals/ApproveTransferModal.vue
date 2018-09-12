@@ -43,12 +43,12 @@
       </b-form-text>
     </b-form-group>
     -->
-    <web3-helper ref="web3Helper" />
   </meta-mask-notification-modal>
 </template>
 
 <script>
-import Web3Helper from '../Web3Helper'
+import store from '../../store'
+import contractHelper from '../../util/contractHelper'
 import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -57,7 +57,6 @@ export default {
   props: ['codexRecord'],
   components: {
     MetaMaskNotificationModal,
-    Web3Helper,
   },
   data() {
     return {
@@ -79,7 +78,7 @@ export default {
       const input = [this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return this.$refs.web3Helper.callContract('CodexRecord', 'approve', input)
+      return contractHelper('CodexRecord', 'approve', input, store.state)
         .then(() => {
           EventBus.$emit('events:record-transfer', this)
         })

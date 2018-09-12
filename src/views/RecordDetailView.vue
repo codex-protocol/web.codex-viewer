@@ -70,17 +70,17 @@
         </div>
       </div> <!-- col-12 -->
     </div> <!-- row -->
-    <web3-helper ref="web3Helper" />
   </div> <!-- container-fluid -->
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
+import store from '../store'
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import Web3Helper from '../components/Web3Helper'
+import contractHelper from '../util/contractHelper'
 import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
@@ -100,7 +100,6 @@ export default {
     RecordBlockchainDetails,
     RecordManageModal,
     RecordImageCarousel,
-    Web3Helper,
   },
 
   data() {
@@ -128,7 +127,6 @@ export default {
 
   computed: {
     ...mapState('auth', ['user', 'authToken']),
-    ...mapState('web3', ['recordContract']),
 
     isOwner() {
       return (
@@ -208,7 +206,7 @@ export default {
       //
       // see checkAndCallSafeTransfer() in:
       //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
-      return this.$refs.web3Helper.callContract('CodexRecord', 'transferFrom', input)
+      return contractHelper('CodexRecord', 'transferFrom', input, store.state)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

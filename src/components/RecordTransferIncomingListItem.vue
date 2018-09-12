@@ -14,26 +14,22 @@
       <b-button variant="secondary" @click.prevent="acceptTransfer" :disabled="this.isLoading">Accept</b-button>
       <b-button variant="outline-primary" @click.prevent="ignoreTransfer" :disabled="this.isLoading">Ignore</b-button>
     </p>
-    <web3-helper ref="web3Helper" />
   </b-card>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
+import store from '../store'
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import Web3Helper from './Web3Helper'
+import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-incoming-list-item',
 
   props: ['codexRecord'],
-
-  components: {
-    Web3Helper,
-  },
 
   data() {
     return {
@@ -88,7 +84,7 @@ export default {
       //
       // see checkAndCallSafeTransfer() in:
       //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
-      return this.$refs.web3Helper.callContract('CodexRecord', 'transferFrom', input)
+      return contractHelper('CodexRecord', 'transferFrom', input, store.state)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

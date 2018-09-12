@@ -12,24 +12,20 @@
     <p class="action-buttons">
       <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
     </p>
-    <web3-helper ref="web3Helper" />
   </b-card>
 </template>
 
 <script>
+import store from '../store'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import Web3Helper from './Web3Helper'
+import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-outgoing-list-item',
 
   props: ['codexRecord'],
-
-  components: {
-    Web3Helper,
-  },
 
   data() {
     return {
@@ -48,7 +44,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      return this.$refs.web3Helper.callContract('CodexRecord', 'approve', input)
+      return contractHelper('CodexRecord', 'approve', input, store.state)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

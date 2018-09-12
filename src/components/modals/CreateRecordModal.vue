@@ -66,14 +66,14 @@
         </b-form-group>
       </div>
     </div>
-    <web3-helper ref="web3Helper" />
   </meta-mask-notification-modal>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import debug from 'debug'
-import Web3Helper from '../Web3Helper'
+import store from '../../store'
+import contractHelper from '../../util/contractHelper'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
@@ -87,7 +87,6 @@ export default {
 
   components: {
     MetaMaskNotificationModal,
-    Web3Helper,
   },
 
   data() {
@@ -223,7 +222,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return this.$refs.web3Helper.callContract('CodexRecord', 'mint', input)
+      return contractHelper('CodexRecord', 'mint', input, store.state)
     },
   },
 
