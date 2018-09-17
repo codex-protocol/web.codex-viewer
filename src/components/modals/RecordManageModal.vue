@@ -246,7 +246,7 @@ export default {
       this.nameHash = this.hash(this.name)
     },
     updateDescriptionHash() {
-      this.descriptionHash = this.hash(this.description || '')
+      this.descriptionHash = this.description ? this.hash(this.description) : config.nullDescriptionHash
     },
     hash(input) {
       return this.instance.utils.soliditySha3(input)

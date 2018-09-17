@@ -73,6 +73,7 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 import contractHelper from '../../util/contractHelper'
+import config from '../../util/config'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
@@ -188,7 +189,7 @@ export default {
           //
           // metadata.nameHash === soliditySha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : null)
+          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : config.nullDescriptionHash)
 
           return this.createRecord(metadata)
 
@@ -212,7 +213,7 @@ export default {
       const input = [
         account,
         soliditySha3(metadata.name),
-        metadata.description ? soliditySha3(metadata.description) : '',
+        metadata.description ? soliditySha3(metadata.description) : config.nullDescriptionHash,
         [this.uploadedFileHash],
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId

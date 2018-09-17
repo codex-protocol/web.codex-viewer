@@ -31,6 +31,11 @@ const etherScanUrl = (() => {
 
 export default {
 
+  // @TODO: I wasn't really sure where the best place to put this would be,
+  //  remove this comment or move nullDescriptionHash somewhere else after
+  //  receiving Pull Request feedback
+  nullDescriptionHash: `0x${new Array(64).fill(0).join('')}`,
+
   showManageTokensPage: process.env.VUE_APP_TARGET_ENV !== 'production',
   showFaucet: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCreateGiveawayButton: process.env.VUE_APP_TARGET_ENV !== 'production',
