@@ -125,22 +125,22 @@ export default {
     ])
   },
 
-  FETCH_TOKEN_BALANCE({ commit, rootState }) {
+  FETCH_TOKEN_BALANCE({ commit, rootState, state }) {
     logger('FETCH_TOKEN_BALANCE action being executed')
 
     const { tokenContract } = rootState.web3
-    const { address } = rootState.auth.user
+    const { address } = state.user
 
     return tokenContract.balanceOf(address).then((balance) => {
       commit('SET_TOKEN_BALANCE', { balance })
     })
   },
 
-  FETCH_STAKE_BALANCES({ commit, rootState }) {
+  FETCH_STAKE_BALANCES({ commit, rootState, state }) {
     logger('FETCH_STAKE_BALANCES action being executed')
 
     const { stakeContract } = rootState.web3
-    const { address } = rootState.auth.user
+    const { address } = state.user
 
 
     return Promise.all([
