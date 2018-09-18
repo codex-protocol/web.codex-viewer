@@ -26,7 +26,7 @@
         This is the recommended way of transferring Records.
       </b-form-text>
     </b-form-group>
-    <!--
+
     <b-form-group
       label="Email address of the wallet owner (optional)"
       label-for="toEmailAddress" label-size="sm"
@@ -42,7 +42,7 @@
         we will send them an email once they've been approved to accept the Record.
       </b-form-text>
     </b-form-group>
-    -->
+
   </meta-mask-notification-modal>
 </template>
 
@@ -73,8 +73,19 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     approveTransfer() {
+
+      // @TODO: add some validation here, prevent this from submitting if:
+      //  1. this.toEthAddress and this.toEmailAddress are both null (or empty
+      //     strings, so just a falsy check)
+      //  2. this.toEthAddress === this.codexRecord.approvedAddress
+      //  3. this.toEthAddress === user.address
+      //  4. this.toEmailAddress === user.email
+      //
+      // I don't think there's a good way right now to check if the
+      //  toEmailAddress belongs to the user with the already-approved address
+
       EventBus.$emit('events:record-click-transfer', this)
-      const input = [this.toEthAddress, this.codexRecord.tokenId]
+      const input = [this.toEthAddress || this.toEmailAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return contractHelper('CodexRecord', 'approve', input, this.$store.state)
