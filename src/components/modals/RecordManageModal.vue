@@ -111,8 +111,9 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
-import contractHelper from '../../util/contractHelper'
 import EventBus from '../../util/eventBus'
+import contractHelper from '../../util/contractHelper'
+import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -246,7 +247,7 @@ export default {
       this.nameHash = this.hash(this.name)
     },
     updateDescriptionHash() {
-      this.descriptionHash = this.description ? this.hash(this.description) : config.nullDescriptionHash
+      this.descriptionHash = this.description ? this.hash(this.description) : NullDescriptionHash
     },
     hash(input) {
       return this.instance.utils.soliditySha3(input)

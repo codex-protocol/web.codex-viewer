@@ -30,10 +30,12 @@ const Web3Errors = {
 }
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
+const NullDescriptionHash = `0x${new Array(64).fill(0).join('')}`
 
 export {
-  ExpectedNetworkId,
   Networks,
   Web3Errors,
   ZeroAddress,
+  ExpectedNetworkId,
+  NullDescriptionHash,
 }

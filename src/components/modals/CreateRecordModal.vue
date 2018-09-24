@@ -70,13 +70,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import debug from 'debug'
-import contractHelper from '../../util/contractHelper'
-import config from '../../util/config'
+import { mapState } from 'vuex'
+
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
+import contractHelper from '../../util/contractHelper'
+import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -189,7 +190,7 @@ export default {
           //
           // metadata.nameHash === soliditySha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : config.nullDescriptionHash)
+          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : NullDescriptionHash)
 
           return this.createRecord(metadata)
 
@@ -213,7 +214,7 @@ export default {
       const input = [
         account,
         soliditySha3(metadata.name),
-        metadata.description ? soliditySha3(metadata.description) : config.nullDescriptionHash,
+        metadata.description ? soliditySha3(metadata.description) : NullDescriptionHash,
         [this.uploadedFileHash],
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
