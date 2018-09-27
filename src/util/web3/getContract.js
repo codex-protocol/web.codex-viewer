@@ -1,66 +1,42 @@
-import contract from 'truffle-contract'
+import truffleContract from 'truffle-contract'
+import contractsByNetwork from '@codex-protocol/ethereum-service/dist/contracts-by-network.json'
 
-/* eslint-disable global-require, import/no-unresolved, import/no-dynamic-require */
+import config from '../config'
 
-// @NOTE: trying to import this from src/util/constants/web3.js doesn't seem to
-//  work with the dynamic imports (probably a conflict in how webpack is
-//  ordering the imports or something), so we'll just duplicate that logic here
-const expectedNetworkId = (() => {
-  switch (process.env.VUE_APP_TARGET_ENV) {
-    case 'production': return '1'
-    case 'staging': return '3'
-    default: return '5777'
-  }
-})()
+const contracts = contractsByNetwork[config.expectedNetworkId]
 
-const codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
-const codexRecordJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecord.json`)
-const codexRecordProxyJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecordProxy.json`)
-const stakeContractJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContract.json`)
+if (contracts.CodexRecord && contracts.CodexRecordProxy) {
+  contracts.CodexRecord.address = contracts.CodexRecordProxy.address
+  delete contracts.CodexRecordProxy
+}
 
-/* eslint-enable global-require, import/no-unresolved, import/no-dynamic-require */
-
-const contracts = {
+const contractAbstractions = {
+  stakeContract: null,
   codexRecord: null,
   codexCoin: null,
-  stakeContract: null,
 }
 
-const getContract = (contractProperty, json, address, provider) => {
-  if (!contracts[contractProperty]) {
-    const contractAbstraction = contract(json)
+const getContract = (contractName, provider) => {
+  if (!contractAbstractions[contractName]) {
+    const contract = contracts[contractName]
+    const contractAbstraction = truffleContract(contract)
     contractAbstraction.setProvider(provider)
-    contracts[contractProperty] = contractAbstraction.at(address)
+    contractAbstractions[contractName] = contractAbstraction.at(contract.address)
   }
 
-  return contracts[contractProperty]
+  return contractAbstractions[contractName]
 }
 
-const getCodexRecordContract = (currentProvider) => {
-  return getContract(
-    'codexRecord',
-    codexRecordJson,
-    codexRecordProxyJson.address,
-    currentProvider
-  )
+const getCodexRecordContract = (provider) => {
+  return getContract('CodexRecord', provider)
 }
 
-const getCodexCoinContract = (currentProvider) => {
-  return getContract(
-    'codexCoin',
-    codexCoinJson,
-    codexCoinJson.address,
-    currentProvider
-  )
+const getCodexCoinContract = (provider) => {
+  return getContract('CodexCoin', provider)
 }
 
-const getStakeContract = (currentProvider) => {
-  return getContract(
-    'stakeContract',
-    stakeContractJson,
-    stakeContractJson.address,
-    currentProvider
-  )
+const getStakeContract = (provider) => {
+  return getContract('CodexStakeContract', provider)
 }
 
 export {

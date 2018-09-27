@@ -1,16 +1,3 @@
-// eslint-disable-next-line import/no-mutable-exports
-let ExpectedNetworkId
-
-// @NOTE: if you change the ExpectedNetworkId values here, be sure to update
-//  src/util/web3/getContract.js as well
-if (process.env.VUE_APP_TARGET_ENV === 'production') {
-  ExpectedNetworkId = '1'
-} else if (process.env.VUE_APP_TARGET_ENV === 'staging') {
-  ExpectedNetworkId = '3'
-} else {
-  ExpectedNetworkId = '5777'
-}
-
 const Networks = {
   1: 'Main Net',
   2: 'Deprecated Morden test network',
@@ -36,6 +23,5 @@ export {
   Networks,
   Web3Errors,
   ZeroAddress,
-  ExpectedNetworkId,
   NullDescriptionHash,
 }

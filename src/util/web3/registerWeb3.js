@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 
-import { ExpectedNetworkId, Web3Errors } from '../../util/constants/web3'
+import config from '../../util/config'
+import { Web3Errors } from '../../util/constants/web3'
 
 const registerWeb3 = () => {
   return new Promise((resolve, reject) => {
@@ -12,10 +13,8 @@ const registerWeb3 = () => {
           hasWeb3Browser: true,
         })
       } else {
-        const providerUrl = process.env.VUE_APP_PROVIDER
-        const provider = new Web3.providers.HttpProvider(providerUrl)
         resolve({
-          web3: new Web3(provider),
+          web3: new Web3(process.env.VUE_APP_ETHEREUM_RPC_URL),
           hasWeb3Browser: false,
         })
       }
@@ -24,8 +23,8 @@ const registerWeb3 = () => {
     .then(({ web3, hasWeb3Browser }) => {
       return web3.eth.net.getId()
         .then((networkId) => {
-          const networkIdStr = String(networkId)
-          if (networkIdStr !== ExpectedNetworkId) {
+          const networkIdString = String(networkId)
+          if (networkIdString !== config.expectedNetworkId) {
             throw Web3Errors.WrongNetwork
           }
           const returnValue = Object.assign({}, {

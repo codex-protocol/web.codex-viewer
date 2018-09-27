@@ -2,24 +2,25 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Raven from 'raven-js'
-import RavenVue from 'raven-js/plugins/vue'
+import { sync } from 'vuex-router-sync'
 import VueBootstrap from 'bootstrap-vue'
 import VueAnalytics from 'vue-analytics'
-import { sync } from 'vuex-router-sync'
+import RavenVue from 'raven-js/plugins/vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/custom-bootstrap.scss'
 
 import App from './App'
-import router from './router'
 import store from './store'
+import router from './router'
+import config from './util/config'
 
 sync(store, router)
 
 if (process.env.VUE_APP_SENTRY_DSN) {
   Raven
     .config(process.env.VUE_APP_SENTRY_DSN, {
-      environment: process.env.VUE_APP_TARGET_ENV,
+      environment: `${process.env.VUE_APP_TARGET_ENV}-${config.expectedNetworkName}`,
     })
     .addPlugin(RavenVue, Vue)
     .install()
@@ -28,24 +29,9 @@ if (process.env.VUE_APP_SENTRY_DSN) {
 Vue.config.productionTip = false
 Vue.use(VueBootstrap)
 
-let googleId
-switch (process.env.VUE_APP_TARGET_ENV) {
-  case 'production':
-    googleId = process.env.VUE_APP_PRODUCTION_GA_ID
-    break
-
-  case 'staging':
-    googleId = process.env.VUE_APP_STAGING_GA_ID
-    break
-
-  default:
-    googleId = false
-    break
-}
-
-if (googleId) {
+if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
   Vue.use(VueAnalytics, {
-    id: googleId,
+    id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
     router,
   })
 }

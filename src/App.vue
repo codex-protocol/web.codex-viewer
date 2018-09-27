@@ -81,7 +81,6 @@ export default {
 
   data() {
     return {
-      freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
       isLoaded: false,
       cookieStatus: false,
@@ -89,10 +88,9 @@ export default {
   },
 
   mounted() {
-    const token = this.freshChatToken
-    if (token) {
+    if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
       window.fcWidget.init({
-        token,
+        token: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
         host: 'https://wchat.freshchat.com',
       })
     }

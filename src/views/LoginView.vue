@@ -58,11 +58,7 @@ import { mapState } from 'vuex'
 
 import config from '../util/config'
 import EventBus from '../util/eventBus'
-import {
-  ExpectedNetworkId,
-  Web3Errors,
-  Networks,
-} from '../util/constants/web3'
+import { Web3Errors, Networks } from '../util/constants/web3'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'
 
@@ -227,7 +223,7 @@ export default {
 
         case Web3Errors.WrongNetwork:
           title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[config.expectedNetworkId]}. Please change the network in your MetaMask settings.`
           this.setButton()
           break
 
