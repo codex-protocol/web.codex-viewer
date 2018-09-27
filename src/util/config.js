@@ -1,6 +1,3 @@
-// @TODO: Move all config to a common location using dotenv or some other config util.
-//  Do a search for references to process.env in non-build directories to consolidate
-
 const expectedNetworkId = process.env.VUE_APP_ETHEREUM_NETWORK_ID || '5777'
 const expectedNetworkName = (() => {
   switch (expectedNetworkId) {
