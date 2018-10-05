@@ -2,7 +2,7 @@ import axios from 'axios'
 import debug from 'debug'
 import Raven from 'raven-js'
 
-const logger = debug('app:store:oauth2:mutations')
+const logger = debug('app:store:oauth2:actions')
 
 export default {
   FETCH_CLIENTS({ commit }) {

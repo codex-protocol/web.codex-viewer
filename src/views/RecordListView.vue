@@ -123,7 +123,7 @@ export default {
     },
 
     showCreateGiveawayButton() {
-      return config.showCreateGiveawayButton && this.isAdmin && !this.giveaway
+      return this.isAdmin && !this.giveaway
     },
 
     showFaucetMarketingCard() {

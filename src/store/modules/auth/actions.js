@@ -69,6 +69,8 @@ export default {
           return dispatch('UPDATE_CONTRACT_STATE')
         }
 
+        // This is to handle where a simple user has a web3 wallet that is in a bad state or on the wrong network
+        // We re-register web3 using Infura as a provider instead of the injected one from their web3 wallet
         if (user.type === 'simple' && rootState.web3.error) {
           return dispatch('web3/REGISTER', true, { root: true })
             .then(setUserAndContractState)

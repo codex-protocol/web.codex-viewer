@@ -32,7 +32,6 @@ export default {
   showFaucet: false,
   showManageTokensPage: false,
   showTestApp: process.env.VUE_APP_TARGET_ENV !== 'production',
-  showCreateGiveawayButton: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCodexGalleryInSideBar: false,
 
   apiUrl,

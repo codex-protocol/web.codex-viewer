@@ -47,6 +47,7 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
+import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
@@ -110,7 +111,7 @@ export default {
     window.addEventListener('load', () => {
       this.$store.dispatch('web3/REGISTER')
         .then(() => {
-          if (this.error) {
+          if (this.error && (this.error !== Web3Errors.Missing)) {
             this.$store.dispatch('auth/LOGOUT_USER')
           }
         })

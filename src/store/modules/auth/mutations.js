@@ -15,7 +15,6 @@ export default {
     logMutation('SET_AUTH_STATE', authToken)
 
     axios.defaults.headers.common.Authorization = authToken
-    SocketService.updateSocket(authToken)
     window.localStorage.setItem('authToken', authToken)
 
     currentState.authToken = authToken
@@ -23,6 +22,8 @@ export default {
 
   SET_USER(currentState, { user }) {
     logMutation('SET_USER', user)
+
+    SocketService.updateSocket(currentState.authToken)
 
     currentState.user = user
   },
