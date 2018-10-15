@@ -3,19 +3,17 @@
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
-    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     size="lg"
     :on-shown="focusModal"
-    :ok-method="createMetaData"
+    :ok-method="createMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
+    :validate="validate"
   >
     <div class="flex-container">
-      <div>
-        <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
-          <img :src="imageStreamUri" />
-        </div>
+      <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
+        <img :src="imageStreamUri" />
       </div>
       <div>
         <b-form-group
@@ -113,8 +111,7 @@ export default {
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
 
-      // @TODO: explain why this is necessary (only exists when slot is filled
-      //  in MMNM)
+      // Manually reset the file input since it's model isn't bound to a data property
       if (this.$refs.fileInput) {
         this.$refs.fileInput.reset()
       }
@@ -148,7 +145,6 @@ export default {
     },
 
     uploadFile(file) {
-
       this.progressVisible = true
       this.uploadSuccess = false
       this.uploadComplete = false
@@ -168,13 +164,21 @@ export default {
         })
     },
 
-    createMetaData() {
+    validate() {
+      const errors = []
 
-      // TODO: Show some better error handling if these aren't filled in
-      if (!this.canSubmit) {
-        return Promise.reject(new Error('Could not create Record: Missing required fields.'))
+      if (!this.name) {
+        errors.push('Name is required')
       }
 
+      if (!(this.uploadComplete && this.uploadSuccess)) {
+        errors.push('Image is required')
+      }
+
+      return errors
+    },
+
+    createMetadata() {
       const metadataToUpload = {
         name: this.name,
         mainImage: this.uploadedFile,
@@ -221,10 +225,6 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 
-    canSubmit() {
-      return this.name && this.uploadedFileHash && this.uploadedFile
-    },
-
     progressVariant() {
       if (!this.uploadComplete) {
         return 'primary'
@@ -263,14 +263,12 @@ export default {
   margin: 0 1rem
   align-items: center
   justify-content: center
-  background-color: rgba(white, .1)
 
   @media screen and (min-width: $breakpoint-sm)
     border: 1px solid rgba(white, .25)
 
   img
-    max-width: 100%
-    max-height: 100%
+    max-width: 20rem
     object-fit: contain
 
 </style>

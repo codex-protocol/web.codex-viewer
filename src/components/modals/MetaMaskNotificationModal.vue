@@ -27,6 +27,12 @@
       scoped styles if you use a v-if
     -->
     <div v-show="shouldShowMainSlot">
+      <p v-if="errors.length">
+        <span>Please fix these error(s):</span>
+        <ul>
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ul>
+      </p>
       <slot></slot>
     </div>
 
@@ -73,10 +79,10 @@
 
         <div v-else-if="currentStep === 3">
           <p>
-            Your transaction has been submitted!
+            Your transaction has been submitted to the blockchain!
           </p>
           <p>
-            It will take a few minutes for your transaction to be mined, but you may now close this dialog.
+            Confirming transactions securely on the blockchain can take anywhere from a few minutes to a few hours. Once confirmed, you'll receive a notification in the app.
           </p>
         </div>
       </div>
@@ -93,6 +99,7 @@ import config from '../../util/config'
 
 export default {
   name: 'meta-mask-notification-modal',
+
   props: [
     'id',
     'title',
@@ -104,7 +111,9 @@ export default {
     'onShown',
     'onClear',
     'requiresTokens',
+    'validate',
   ],
+
   data() {
     return {
       isFooterHidden: false,
@@ -112,20 +121,61 @@ export default {
       modalVisible: false,
       preventClose: false,
       currentStep: 0,
+      errors: [],
     }
   },
+
+  computed: {
+    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapGetters('auth', ['isSimpleUser']),
+
+    shown() {
+      return this.onShown || this.noop
+    },
+
+    noop() {
+      return () => {}
+    },
+
+    isDisabled() {
+      return this.willTransactionFail || this.okDisabled || false
+    },
+
+    modalSize() {
+      return this.size || ''
+    },
+
+    willTransactionFail() {
+      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
+    },
+
+    shouldShowMainSlot() {
+      return this.currentStep === 0 && !this.willTransactionFail
+    },
+  },
+
   methods: {
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
       if (typeof this.onClear === 'function') this.onClear()
     },
+
     nextStep() {
-      if (!this.isSimpleUser) {
-        this.goToStep(this.currentStep + 1)
-      } else {
+      if (this.validate) {
+        this.errors = this.validate()
+
+        if (this.errors.length) {
+          return
+        }
+      }
+
+      if (this.isSimpleUser) {
         this.goToStep(3)
+      } else {
+        this.goToStep(this.currentStep + 1)
       }
     },
+
     goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
@@ -172,29 +222,6 @@ export default {
 
       this.currentStep = newCurrentStep
 
-    },
-  },
-  computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isSimpleUser']),
-
-    shown() {
-      return this.onShown || this.noop
-    },
-    noop() {
-      return () => {}
-    },
-    isDisabled() {
-      return this.willTransactionFail || this.okDisabled || false
-    },
-    modalSize() {
-      return this.size || ''
-    },
-    willTransactionFail() {
-      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
-    },
-    shouldShowMainSlot() {
-      return this.currentStep === 0 && !this.willTransactionFail
     },
   },
 }
