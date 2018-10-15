@@ -3,6 +3,7 @@
     id="stakeTokensModal"
     title="Stake tokens"
     ok-title="Stake"
+    :on-shown="focusModal"
     :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     :ok-method="stakeTokens"

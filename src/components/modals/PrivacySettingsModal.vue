@@ -129,16 +129,19 @@ export default {
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
+
     toggleIsPrivate() {
       if (this.isPrivate) {
         this.isInGallery = false
       }
     },
+
     toggleIsInGallery() {
       if (this.isInGallery) {
         this.isPrivate = false
       }
     },
+
     addWhitelistedAddress() {
 
       const addressToAdd = this.newWhitelistedAddress
@@ -154,13 +157,14 @@ export default {
       this.newWhitelistedAddress = null
 
     },
+
     removeWhitelistedAddress(addressToRemove) {
       this.whitelistedAddresses = this.whitelistedAddresses.filter((whitelistedAddress) => {
         return whitelistedAddress !== addressToRemove
       })
     },
-    updateRecord(event) {
 
+    updateRecord(event) {
       event.preventDefault()
 
       // if they typed in an address but didn't click "add", add it for them

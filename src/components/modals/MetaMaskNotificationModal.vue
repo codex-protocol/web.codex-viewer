@@ -3,15 +3,15 @@
     :ref="id"
     :id="id"
     :title="title"
-    @hidden="onHide"
     :ok-title="okTitle"
     :hide-footer="isFooterHidden"
     :cancel-variant="cancelVariant"
     :ok-disabled="isDisabled"
     :size="modalSize"
     v-model="modalVisible"
-    v-on:shown="shown"
-    v-on:ok.prevent="nextStep"
+    @shown="shown"
+    @hidden="onHide"
+    @ok.prevent="nextStep"
 
     :no-close-on-esc="preventClose"
     :hide-header-close="preventClose"
@@ -113,6 +113,8 @@ export default {
   ],
 
   data() {
+    const noOp = () => {}
+
     return {
       isFooterHidden: false,
       metamaskError: null,
@@ -120,20 +122,19 @@ export default {
       preventClose: false,
       currentStep: 0,
       errors: [],
+      shown: this.onShown || noOp,
     }
   },
+
+  // monted() {
+  //   if (this.onShown) {
+  //     this.shown = this.onShown
+  //   }
+  // },
 
   computed: {
     ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
     ...mapGetters('auth', ['isSimpleUser']),
-
-    shown() {
-      return this.onShown || this.noop
-    },
-
-    noop() {
-      return () => {}
-    },
 
     isDisabled() {
       return this.willTransactionFail || this.okDisabled || false
@@ -163,6 +164,9 @@ export default {
         this.errors = this.validate()
 
         if (this.errors.length) {
+          // rudimentary, but refocuses at the top if we need to scroll
+          this.shown()
+
           return
         }
       }
