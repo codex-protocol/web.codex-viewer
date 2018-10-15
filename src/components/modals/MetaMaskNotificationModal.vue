@@ -86,9 +86,7 @@
           </p>
         </div>
       </div>
-
     </div>
-
   </b-modal>
 </template>
 
@@ -98,7 +96,7 @@ import { mapState, mapGetters } from 'vuex'
 import config from '../../util/config'
 
 export default {
-  name: 'meta-mask-notification-modal',
+  name: 'MetaMaskNotificationModal',
 
   props: [
     'id',

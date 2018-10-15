@@ -33,7 +33,7 @@
                   </b-button>
 
                   <record-manage-modal :codex-record="codexRecord" />
-                  <approve-transfer-modal :codex-record="codexRecord" />
+                  <ApproveTransferModal :codex-record="codexRecord" />
                   <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
                 </div>
 

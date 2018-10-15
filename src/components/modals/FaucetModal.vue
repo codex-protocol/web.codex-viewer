@@ -24,16 +24,19 @@ import EventBus from '../../util/eventBus'
 
 export default {
   name: 'faucetModal',
+
   data() {
     return {
       dripAmount: 100,
       modalVisible: false,
     }
   },
+
   computed: {
     ...mapState('auth', ['balance']),
     ...mapState('web3', ['instance']),
   },
+
   methods: {
     requestTokens(event) {
       event.preventDefault()

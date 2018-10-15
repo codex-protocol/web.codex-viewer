@@ -29,7 +29,11 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 export default {
   name: 'approve-contract-modal',
 
-  props: ['id', 'contract', 'stateProperty'],
+  props: {
+    id: String,
+    contract: Object,
+    stateProperty: String,
+  },
 
   components: {
     MetaMaskNotificationModal,
@@ -55,6 +59,7 @@ export default {
           })
         })
     },
+
     getAddressUrl() {
       return etherscanHelper.getAddressUrl(this.contract.address)
     },
