@@ -72,7 +72,7 @@ export default {
       formData.append('description', this.description)
       formData.append('mainImage', this.image)
 
-      axios.post('v1/client/record-metadata', formData, {
+      axios.post('v1/client/record', formData, {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
