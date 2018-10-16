@@ -5,6 +5,7 @@ import store from '../store'
 import config from '../util/config'
 
 import LoginView from '../views/LoginView'
+import ConfirmEmailView from '../views/ConfirmEmailView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
 import RecordListView from '../views/RecordListView'
@@ -27,6 +28,17 @@ const router = new Router({
       path: '/login',
       alias: '/',
       component: LoginView,
+      meta: {
+        hideSideBar: true,
+        useBackgroundImage: true,
+        allowUnauthenticatedUsers: true,
+        ifAuthenticatedRedirectTo: 'collection',
+      },
+    },
+    {
+      name: 'confirm-email',
+      path: '/confirm-email',
+      component: ConfirmEmailView,
       meta: {
         hideSideBar: true,
         useBackgroundImage: true,
