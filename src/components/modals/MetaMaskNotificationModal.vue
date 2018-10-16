@@ -126,12 +126,6 @@ export default {
     }
   },
 
-  // monted() {
-  //   if (this.onShown) {
-  //     this.shown = this.onShown
-  //   }
-  // },
-
   computed: {
     ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
     ...mapGetters('auth', ['isSimpleUser']),
