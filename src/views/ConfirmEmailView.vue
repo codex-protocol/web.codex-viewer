@@ -20,7 +20,7 @@
           {{ buttonText }}
         </b-button>
 
-        <ResendConfirmationEmailModal :email="this.emailAddress" />
+        <ResendConfirmationEmailModal :default-email="this.emailAddress" />
 
       </div>
       <div class="col-12 col-md-6 secondary">

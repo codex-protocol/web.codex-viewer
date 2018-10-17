@@ -3,10 +3,10 @@
     ok-title="Send"
     @hidden="reset"
     v-model="modalVisible"
-    @ok="resendConfirmationEmail"
     cancel-variant="outline-primary"
     id="resendConfirmationEmailModal"
     title="Resend Confirmation Email"
+    @ok="resendConfirmationEmail(emailAddress)"
   >
     <b-form-group
       label-size="sm"
@@ -37,31 +37,31 @@ export default {
   name: 'ResendConfirmationEmailModal',
 
   props: {
-    email: String,
+    defaultEmail: String,
   },
 
   data() {
     return {
       modalVisible: false,
-      emailAddress: this.email,
+      emailAddress: this.defaultEmail,
     }
   },
 
   methods: {
     reset() {
-      this.emailAddress = this.email
+      this.emailAddress = this.defaultEmail
     },
 
-    resendConfirmationEmail(event) {
+    resendConfirmationEmail(emailAddress) {
 
-      if (!this.emailAddress) {
-        this.modalVisible = false
+      if (!emailAddress) {
+        this.hide()
         return
       }
 
       EventBus.$emit('events:resend-confirmation-email-dialog', this)
 
-      EmailConfirmation.resend(this.emailAddress)
+      EmailConfirmation.resend(emailAddress)
         .then(() => {
           EventBus.$emit('toast:success', 'Confirmation email has been re-sent!', 5000)
           this.modalVisible = false
