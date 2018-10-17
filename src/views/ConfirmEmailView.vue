@@ -59,7 +59,7 @@ export default {
 
   created() {
 
-    EventBus.$emit('events:viewer:confirm-email-page', this)
+    EventBus.$emit('events:view-confirm-email-page', this)
 
     // remove email from the query params if specified
     if (this.$route.query.email) {

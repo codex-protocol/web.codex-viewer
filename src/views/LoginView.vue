@@ -55,7 +55,7 @@ export default {
   },
 
   created() {
-    EventBus.$emit('events:viewer:view-login-page', this)
+    EventBus.$emit('events:view-login-page', this)
   },
 
   computed: {
