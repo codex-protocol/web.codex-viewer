@@ -3,10 +3,10 @@
     ok-title="Send"
     @hidden="reset"
     v-model="modalVisible"
+    @ok="resendConfirmationEmail"
     cancel-variant="outline-primary"
     id="resendConfirmationEmailModal"
     title="Resend Confirmation Email"
-    v-on:ok="resendConfirmationEmail"
   >
     <b-form-group
       label-size="sm"
