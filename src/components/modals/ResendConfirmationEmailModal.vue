@@ -49,8 +49,6 @@ export default {
 
     resendConfirmationEmail(event) {
 
-      event.preventDefault()
-
       if (!this.emailAddress) {
         this.modalVisible = false
         return
