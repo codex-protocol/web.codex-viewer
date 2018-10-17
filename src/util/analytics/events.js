@@ -16,7 +16,6 @@ const events = (analytics) => {
   }
 
   Object.keys(actionsLabels).forEach((actionsLabel) => {
-    console.log('actionsLabel', actionsLabel)
     registerEvent(actionsLabel)
   })
 
