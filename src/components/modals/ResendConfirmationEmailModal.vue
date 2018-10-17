@@ -24,8 +24,13 @@
 </template>
 
 <script>
+
+import debug from 'debug'
+
 import EventBus from '../../util/eventBus'
 import EmailConfirmation from '../../util/api/emailConfirmation'
+
+const logger = debug('app:component:resend-confirmation-email-modal')
 
 export default {
 
@@ -62,7 +67,8 @@ export default {
           this.modalVisible = false
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not resend confirmation email: ${error.message}`)
+          logger('Could not resend confirmation email:', error)
+          EventBus.$emit('toast:error', 'Could not resend confirmation email.')
         })
     },
   },
