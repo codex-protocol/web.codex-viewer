@@ -137,7 +137,7 @@ export default {
         to: '/login',
         condition: !this.isAuthenticated,
         icon: logoutIcon,
-        text: 'Logout',
+        text: 'Login',
       },
     ]
 

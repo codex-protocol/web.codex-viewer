@@ -18,7 +18,7 @@
       </template>
       <div class="main-content-wrapper">
         <div class="main-content">
-          <router-view v-if="isLoaded" />
+          <router-view :key="$route.fullPath" v-if="isLoaded" />
           <LoadingOverlay type="global" v-else />
         </div>
         <AppFooter />
