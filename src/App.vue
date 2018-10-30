@@ -87,6 +87,8 @@ export default {
   created() {
     this.initializeApi()
 
+    this.$store.dispatch('app/FETCH_VERIFIED_USERS_ADDRESS_NAME_MAP')
+
     EventBus.$on('socket:codex-coin:transferred', () => {
       this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
     })
@@ -126,10 +128,6 @@ export default {
             })
         })
         .then(this.$store.dispatch('auth/UPDATE_CONTRACT_STATE'))
-
-        // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
-        //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-        .then(this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP'))
         .then(() => {
           if (this.$route.meta.ifAuthenticatedRedirectTo) {
             this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })

@@ -108,8 +108,6 @@ export default {
   created() {
     this.getRecords()
     this.getGiveaways()
-
-    EventBus.$emit('events:view-collection-page', this)
   },
 
   computed: {

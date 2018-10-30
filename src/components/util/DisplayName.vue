@@ -31,7 +31,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('verified-users', ['getVerifiedNameFromAddress']),
+    ...mapGetters('app', ['getVerifiedNameFromAddress']),
 
     processedName() {
       // If userObject is defined, show the full selected name instead of 'You'

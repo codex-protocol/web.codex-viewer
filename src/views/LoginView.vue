@@ -226,11 +226,6 @@ export default {
             return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
           })
           .then(() => {
-            // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
-            //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-            return this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP')
-          })
-          .then(() => {
             if (this.$route.meta.ifAuthenticatedRedirectTo) {
               this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
             } else {
