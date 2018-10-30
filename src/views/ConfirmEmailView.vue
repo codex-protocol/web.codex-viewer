@@ -20,14 +20,14 @@
           {{ buttonText }}
         </b-button>
 
-        <ResendConfirmationEmailModal :default-email="emailAddress" />
+        <ResendConfirmationEmailModal :default-email="confirmEmailAddress" />
 
         <b-button
           size="sm"
           variant="link"
           class="pl-0 pr-0"
           @click.prevent="confirmEmail"
-          v-if="showManualConfirm && emailAddress"
+          v-if="showManualConfirm && confirmEmailAddress"
         >
           Confirm email
         </b-button>
@@ -44,7 +44,6 @@
 import { mapState } from 'vuex'
 
 import config from '../util/config'
-import EventBus from '../util/eventBus'
 import EmailConfirmation from '../util/api/emailConfirmation'
 
 import ResendConfirmationEmailModal from '../components/modals/ResendConfirmationEmailModal'
@@ -59,7 +58,6 @@ export default {
 
   data() {
     return {
-      emailAddress: null,
       headerText: 'Confirm Your Email Address',
       buttonText: 'Didn\'t receive a confirmation email?',
       bodyText: 'Please check your email for a confirmation link from Codex Protocol. Once your email is confirmed, you\'ll automatically be logged into the Codex Registry.',
@@ -69,18 +67,15 @@ export default {
 
   computed: {
     ...mapState('auth', ['apiError']),
+    ...mapState('app', ['confirmEmailAddress']),
   },
 
   created() {
-
-    EventBus.$emit('events:view-confirm-email-page', this)
-
     // remove email from the query params if specified
     if (this.$route.query.email) {
-      this.emailAddress = this.$route.query.email
+      this.$store.commit('app/SET_CONFIRM_EMAIL_ADDRESS', this.$route.query.email)
       this.$router.replace({ name: this.$route.name })
     }
-
   },
 
   mounted() {
@@ -93,7 +88,7 @@ export default {
 
   methods: {
     confirmEmail() {
-      EmailConfirmation.confirm(this.emailAddress)
+      EmailConfirmation.confirm(this.confirmEmailAddress)
         .then(() => {
           this.$router.replace('/')
         })
