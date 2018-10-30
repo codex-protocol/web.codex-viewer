@@ -81,7 +81,6 @@ export default {
           commit('SET_REGISTRATION_ERROR', {
             message: 'Error while polling',
             error,
-            ignoreInSentry: true,
           })
 
           commit('SET_IS_POLLING', {
@@ -90,11 +89,11 @@ export default {
 
           dispatch('auth/LOGOUT_USER', null, { root: true })
         })
-    }
 
-    window.setTimeout(() => {
-      dispatch('POLL_WEB3')
-    }, 1000)
+      window.setTimeout(() => {
+        dispatch('POLL_WEB3')
+      }, 1000)
+    }
   },
 
   REGISTER_ALL_CONTRACTS({ state, commit }) {

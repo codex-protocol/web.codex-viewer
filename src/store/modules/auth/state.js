@@ -15,6 +15,7 @@ if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
   })
 }
 
+
 export default () => {
   return {
     user: null,
@@ -25,9 +26,5 @@ export default () => {
     registryContractApproved: false,
     stakeContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
-    apiError: null,
-
-    // Break this out into a separate 'app' module if one is ever needed
-    isLoaded: false,
   }
 }

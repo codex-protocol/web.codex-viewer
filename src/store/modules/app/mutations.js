@@ -25,4 +25,19 @@ export default {
 
     currentState.confirmEmailAddress = emailAddress
   },
+
+  SET_API_ERROR(currentState, { code, message }) {
+    logMutation('SET_API_ERROR', message)
+
+    currentState.apiError = {
+      code,
+      message,
+    }
+  },
+
+  SET_IS_LOADED(currentState, { isLoaded }) {
+    logMutation('SET_IS_LOADED', isLoaded)
+
+    currentState.isLoaded = isLoaded
+  },
 }

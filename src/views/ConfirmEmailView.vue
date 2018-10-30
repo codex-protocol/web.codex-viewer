@@ -66,8 +66,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['apiError']),
-    ...mapState('app', ['confirmEmailAddress']),
+    ...mapState('app', ['apiError', 'confirmEmailAddress']),
   },
 
   created() {

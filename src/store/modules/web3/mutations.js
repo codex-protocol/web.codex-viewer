@@ -1,5 +1,4 @@
 import debug from 'debug'
-import Raven from 'raven-js'
 
 import { Web3Errors } from '../../../util/constants/web3'
 
@@ -36,15 +35,18 @@ export default {
     currentState[propertyName] = Object.freeze(contract)
   },
 
-  SET_REGISTRATION_ERROR(currentState, { message, error, ignoreInSentry }) {
-    logMutation('SET_REGISTRATION_ERROR', message, error, ignoreInSentry)
-
-    if (!ignoreInSentry) {
-      Raven.captureException(error)
-    }
+  SET_REGISTRATION_ERROR(currentState, { message, error }) {
+    logMutation('SET_REGISTRATION_ERROR', message, error)
 
     currentState.registrationError = error
+
+    // Reset web3 state
+    currentState.instance = null
+    currentState.recordContract = null
+    currentState.tokenContract = null
+    currentState.stakeContract = null
     currentState.providerAccount = null
+    currentState.isPolling = false
   },
 
   SET_IS_POLLING(currentState, { isPolling }) {

@@ -1,10 +1,74 @@
 import debug from 'debug'
 
 import router from '../../../router'
+import User from '../../../util/api/user'
 
 const logger = debug('app:store:auth:actions')
 
 export default {
+  // Called from App.vue, ONLY IF there's an authToken in the query string or in local storage.
+  //  This be either simple or savvy users--we find out which once we retrieve the user object
+  //  from the API. If it's a simple user, we register Web3 using Infura. If it's a savvy user
+  //  we attempt to register Web3 using their wallet provider. If there is no wallet provider,
+  //  we kick them back to the login page with an error.
+  LOGIN_FROM_CACHED_TOKEN({ commit, dispatch, state }, authToken) {
+    commit('SET_AUTH_STATE', {
+      authToken,
+    })
+
+    return User.getUser()
+      .then((user) => {
+        commit('SET_USER', {
+          user,
+        })
+
+        if (user.type === 'simple') {
+          return dispatch('web3/REGISTER_INFURA_PROVIDER', null, { root: true })
+        }
+
+        return dispatch('web3/REGISTER_WALLET_PROVIDER', null, { root: true })
+          .then(() => {
+            commit('web3/SET_IS_POLLING', {
+              isPolling: true,
+            }, {
+              root: true,
+            })
+
+            dispatch('web3/POLL_WEB3', null, { root: true })
+          })
+      })
+      .then(dispatch('UPDATE_CONTRACT_STATE'))
+  },
+
+  // Called from Login.vue, AFTER Web3 wallet provider registration has already happened.
+  //  This is where savvy users sign a string prompted to them by their wallet, proving that
+  //  they own a particular Ethereum address.
+  LOGIN_FROM_SIGNED_DATA({ commit, dispatch }, { userAddress, signedData }) {
+    return User.getAuthTokenFromSignedData({
+      userAddress,
+      signedData,
+    })
+      .then((response) => {
+        commit('SET_AUTH_STATE', {
+          authToken: response.token,
+        })
+
+        commit('SET_USER', {
+          user: response.user,
+        })
+
+        commit('web3/SET_IS_POLLING', {
+          isPolling: true,
+        }, {
+          root: true,
+        })
+
+        dispatch('web3/POLL_WEB3', null, { root: true })
+
+        return dispatch('UPDATE_CONTRACT_STATE')
+      })
+  },
+
   UPDATE_CONTRACT_STATE({ dispatch, state }) {
     if (!state.user) {
       return null

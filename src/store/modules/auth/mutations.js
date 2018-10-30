@@ -88,15 +88,6 @@ export default {
     window.localStorage.setItem('hideSetup', true)
   },
 
-  SET_ERROR(currentState, { code, message }) {
-    logMutation('SET_ERROR', message)
-
-    currentState.apiError = {
-      code,
-      message,
-    }
-  },
-
   SPEND_GAS(currentState, { estimatedGas }) {
     logMutation('SPEND_GAS', estimatedGas)
 
@@ -104,11 +95,5 @@ export default {
       const bnAllowance = new BigNumber(currentState.user.gasAllowanceRemaining)
       Vue.set(currentState.user, 'gasAllowanceRemaining', bnAllowance.sub(estimatedGas).toString())
     }
-  },
-
-  SET_IS_LOADED(currentState, { isLoaded }) {
-    logMutation('SET_IS_LOADED', isLoaded)
-
-    currentState.isLoaded = isLoaded
   },
 }
