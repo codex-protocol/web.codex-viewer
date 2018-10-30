@@ -114,22 +114,7 @@ export default {
             setIsLoaded()
           }
         })
-        .catch((error) => {
-          if (this.user) {
-            if (this.user.type === 'savvy') {
-              this.$store.commit('web3/SET_REGISTRATION_ERROR', {
-                message: 'Error while registering Web3',
-                error,
-              })
-            } else {
-              this.$store.commit('app/SET_API_ERROR', error)
-            }
-
-            this.$store.dispatch('auth/LOGOUT_USER')
-          }
-
-          setIsLoaded()
-        })
+        .catch(setIsLoaded)
     } else {
       setIsLoaded()
     }

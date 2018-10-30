@@ -175,47 +175,7 @@ export default {
     registerWalletProvider(provider) {
       this.walletProvider = provider
 
-      this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
-        .then(this.web3Login)
-        .catch((error) => {
-          this.$store.commit('web3/SET_REGISTRATION_ERROR', {
-            message: 'Error while registering Web3',
-            error,
-          })
-
-          if (this.user) {
-            this.$store.dispatch('auth/LOGOUT_USER')
-          }
-        })
-    },
-
-    web3Login() {
-      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-      const sendAsyncOptions = {
-        method: 'personal_sign',
-        params: [
-          this.instance.utils.toHex(personalMessageToSign),
-          this.providerAccount,
-        ],
-      }
-
-      return new Promise((resolve, reject) => {
-        this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-          if (error) {
-            reject(new Error(Web3Errors.Unknown))
-          } else if (result.error) {
-            reject(new Error(Web3Errors.UserDeniedSignature))
-          } else {
-            resolve(result)
-          }
-        })
-      })
-        .then((result) => {
-          return this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA', {
-            userAddress: this.providerAccount,
-            signedData: result.result.substr(2),
-          })
-        })
+      this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
         .then(() => {
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
           // We don't have to worry about the isLoading flag here since it is already set to true

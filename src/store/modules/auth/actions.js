@@ -12,6 +12,8 @@ export default {
   //  we attempt to register Web3 using their wallet provider. If there is no wallet provider,
   //  we kick them back to the login page with an error.
   LOGIN_FROM_CACHED_TOKEN({ commit, dispatch, state }, authToken) {
+    logger('LOGIN_FROM_CACHED_TOKEN action being executed')
+
     commit('SET_AUTH_STATE', {
       authToken,
     })
@@ -34,39 +36,78 @@ export default {
               root: true,
             })
 
+            // No need to block on the promise resolution of polling
             dispatch('web3/POLL_WEB3', null, { root: true })
           })
       })
-      .then(dispatch('UPDATE_CONTRACT_STATE'))
-  },
-
-  // Called from Login.vue, AFTER Web3 wallet provider registration has already happened.
-  //  This is where savvy users sign a string prompted to them by their wallet, proving that
-  //  they own a particular Ethereum address.
-  LOGIN_FROM_SIGNED_DATA({ commit, dispatch }, { userAddress, signedData }) {
-    return User.getAuthTokenFromSignedData({
-      userAddress,
-      signedData,
-    })
-      .then((response) => {
-        commit('SET_AUTH_STATE', {
-          authToken: response.token,
-        })
-
-        commit('SET_USER', {
-          user: response.user,
-        })
-
-        commit('web3/SET_IS_POLLING', {
-          isPolling: true,
-        }, {
-          root: true,
-        })
-
-        dispatch('web3/POLL_WEB3', null, { root: true })
-
+      .then(() => {
         return dispatch('UPDATE_CONTRACT_STATE')
       })
+      .catch((error) => {
+        return dispatch('HANDLE_LOGIN_ERROR', error)
+      })
+  },
+
+  // Called from Login.vue.
+  //  This is where savvy users sign a string prompted to them by their wallet, proving that
+  //  they own a particular Ethereum address. This registers Web3 using the user's wallet provider.
+  //  Then, it prompts the user to sign a string to prove they own the Ethereum address they are
+  //  trying to authenticate with.
+  LOGIN_FROM_SIGNED_DATA({ commit, dispatch }) {
+    logger('LOGIN_FROM_SIGNED_DATA action being executed')
+
+    return dispatch('web3/REGISTER_WALLET_PROVIDER', null, { root: true })
+      .then(() => {
+        return dispatch('web3/PROMPT_FOR_SIGNED_DATA', null, { root: true })
+      })
+      .then(({ userAddress, signedData }) => {
+        return User.getAuthTokenFromSignedData({
+          userAddress,
+          signedData,
+        })
+          .then((response) => {
+            commit('SET_AUTH_STATE', {
+              authToken: response.token,
+            })
+
+            commit('SET_USER', {
+              user: response.user,
+            })
+
+            commit('web3/SET_IS_POLLING', {
+              isPolling: true,
+            }, {
+              root: true,
+            })
+
+            // No need to block on the promise resolution of polling
+            dispatch('web3/POLL_WEB3', null, { root: true })
+
+            return dispatch('UPDATE_CONTRACT_STATE')
+          })
+      })
+      .catch((error) => {
+        return dispatch('HANDLE_LOGIN_ERROR', error)
+      })
+  },
+
+  HANDLE_LOGIN_ERROR({ commit, dispatch, state }, error) {
+    logger('HANDLE_LOGIN_ERROR action being executed')
+
+    if (state.user && state.user.type === 'simple') {
+      commit('app/SET_API_ERROR', error, { root: true })
+    } else {
+      commit('web3/SET_REGISTRATION_ERROR', {
+        message: 'Error while registering Web3',
+        error,
+      }, {
+        root: true,
+      })
+    }
+
+    dispatch('LOGOUT_USER')
+
+    throw error
   },
 
   UPDATE_CONTRACT_STATE({ dispatch, state }) {

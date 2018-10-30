@@ -69,6 +69,34 @@ export default {
       })
   },
 
+  PROMPT_FOR_SIGNED_DATA({ state }) {
+    logger('PROMPT_FOR_SIGNED_DATA action being executed')
+
+    const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
+    const sendAsyncOptions = {
+      method: 'personal_sign',
+      params: [
+        state.providerAccount,
+        state.instance.utils.toHex(personalMessageToSign),
+      ],
+    }
+
+    return new Promise((resolve, reject) => {
+      state.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+        if (error) {
+          reject(new Error(Web3Errors.Unknown))
+        } else if (result.error) {
+          reject(new Error(Web3Errors.UserDeniedSignature))
+        } else {
+          resolve({
+            userAddress: state.providerAccount,
+            signedData: result.result.substr(2),
+          })
+        }
+      })
+    })
+  },
+
   POLL_WEB3({ commit, dispatch, state }) {
     if (state.instance && state.isPolling) {
       registerWalletProvider()
