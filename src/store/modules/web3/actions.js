@@ -9,12 +9,22 @@ const logger = debug('app:store:web3:actions')
 
 const registerWalletProvider = () => {
   return new Promise((resolve, reject) => {
-    if (typeof window.web3 === 'undefined') {
+    // @TODO: Test this when the new custom build becomes stable
+    if (window.ethereum) {
+      window.ethereum.enable()
+        .then(() => {
+          resolve(new Web3(window.ethereum))
+        })
+        .catch((error) => {
+          logger(error)
 
+          reject(new Error(Web3Errors.UserDeniedSignature))
+        })
+    } else if (typeof window.web3 === 'undefined') {
       reject(new Error(Web3Errors.Missing))
+    } else {
+      resolve(new Web3(window.web3.currentProvider))
     }
-
-    resolve(new Web3(window.web3.currentProvider))
   })
     .then((web3) => {
       return web3.eth.net.getId()
