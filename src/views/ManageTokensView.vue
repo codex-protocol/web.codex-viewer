@@ -55,8 +55,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import EventBus from '../util/eventBus'
-
 import AppHeader from '../components/core/AppHeader'
 import PersonalStakesTable from '../components/PersonalStakesTable'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
@@ -72,10 +70,6 @@ export default {
     ApproveContractModal,
     StakeTokensModal,
     UnstakeTokensModal,
-  },
-
-  created() {
-    EventBus.$emit('events:view-tokens-page', this)
   },
 
   computed: {

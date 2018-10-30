@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import EventBus from '../util/eventBus'
 import AppHeader from '../components/core/AppHeader'
 import laLogo from '../assets/images/features/la-logo.png'
 import amLogo from '../assets/images/features/am-logo.png'
@@ -35,17 +34,11 @@ import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
   name: 'FeatureListView',
+
   components: {
     AppHeader,
   },
-  created() {
-    EventBus.$emit('events:view-coming-soon-page', this)
-  },
-  methods: {
-    clickPartner(url) {
-      EventBus.$emit('events:click-partner-link', this)
-    },
-  },
+
   data() {
     return {
       features: [

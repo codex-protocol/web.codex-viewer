@@ -75,7 +75,6 @@ export default {
   },
 
   created() {
-    EventBus.$emit('events:view-transfers-page', this)
     this.fetchData(this.transferDirection)
   },
 

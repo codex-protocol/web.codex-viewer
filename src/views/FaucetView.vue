@@ -66,7 +66,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
 import formatTokenAmount from '../util/formatTokenAmount'
 
@@ -81,10 +80,6 @@ export default {
     AppHeader,
     FaucetModal,
     ApproveContractModal,
-  },
-
-  created() {
-    EventBus.$emit('events:view-faucet-page', this)
   },
 
   computed: {

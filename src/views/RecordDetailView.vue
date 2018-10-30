@@ -104,7 +104,6 @@ export default {
   },
 
   created() {
-    EventBus.$emit('events:view-record-page', this)
     this.getRecord()
   },
 
