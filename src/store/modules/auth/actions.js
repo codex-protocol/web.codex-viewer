@@ -44,7 +44,8 @@ export default {
         return dispatch('UPDATE_CONTRACT_STATE')
       })
       .catch((error) => {
-        return dispatch('HANDLE_LOGIN_ERROR', error)
+        dispatch('HANDLE_LOGIN_ERROR', error)
+        throw error
       })
   },
 
@@ -87,7 +88,8 @@ export default {
           })
       })
       .catch((error) => {
-        return dispatch('HANDLE_LOGIN_ERROR', error)
+        dispatch('HANDLE_LOGIN_ERROR', error)
+        throw error
       })
   },
 
@@ -106,8 +108,6 @@ export default {
     }
 
     dispatch('LOGOUT_USER')
-
-    throw error
   },
 
   UPDATE_CONTRACT_STATE({ dispatch, state }) {

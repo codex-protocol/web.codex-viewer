@@ -6,8 +6,8 @@ const logMutation = (mutationName, ...args) => {
 }
 
 export default {
-  SET_VERIFIED_USERS_ADDRESS_NAME_MAP(currentState, users) {
-    logMutation('SET_VERIFIED_USERS_ADDRESS_NAME_MAP', users)
+  SET_VERIFIED_USERS(currentState, users) {
+    logMutation('SET_VERIFIED_USERS', users)
 
     const newAddressNameMap = {}
 
@@ -16,14 +16,14 @@ export default {
       newAddressNameMap[user.address.toLowerCase()] = user.name
     })
 
-    currentState.verifiedUsersAddressNameMap = newAddressNameMap
+    currentState.verifiedUsers = newAddressNameMap
 
   },
 
-  SET_CONFIRM_EMAIL_ADDRESS(currentState, emailAddress) {
-    logMutation('SET_CONFIRM_EMAIL_ADDRESS', emailAddress)
+  SET_EMAIL_ADDRESS_TO_CONFIRM(currentState, emailAddress) {
+    logMutation('SET_EMAIL_ADDRESS_TO_CONFIRM', emailAddress)
 
-    currentState.confirmEmailAddress = emailAddress
+    currentState.emailAddressToConfirm = emailAddress
   },
 
   SET_API_ERROR(currentState, { code, message }) {

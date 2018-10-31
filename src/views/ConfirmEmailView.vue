@@ -20,14 +20,14 @@
           {{ buttonText }}
         </b-button>
 
-        <ResendConfirmationEmailModal :default-email="confirmEmailAddress" />
+        <ResendConfirmationEmailModal :default-email="emailAddressToConfirm" />
 
         <b-button
           size="sm"
           variant="link"
           class="pl-0 pr-0"
           @click.prevent="confirmEmail"
-          v-if="showManualConfirm && confirmEmailAddress"
+          v-if="showManualConfirm && emailAddressToConfirm"
         >
           Confirm email
         </b-button>
@@ -66,13 +66,13 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['apiError', 'confirmEmailAddress']),
+    ...mapState('app', ['apiError', 'emailAddressToConfirm']),
   },
 
   created() {
     // remove email from the query params if specified
     if (this.$route.query.email) {
-      this.$store.commit('app/SET_CONFIRM_EMAIL_ADDRESS', this.$route.query.email)
+      this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', this.$route.query.email)
       this.$router.replace({ name: this.$route.name })
     }
   },
@@ -87,7 +87,7 @@ export default {
 
   methods: {
     confirmEmail() {
-      EmailConfirmation.confirm(this.confirmEmailAddress)
+      EmailConfirmation.confirm(this.emailAddressToConfirm)
         .then(() => {
           this.$router.replace('/')
         })

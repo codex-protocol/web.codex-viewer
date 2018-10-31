@@ -86,7 +86,7 @@ export default {
   created() {
     this.initializeApi()
 
-    this.$store.dispatch('app/FETCH_VERIFIED_USERS_ADDRESS_NAME_MAP')
+    this.$store.dispatch('app/FETCH_VERIFIED_USERS')
 
     EventBus.$on('socket:codex-coin:transferred', () => {
       this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')

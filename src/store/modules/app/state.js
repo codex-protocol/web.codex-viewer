@@ -1,7 +1,7 @@
 export default () => {
   return {
-    confirmEmailAddress: null,
-    verifiedUsersAddressNameMap: null,
+    emailAddressToConfirm: null,
+    verifiedUsers: null,
     apiError: null,
     isLoaded: false,
   }
