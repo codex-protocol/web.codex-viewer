@@ -20,6 +20,12 @@ export default {
 
   },
 
+  SET_PENDING_USER_CODE(currentState, pendingUserCode) {
+    logMutation('SET_PENDING_USER_CODE', pendingUserCode)
+
+    currentState.pendingUserCode = pendingUserCode
+  },
+
   SET_EMAIL_ADDRESS_TO_CONFIRM(currentState, emailAddress) {
     logMutation('SET_EMAIL_ADDRESS_TO_CONFIRM', emailAddress)
 
