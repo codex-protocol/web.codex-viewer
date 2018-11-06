@@ -193,12 +193,6 @@ export default {
     },
 
     toggleWhitelistField() {
-
-      if (!config.supportEmailAccounts) {
-        this.showEthereumAddressField = true
-        return
-      }
-
       this.toEthAddress = null
       this.toEmailAddress = null
       this.showEthereumAddressField = !this.showEthereumAddressField
