@@ -207,8 +207,7 @@ export default {
     addWhitelistedAddress(addressToAdd = this.newWhitelistedAddress) {
 
       if (
-        addressToAdd !== null &&
-        this.instance.utils.isAddress(addressToAdd) &&
+        this.instance.utils.isAddress(addressToAdd) && // this also handles null values
         !this.whitelistedAddresses.includes(addressToAdd) &&
         addressToAdd.toLowerCase() !== this.user.address.toLowerCase()
       ) {
