@@ -105,7 +105,7 @@
         <div v-if="whitelistedEmails.length > 0">
           <div v-for="email in whitelistedEmails" :key="email">
             <DisplayName :name="email" />
-            <span class="close" v-on:click="removeWhitelistedEmail(email)">×</span>
+            <span class="close" @click="removeWhitelistedEmail(email)">×</span>
           </div>
         </div>
         <div v-if="whitelistedAddresses.length === 0 && whitelistedEmails.length === 0">
