@@ -17,11 +17,42 @@
           variant="secondary"
           v-if="pendingUserStats && pendingUserStats.email"
         >
-          You have {{ pendingUserStats.numApproved > 0 ? pendingUserStats.numApproved : '' }}
-          Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
-          waiting to be claimed. Log in with an Identity Provider below
-          associated with the email <strong>{{ pendingUserStats.email }}</strong> to
-          claim {{ pendingUserStats.numApproved === 1 ? 'it' : 'them' }}!
+
+          <!--
+            only show the "you have X records shared with you" message if
+            they don't have any records waiting to be claimed (which is a "more
+            important" message to show), since combining the two is kind of
+            complicated
+          -->
+          <span v-if="!pendingUserStats.numApproved && pendingUserStats.numWhitelisted">
+            {{ pendingUserStats.numWhitelisted }}
+            Codex {{ pendingUserStats.numWhitelisted === 1 ? 'Record' : 'Records' }}
+            {{ pendingUserStats.numWhitelisted === 1 ? 'has' : 'have' }} been
+            shared with you. Log in with an Identity Provider below associated
+            with the email <strong>{{ pendingUserStats.email }}</strong> to view
+            {{ pendingUserStats.numWhitelisted === 1 ? 'it' : 'them' }}!
+          </span>
+
+          <span v-if="pendingUserStats.numWhitelisted">
+            You have {{ pendingUserStats.numApproved }}
+            Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
+            waiting to be claimed. Log in with an Identity Provider below
+            associated with the email <strong>{{ pendingUserStats.email }}</strong>
+            to claim {{ pendingUserStats.numApproved === 1 ? 'it' : 'them' }}!
+          </span>
+
+          <!--
+            this is a generic message that will show if this pending user has
+            nothing available... this can only really happen if someone approves
+            an email address, then they approve someone else before the user can
+            click their email - maybe this shouldn't even be shown since it's a
+            little missleading?
+          -->
+          <span v-else>
+            Log in with an Identity Provider below associated with the email
+            <strong>{{ pendingUserStats.email }}</strong> to see what's waiting
+            for you!
+          </span>
 
           <!-- add a "claim with a different email" link here if/when that flow is implemented -->
         </b-alert>

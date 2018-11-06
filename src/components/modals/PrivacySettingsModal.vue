@@ -49,21 +49,51 @@
       label-for="address"
       label-size="sm"
     >
-      <b-form-text>
-        Wallet Address
-      </b-form-text>
-      <b-input-group class="grant-access">
-        <b-form-input
-          id="address"
-          type="text"
-          placeholder="e.g. 0x627306090aba..."
-          v-model="newWhitelistedAddress"
-          spellcheck="false"
-        />
-        <b-input-group-append>
-          <b-button variant="primary" @click="addWhitelistedAddress()">Add</b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <div v-if="showEthereumAddressField">
+        <b-form-text>
+          Wallet Address
+        </b-form-text>
+        <b-input-group class="grant-access">
+          <b-form-input
+            id="address"
+            type="text"
+            spellcheck="false"
+            v-model="newWhitelistedAddress"
+            placeholder="e.g. 0x627306090aba..."
+          />
+          <b-input-group-append>
+            <b-button variant="primary" @click="addWhitelistedAddress()">Add</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
+
+      <div v-else>
+        <b-form-text>
+          Email Address
+        </b-form-text>
+        <b-input-group class="grant-access">
+          <b-form-input
+            id="email"
+            type="email"
+            spellcheck="false"
+            v-model="newWhitelistedEmail"
+            placeholder="e.g., user@example.com"
+          />
+          <b-input-group-append>
+            <b-button variant="primary" @click="addWhitelistedEmail()">Add</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
+
+      <b-button
+        size="sm"
+        variant="link"
+        class="pl-0 pr-0"
+        v-if="supportEmailAccounts"
+        @click="toggleWhitelistField()"
+      >
+        Share with an {{ showEthereumAddressField ? 'email' : 'Ethereum' }} address instead?
+      </b-button>
 
       <div class="mt-4">
         <div v-if="whitelistedAddresses.length > 0">
@@ -72,7 +102,13 @@
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </div>
-        <div v-else>
+        <div v-if="whitelistedEmails.length > 0">
+          <div v-for="email in whitelistedEmails" :key="email">
+            <DisplayName :name="email" />
+            <span class="close" v-on:click="removeWhitelistedEmail(email)">×</span>
+          </div>
+        </div>
+        <div v-if="whitelistedAddresses.length === 0 && whitelistedEmails.length === 0">
           <small class="text-muted">
             You have not shared this record with any other addresses. Add one above to allow read-only access for that address.
           </small>
@@ -87,9 +123,10 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import DisplayName from '../util/DisplayName'
+import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
+import DisplayName from '../util/DisplayName'
 
 const logger = debug('app:component:privacy-settings-modal')
 
@@ -105,15 +142,20 @@ export default {
   data() {
     return {
       modalVisible: false,
+      newWhitelistedEmail: null,
       newWhitelistedAddress: null,
+      showEthereumAddressField: true,
       isPrivate: this.codexRecord.isPrivate,
       isInGallery: this.codexRecord.isInGallery,
+      supportEmailAccounts: config.supportEmailAccounts,
+      whitelistedEmails: Array.from(this.codexRecord.whitelistedEmails) || [],
       whitelistedAddresses: Array.from(this.codexRecord.whitelistedAddresses) || [],
     }
   },
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('web3', ['instance']),
 
     isPublic: {
       get: function getIsPublic() {
@@ -123,6 +165,14 @@ export default {
         this.isPrivate = !newValue
       },
     },
+  },
+
+  mounted() {
+    // by default, show the ethereum address field to savvy users and the email
+    //  field to simple users
+    if (this.user.type !== 'savvy' && config.supportEmailAccounts) {
+      this.showEthereumAddressField = false
+    }
   },
 
   methods: {
@@ -142,12 +192,23 @@ export default {
       }
     },
 
-    addWhitelistedAddress() {
+    toggleWhitelistField() {
 
-      const addressToAdd = this.newWhitelistedAddress
+      if (!config.supportEmailAccounts) {
+        this.showEthereumAddressField = true
+        return
+      }
+
+      this.toEthAddress = null
+      this.toEmailAddress = null
+      this.showEthereumAddressField = !this.showEthereumAddressField
+    },
+
+    addWhitelistedAddress(addressToAdd = this.newWhitelistedAddress) {
 
       if (
         addressToAdd !== null &&
+        this.instance.utils.isAddress(addressToAdd) &&
         !this.whitelistedAddresses.includes(addressToAdd) &&
         addressToAdd.toLowerCase() !== this.user.address.toLowerCase()
       ) {
@@ -164,11 +225,33 @@ export default {
       })
     },
 
+    addWhitelistedEmail(emailToAdd = this.newWhitelistedEmail) {
+
+      if (
+        emailToAdd !== null &&
+        !this.whitelistedEmails.includes(emailToAdd) &&
+        (!this.user.email || emailToAdd.toLowerCase() !== this.user.email.toLowerCase())
+      ) {
+        this.whitelistedEmails.push(emailToAdd)
+      }
+
+      this.newWhitelistedEmail = null
+
+    },
+
+    removeWhitelistedEmail(emailToRemove) {
+      this.whitelistedEmails = this.whitelistedEmails.filter((whitelistedEmail) => {
+        return whitelistedEmail !== emailToRemove
+      })
+    },
+
     updateRecord(event) {
       event.preventDefault()
 
-      // @TODO: figure out how to allow users to specify email addresses as well
-      //  as ethereum addresses for the whitelist addresses
+      // if they typed in an email but didn't click "add", add it for them
+      if (this.newWhitelistedEmail !== null) {
+        this.addWhitelistedEmail()
+      }
 
       // if they typed in an address but didn't click "add", add it for them
       if (this.newWhitelistedAddress !== null) {
@@ -178,6 +261,7 @@ export default {
       const dataToUpdate = {
         isPrivate: this.isPrivate,
         isInGallery: this.isInGallery,
+        whitelistedEmails: this.whitelistedEmails,
         whitelistedAddresses: this.whitelistedAddresses,
       }
 
