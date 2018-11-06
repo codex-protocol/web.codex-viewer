@@ -15,45 +15,18 @@
           show
           class="mt-5"
           variant="secondary"
-          v-if="pendingUserStats && pendingUserStats.email"
+          v-if="pendingUserMessage"
         >
-
           <!--
-            only show the "you have X records shared with you" message if
-            they don't have any records waiting to be claimed (which is a "more
-            important" message to show), since combining the two is kind of
-            complicated
+            @NOTE: using v-html here should be fine, since the only user-defined
+            data is the email address... and the database verifies all email
+            addresses when creating users
+
+            even if someone could put some malicious text into an invited user's
+            email field, nobody would ever actually recieve an email with a link
+            that would generate this page since the email would be invalid...
           -->
-          <span v-if="!pendingUserStats.numApproved && pendingUserStats.numWhitelisted">
-            {{ pendingUserStats.numWhitelisted }}
-            Codex {{ pendingUserStats.numWhitelisted === 1 ? 'Record' : 'Records' }}
-            {{ pendingUserStats.numWhitelisted === 1 ? 'has' : 'have' }} been
-            shared with you. Log in with an Identity Provider below associated
-            with the email <strong>{{ pendingUserStats.email }}</strong> to view
-            {{ pendingUserStats.numWhitelisted === 1 ? 'it' : 'them' }}!
-          </span>
-
-          <span v-if="pendingUserStats.numWhitelisted">
-            You have {{ pendingUserStats.numApproved }}
-            Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
-            waiting to be claimed. Log in with an Identity Provider below
-            associated with the email <strong>{{ pendingUserStats.email }}</strong>
-            to claim {{ pendingUserStats.numApproved === 1 ? 'it' : 'them' }}!
-          </span>
-
-          <!--
-            this is a generic message that will show if this pending user has
-            nothing available... this can only really happen if someone approves
-            an email address, then they approve someone else before the user can
-            click their email - maybe this shouldn't even be shown since it's a
-            little missleading?
-          -->
-          <span v-else>
-            Log in with an Identity Provider below associated with the email
-            <strong>{{ pendingUserStats.email }}</strong> to see what's waiting
-            for you!
-          </span>
-
+          <span v-html="pendingUserMessage"></span>
           <!-- add a "claim with a different email" link here if/when that flow is implemented -->
         </b-alert>
 
@@ -194,6 +167,57 @@ export default {
         case 'metaMask':
           return 'https://www.metamask.io'
       }
+    },
+
+    pendingUserMessage() {
+
+      const { numApproved, numWhitelisted, email } = this.pendingUserStats || {}
+
+      if (!email) {
+        return null
+      }
+
+      // always show the "you have X records waiting to be claimed" message,
+      //  even if they also have some whitelisted records, since this is the
+      //  "most important" message to show and combining the two is kind of
+      //  complicated
+      if (numApproved > 0) {
+
+        const [recordOrRecords, itOrThem] = numApproved > 1
+          ? ['Records', 'them']
+          : ['Record', 'it']
+
+        return `
+          You have ${numApproved} Codex ${recordOrRecords} waiting to be
+          claimed. Log in with an Identity Provider associated with the
+          email <strong>${email}</strong> below to claim ${itOrThem}!
+        `
+      }
+
+      if (numWhitelisted > 0) {
+
+        const [recordOrRecords, hasOrHave, itOrThem] = numWhitelisted > 1
+          ? ['Records', 'have', 'them']
+          : ['Record', 'has', 'it']
+
+        return `
+          ${numWhitelisted} Codex ${recordOrRecords} ${hasOrHave} been shared
+          with you. Log in with an Identity Provider associated with the
+          email <strong>${email}</strong> below to view ${itOrThem}!
+        `
+      }
+
+      // this is a generic message that will show if this pending user has
+      //  nothing available... which can only really happen if someone approves
+      //  an unregistered email address, then they approve someone else before
+      //  the invited user can click the link in thier email
+      //
+      // this message is a little missleading, but I suppose it's better than
+      //  showing nothing
+      return `
+        Log in with an Identity Provider associated with the email
+        <strong>${email}</strong> below to see what's waiting for you!
+      `
     },
   },
 
