@@ -41,7 +41,7 @@
             <b-link
               :key="index"
               :disabled="provider.isDisabled"
-              :href="getOAuth2LoginUrl(provider.name)"
+              :href="getOAuth2LoginUrl(provider)"
               v-for="(provider, index) in oAuth2Providers"
             >
               <IconBase :iconName="provider.name" width="48" height="48" />
@@ -273,11 +273,11 @@ export default {
 
     getOAuth2LoginUrl(provider) {
 
-      if (!Object.keys(this.oAuth2Providers).includes(provider)) {
+      if (!this.oAuth2Providers.includes(provider)) {
         return null
       }
 
-      return `${config.apiUrl}/oauth2/login/${provider}?${this.oAuth2LoginQueryString}`
+      return `${config.apiUrl}/oauth2/login/${provider.name}?${this.oAuth2LoginQueryString}`
     },
 
     getPendingUserStats(pendingUserCode) {
