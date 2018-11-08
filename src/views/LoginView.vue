@@ -35,15 +35,20 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="getOAuth2LoginUrl('google')" v-if="supportEmailAccounts">
-            <IconBase iconName="google" width="48" height="48" />
-          </a>
-          <a :href="getOAuth2LoginUrl('facebook')" :disabled="disableFacebook" v-if="supportEmailAccounts">
-            <IconBase iconName="facebook" width="48" height="48" />
-          </a>
-          <a :href="getOAuth2LoginUrl('microsoft')" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
-            <IconBase iconName="microsoft" width="48" height="48" />
-          </a>
+
+          <!-- oauth2 login buttons -->
+          <span v-if="supportEmailAccounts">
+            <b-link
+              :disabled="provider.isDisabled"
+              :href="getOAuth2LoginUrl(provider.name)"
+              @click="preventLoginIfProviderDisabled($event, provider)"
+              v-for="(provider, index) in oAuth2Providers" :key="index"
+            >
+              <IconBase :iconName="provider.name" width="48" height="48" />
+            </b-link>
+          </span>
+
+          <!-- web3 login buttons -->
           <b-link @click="registerWalletProvider('metaMask')">
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
@@ -92,9 +97,22 @@ export default {
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
-      // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
-      disableFacebook: config.expectedNetworkName === 'ropsten',
-      disableMicrosoft: config.expectedNetworkName === 'ropsten',
+      oAuth2Providers: [
+        {
+          name: 'google',
+          isDisabled: false,
+        },
+        // facebook and microsoft only support https for redirect_uri so we
+        //  disable these in ropsten
+        {
+          name: 'facebook',
+          isDisabled: config.expectedNetworkName === 'ropsten',
+        },
+        {
+          name: 'microsoft',
+          isDisabled: config.expectedNetworkName === 'ropsten',
+        },
+      ],
 
       pendingUserStats: null,
     }
@@ -255,7 +273,7 @@ export default {
 
     getOAuth2LoginUrl(provider) {
 
-      if (!['google', 'facebook', 'microsoft'].includes(provider)) {
+      if (!Object.keys(this.oAuth2Providers).includes(provider)) {
         return null
       }
 
@@ -273,6 +291,10 @@ export default {
           logger(error)
         })
     },
+
+    preventLoginIfProviderDisabled(event, provider = {}) {
+      if (provider.isDisabled === false) event.preventDefault()
+    },
   },
 }
 </script>
@@ -287,7 +309,13 @@ export default {
       margin-left: 0
 
     &.disabled
+    &[disabled]
       opacity: .5
+
+      // disable hover state changes
+      &:hover
+        cursor: unset
+        color: $color-primary
 
   .logo
     max-width: 100px
