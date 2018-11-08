@@ -37,7 +37,7 @@
         <div class="icons mb-3">
 
           <!-- oauth2 login buttons -->
-          <span v-if="supportEmailAccounts">
+          <template v-if="supportEmailAccounts">
             <b-link
               :disabled="provider.isDisabled"
               :href="getOAuth2LoginUrl(provider.name)"
@@ -46,7 +46,7 @@
             >
               <IconBase :iconName="provider.name" width="48" height="48" />
             </b-link>
-          </span>
+          </template>
 
           <!-- web3 login buttons -->
           <b-link @click="registerWalletProvider('metaMask')">
