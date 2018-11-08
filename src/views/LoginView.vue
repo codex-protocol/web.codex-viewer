@@ -42,7 +42,6 @@
               :key="index"
               :disabled="provider.isDisabled"
               :href="getOAuth2LoginUrl(provider.name)"
-              @click="preventLoginIfProviderDisabled($event, provider)"
               v-for="(provider, index) in oAuth2Providers"
             >
               <IconBase :iconName="provider.name" width="48" height="48" />
@@ -291,10 +290,6 @@ export default {
           //  invalid
           logger(error)
         })
-    },
-
-    preventLoginIfProviderDisabled(event, provider = {}) {
-      if (provider.isDisabled === false) event.preventDefault()
     },
   },
 }
