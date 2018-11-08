@@ -35,13 +35,13 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="googleLoginUrl" v-if="supportEmailAccounts">
+          <a :href="googleLoginUrl + oAuth2LoginQueryString" v-if="supportEmailAccounts">
             <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl" :disabled="disableFacebook" v-if="supportEmailAccounts">
+          <a :href="facebookLoginUrl + oAuth2LoginQueryString" :disabled="disableFacebook" v-if="supportEmailAccounts">
             <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
+          <a :href="microsoftLoginUrl + oAuth2LoginQueryString" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link @click="registerWalletProvider('metaMask')">
@@ -92,6 +92,10 @@ export default {
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
+      // this is built up in the created() hook and appended to the login URLs
+      //  in the template
+      oAuth2LoginQueryString: '?',
+
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
       microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
@@ -105,19 +109,32 @@ export default {
   },
 
   created() {
+
     if (this.pendingUserCode) {
-      const oAuth2LoginQueryString = `?pendingUserCode=${this.pendingUserCode}`
-      this.googleLoginUrl += oAuth2LoginQueryString
-      this.facebookLoginUrl += oAuth2LoginQueryString
-      this.microsoftLoginUrl += oAuth2LoginQueryString
       this.getPendingUserStats(this.pendingUserCode)
     }
+
+    const oAuth2LoginQueryParams = {
+      destination: this.postLoginDestination,
+      pendingUserCode: this.pendingUserCode,
+    }
+
+    // forward any OAuth2 state params (e.g. destination)
+    this.oAuth2LoginQueryString += Object
+      .keys(oAuth2LoginQueryParams)
+      .filter((key) => {
+        return !!oAuth2LoginQueryParams[key] // remove any empty values
+      })
+      .map((key) => {
+        return `${key}=${encodeURIComponent(oAuth2LoginQueryParams[key])}`
+      })
+      .join('&')
   },
 
   computed: {
-    ...mapState('app', ['apiErrorCode', 'pendingUserCode']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination']),
 
     errorMessage() {
       return this.web3ErrorMessage || this.apiErrorMessage
