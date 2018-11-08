@@ -308,20 +308,19 @@ export default {
       }
 
       return Record.updateMetadata(this.codexRecord.tokenId, updatedMetadata)
-        .then((metadata) => {
-          return this.modifyRecord(metadata)
-        })
+        .then(this.modifyRecord)
     },
 
-    modifyRecord(metadata) {
+    modifyRecord(pendingUpdate) {
       const input = [
         this.codexRecord.tokenId,
-        metadata.nameHash,
-        metadata.descriptionHash || NullDescriptionHash,
-        metadata.fileHashes,
+        pendingUpdate.nameHash,
+        pendingUpdate.descriptionHash || NullDescriptionHash,
+        pendingUpdate.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
           this.codexRecord.metadata.id, // providerMetadataId
+          pendingUpdate.id, // providerMetadataPendingUpdateId
         ]),
       ]
 
