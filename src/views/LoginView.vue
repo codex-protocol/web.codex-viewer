@@ -35,13 +35,13 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="googleLoginUrl + oAuth2LoginQueryString" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('google')" v-if="supportEmailAccounts">
             <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl + oAuth2LoginQueryString" :disabled="disableFacebook" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('facebook')" :disabled="disableFacebook" v-if="supportEmailAccounts">
             <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl + oAuth2LoginQueryString" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('microsoft')" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link @click="registerWalletProvider('metaMask')">
@@ -92,14 +92,6 @@ export default {
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
-      // this is built up in the created() hook and appended to the login URLs
-      //  in the template
-      oAuth2LoginQueryString: '?',
-
-      googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
-      facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
-      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
-
       // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
       disableFacebook: config.expectedNetworkName === 'ropsten',
       disableMicrosoft: config.expectedNetworkName === 'ropsten',
@@ -109,32 +101,34 @@ export default {
   },
 
   created() {
-
     if (this.pendingUserCode) {
       this.getPendingUserStats(this.pendingUserCode)
     }
-
-    const oAuth2LoginQueryParams = {
-      destination: this.postLoginDestination,
-      pendingUserCode: this.pendingUserCode,
-    }
-
-    // forward any OAuth2 state params (e.g. destination)
-    this.oAuth2LoginQueryString += Object
-      .keys(oAuth2LoginQueryParams)
-      .filter((key) => {
-        return !!oAuth2LoginQueryParams[key] // remove any empty values
-      })
-      .map((key) => {
-        return `${key}=${encodeURIComponent(oAuth2LoginQueryParams[key])}`
-      })
-      .join('&')
   },
 
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
     ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination']),
+
+    oAuth2LoginQueryString() {
+
+      const oAuth2LoginQueryParams = {
+        destination: this.postLoginDestination,
+        pendingUserCode: this.pendingUserCode,
+      }
+
+      return Object
+        .keys(oAuth2LoginQueryParams)
+        .filter((key) => {
+          return !!oAuth2LoginQueryParams[key] // remove any empty values
+        })
+        .map((key) => {
+          return `${key}=${encodeURIComponent(oAuth2LoginQueryParams[key])}`
+        })
+        .join('&')
+
+    },
 
     errorMessage() {
       return this.web3ErrorMessage || this.apiErrorMessage
@@ -257,6 +251,15 @@ export default {
           // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
           //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
         })
+    },
+
+    getOAuth2LoginUrl(provider) {
+
+      if (!['google', 'facebook', 'microsoft'].includes(provider)) {
+        return null
+      }
+
+      return `${config.apiUrl}/oauth2/login/${provider}?${this.oAuth2LoginQueryString}`
     },
 
     getPendingUserStats(pendingUserCode) {
