@@ -5,7 +5,7 @@
     ok-title="Start transfer"
     cancel-variant="outline-primary"
     :ok-method="approveTransfer"
-    :on-shown="focusModal"
+    :on-shown="onShow"
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
@@ -92,15 +92,13 @@ export default {
     ...mapState('web3', ['instance']),
   },
 
-  mounted() {
-    if (this.user.type === 'savvy') {
-      this.showEthereumAddressField = true
-    }
-  },
-
   methods: {
 
-    focusModal() {
+    onShow() {
+      if (this.user.type === 'savvy') {
+        this.showEthereumAddressField = true
+      }
+
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
       }

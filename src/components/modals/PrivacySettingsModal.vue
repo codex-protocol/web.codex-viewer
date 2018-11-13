@@ -7,6 +7,7 @@
     v-model="modalVisible"
     v-on:ok="updateRecord"
     @hidden="onHide"
+    @shown="onShow"
   >
     <b-form-group
       label="Share Record Publicly"
@@ -167,15 +168,16 @@ export default {
     },
   },
 
-  mounted() {
-    // by default, show the ethereum address field to savvy users and the email
-    //  field to simple users
-    if (this.user.type !== 'savvy' && config.supportEmailAccounts) {
-      this.showEthereumAddressField = false
-    }
-  },
-
   methods: {
+
+    onShow() {
+      // by default, show the ethereum address field to savvy users and the email
+      //  field to simple users
+      if (this.user.type !== 'savvy' && config.supportEmailAccounts) {
+        this.showEthereumAddressField = false
+      }
+    },
+
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
