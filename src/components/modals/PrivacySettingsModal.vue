@@ -158,6 +158,8 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 
+    // it's more verbose to do this, but it makes passing isPrivate much more
+    //  intuitive than isPublic
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate
