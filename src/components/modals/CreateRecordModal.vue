@@ -62,6 +62,21 @@
             v-model="description"
           />
         </b-form-group>
+        <b-form-group
+          label="Share Record Publicly"
+          label-for="isPublic"
+          label-size="sm"
+        >
+          <input
+            id="isPublic"
+            type="checkbox"
+            v-model="isPublic"
+            class="toggle-checkbox"
+          />
+          <b-form-text>
+            By making this Record public, anyone can view the name, description and images.
+          </b-form-text>
+        </b-form-group>
       </div>
     </div>
   </meta-mask-notification-modal>
@@ -94,9 +109,12 @@ export default {
       description: null,
       uploadedFile: null,
       imageStreamUri: null,
-      progressVisible: false,
-      uploadComplete: false,
       uploadSuccess: false,
+      uploadComplete: false,
+      progressVisible: false,
+      confirmMintValues: {
+        isPrivate: true,
+      },
     }
   },
 
@@ -173,6 +191,7 @@ export default {
         name: this.name,
         mainImage: this.uploadedFile,
         description: this.description || null,
+        confirmMintValues: this.confirmMintValues,
       }
 
       return Record.createMetadata(metadataToUpload)
@@ -224,6 +243,15 @@ export default {
 
       return 'danger'
     },
+
+    isPublic: {
+      get: function getIsPublic() {
+        return !this.confirmMintValues.isPrivate
+      },
+      set: function setIsPublic(newValue) {
+        this.confirmMintValues.isPrivate = !newValue
+      },
+    },
   },
 }
 </script>
@@ -232,9 +260,6 @@ export default {
 .flex-container
   display: flex
   flex-direction: column
-
-  input
-    width: 100%
 
   @media screen and (min-width: $breakpoint-sm)
     flex-direction: row
