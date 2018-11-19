@@ -42,6 +42,21 @@
         placeholder="Upload image file"
       />
     </b-form-group>
+    <b-form-group
+      label="Share Record Publicly"
+      label-for="isPublic"
+      label-size="sm"
+    >
+      <input
+        id="isPublic"
+        type="checkbox"
+        v-model="isPublic"
+        class="toggle-checkbox"
+      />
+      <b-form-text>
+        By making this Record public, anyone can view the name, description and images.
+      </b-form-text>
+    </b-form-group>
     <b-button type="submit" variant="primary">Submit</b-button>
   </b-form>
 </template>
@@ -61,6 +76,7 @@ export default {
     return {
       name: null,
       image: null,
+      isPrivate: true,
       description: null,
     }
   },
@@ -70,6 +86,7 @@ export default {
       const formData = new FormData()
       formData.append('name', this.name)
       formData.append('mainImage', this.image)
+      formData.append('isPrivate', this.isPrivate)
       formData.append('description', this.description)
 
       axios.post('v1/client/record', formData, {
@@ -80,5 +97,16 @@ export default {
       }).then(this.showResult)
     },
   },
+
+  computed: {
+    isPublic: {
+      get: function getIsPublic() {
+        return !this.isPrivate
+      },
+      set: function setIsPublic(newValue) {
+        this.isPrivate = !newValue
+      },
+    },
+  }
 }
 </script>
