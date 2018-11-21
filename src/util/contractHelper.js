@@ -10,8 +10,8 @@ const contractHelper = ((contractName, functionName, args, store) => {
     case 'simple':
       return identityProxy.contractCall(contractName, functionName, args)
         .then((result) => {
-          store.commit('auth/SPEND_GAS', {
-            estimatedGas: result.value.tx.estimatedGas,
+          store.commit('auth/SPEND_CODX', {
+            codxCost: result.value.tx.codxCost,
           })
         })
 

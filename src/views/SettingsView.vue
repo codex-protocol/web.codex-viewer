@@ -80,19 +80,6 @@ export default {
     if (config.supportEmailAccounts) {
       profileProperties.push(
         {
-          property: 'gasAllowanceLastResetAt',
-          text: 'Last allowance reset',
-          formatter: formatDate,
-        },
-        {
-          property: 'gasAllowanceRemaining',
-          text: 'Remaining gas',
-        },
-        {
-          property: 'gasAllowance',
-          text: 'Prepaid gas per month',
-        },
-        {
           property: 'email',
           text: 'Email address',
         },

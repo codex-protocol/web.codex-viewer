@@ -25,7 +25,6 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <PrepaidTransactionsControl />
       </footer>
     </div>
   </nav>
@@ -38,7 +37,6 @@ import {
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
-import PrepaidTransactionsControl from '../PrepaidTransactionsControl'
 
 import config from '../../util/config'
 
@@ -59,7 +57,6 @@ export default {
 
   components: {
     DisplayName,
-    PrepaidTransactionsControl,
   },
 
   data() {
