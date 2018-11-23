@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl />
+        <CODXBalanceControl v-if="user.type !== 'savvy'" />
       </footer>
     </div>
   </nav>

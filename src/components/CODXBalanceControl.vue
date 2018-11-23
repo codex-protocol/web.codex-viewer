@@ -32,14 +32,14 @@ export default {
   name: 'CODXBalanceControl',
 
   computed: {
-    ...mapState('auth', ['balance']),
+    ...mapState('auth', ['user']),
 
     popoverPlacement() {
       return is.mobile() ? 'top' : 'right'
     },
 
     formattedTokenBalance() {
-      return `${formatTokenAmount(this.balance)} CODX`
+      return `${formatTokenAmount(this.user.codxBalance)} CODX`
     },
   },
 }
@@ -57,6 +57,7 @@ export default {
   width: 100%
   display: flex
   align-items: center
+  word-break: break-all
 
   > div
     flex-grow: 1

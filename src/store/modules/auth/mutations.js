@@ -96,4 +96,13 @@ export default {
       Vue.set(currentState.user, 'codxBalance', bnCODXBalance.sub(codxCost).toString())
     }
   },
+
+  REFUND_CODX(currentState, { codxCost }) {
+    logMutation('REFUND_CODX', codxCost)
+
+    if (currentState.user && currentState.user.codxBalance) {
+      const bnCODXBalance = new BigNumber(currentState.user.codxBalance)
+      Vue.set(currentState.user, 'codxBalance', bnCODXBalance.plus(codxCost).toString())
+    }
+  },
 }
