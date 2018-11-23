@@ -31,17 +31,17 @@
                 class="mb-3"
                 variant="primary"
                 v-b-modal.faucetModal
-                :disabled="!user.canRequestFaucetTokens"
+                :disabled="!user.canRequestFaucetDrip"
               >
                 Get more CODX
               </b-button>
 
               <p>Your balance: {{ formattedBalance }} CODX</p>
-              <p v-if="!user.canRequestFaucetTokens">
+              <p v-if="!user.canRequestFaucetDrip">
                 <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
               </p>
 
-              <faucet-modal />
+              <FaucetModal />
             </div>
 
             <hr>
@@ -52,9 +52,9 @@
                 Approve the registry contract
               </b-button>
 
-              <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
+              <ApproveContractModal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
                 This will grant the Codex Viewer permission to spend CODX on your behalf.
-              </approve-contract-modal>
+              </ApproveContractModal>
             </div>
           </div>
         </div>
@@ -91,9 +91,9 @@ export default {
     },
 
     nextRequestIn() {
-      const lastRequestedAt = new Date(this.user.faucetLastRequestedAt)
-      const nextDay = new Date(lastRequestedAt.getTime() - (86400 * 1000))
-      return timeSince(nextDay)
+      const now = Date.now()
+      const faucetDripNextRequestAt = new Date(this.user.faucetDripNextRequestAt).getTime()
+      return timeSince(new Date(now - (faucetDripNextRequestAt - now)))
     },
   },
 }
