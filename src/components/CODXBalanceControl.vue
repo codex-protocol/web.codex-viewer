@@ -1,7 +1,23 @@
 <template>
   <div class="codx-balance-container">
-    <h4>CODX Balance</h4>
-    <div>{{ formattedTokenBalance }}</div>
+    <div>
+      <h4>Credit Balance</h4>
+      <div>{{ formattedTokenBalance }}</div>
+    </div>
+    <!-- <img id="codx-balance-info" src="../assets/icons/info.svg">
+
+    <b-popover
+      @click.stop
+      boundary="viewport"
+      class="popover-theme"
+      triggers="hover click"
+      target="codx-balance-info"
+      :placement="popoverPlacement"
+    >
+      <div class="popover-theme">
+        <p>@TODO: fill in popover here</p>
+      </div>
+    </b-popover> -->
   </div>
 </template>
 
@@ -17,6 +33,10 @@ export default {
 
   computed: {
     ...mapState('auth', ['balance']),
+
+    popoverPlacement() {
+      return is.mobile() ? 'top' : 'right'
+    },
 
     formattedTokenBalance() {
       return `${formatTokenAmount(this.balance)} CODX`
@@ -35,5 +55,16 @@ export default {
 
 .codx-balance-container
   width: 100%
+  display: flex
+  align-items: center
+
+  > div
+    flex-grow: 1
+
+  img
+    opacity: .8
+
+    &:hover
+      opacity: .9
 
 </style>
