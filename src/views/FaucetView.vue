@@ -36,7 +36,7 @@
                 Get more CODX
               </b-button>
 
-              <p>Your balance: {{ formattedBalance }} CODX</p>
+              <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
               <p v-if="!user.canRequestFaucetDrip">
                 <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
               </p>
@@ -67,7 +67,6 @@
 import { mapState } from 'vuex'
 
 import { timeSince } from '../util/dateHelpers'
-import formatTokenAmount from '../util/formatTokenAmount'
 
 import AppHeader from '../components/core/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
@@ -85,10 +84,6 @@ export default {
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapState('web3', ['recordContract']),
-
-    formattedBalance() {
-      return formatTokenAmount(this.user.codxBalance)
-    },
 
     nextRequestIn() {
       const now = Date.now()

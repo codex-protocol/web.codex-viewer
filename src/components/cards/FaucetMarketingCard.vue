@@ -14,7 +14,7 @@
           <li :class="{ 'completed': currentStep >= 2 }">Get CODX from the faucet</li>
           <li :class="{ 'completed': currentStep >= 3 }">Approve the registry contract</li>
         </ul>
-        <p>Your balance: {{ formattedBalance }} CODX</p>
+        <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
       </div>
       <b-button
         variant="primary"
@@ -43,10 +43,8 @@
 import { mapState } from 'vuex'
 import BigNumber from 'bignumber.js'
 
-import formatTokenAmount from '../../util/formatTokenAmount'
-
-import ApproveContractModal from './../modals/ApproveContractModal'
 import FaucetModal from './../modals/FaucetModal'
+import ApproveContractModal from './../modals/ApproveContractModal'
 
 export default {
   name: 'FaucetMarketingCard',
@@ -65,10 +63,6 @@ export default {
 
     done() {
       return this.currentStep === this.numSteps
-    },
-
-    formattedBalance() {
-      return formatTokenAmount(this.user.codxBalance)
     },
 
     currentStep() {
@@ -114,9 +108,6 @@ export default {
     },
     hide() {
       this.$store.dispatch('auth/HIDE_SETUP')
-    },
-    formatTokenAmount(rawAmount) {
-      return formatTokenAmount(rawAmount)
     },
   },
 }

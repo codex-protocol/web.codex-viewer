@@ -9,7 +9,7 @@
         :style="{ order: index }"
         :key="'actualAmount' + index"
       >
-        {{ formatTokenAmount(property) }} CODX
+        {{ property | formatCODXBalance }}
       </div>
 
       <div class="table-header addresses">Staked for</div>
@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import formatTokenAmount from '../util/formatTokenAmount'
 import DisplayName from './util/DisplayName'
 
 export default {
@@ -43,11 +42,6 @@ export default {
   props: ['personalStakes'],
   components: {
     DisplayName,
-  },
-  methods: {
-    formatTokenAmount(rawAmount) {
-      return formatTokenAmount(rawAmount)
-    },
   },
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="codx-balance-container">
     <div>
       <h4>Credit Balance</h4>
-      <div>{{ formattedTokenBalance }}</div>
+      <div>{{ user.codxBalance | formatCODXBalance }}</div>
     </div>
     <!-- <img id="codx-balance-info" src="../assets/icons/info.svg">
 
@@ -26,8 +26,6 @@
 import is from 'is_js'
 import { mapState } from 'vuex'
 
-import formatTokenAmount from '../util/formatTokenAmount'
-
 export default {
   name: 'CODXBalanceControl',
 
@@ -36,10 +34,6 @@ export default {
 
     popoverPlacement() {
       return is.mobile() ? 'top' : 'right'
-    },
-
-    formattedTokenBalance() {
-      return `${formatTokenAmount(this.user.codxBalance)} CODX`
     },
   },
 }
