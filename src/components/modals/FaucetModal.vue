@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
