@@ -38,11 +38,6 @@ import {
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
-
-// for some reason, eslint can't handle this file... it loads just fine but
-//  eslint throws a bunch of weird errors so we'll just disable this line
-//
-// eslint-disable-next-line
 import CODXBalanceControl from '../CODXBalanceControl'
 
 import config from '../../util/config'
