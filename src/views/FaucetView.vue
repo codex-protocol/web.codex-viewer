@@ -83,11 +83,11 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['registryContractApproved', 'balance', 'user']),
+    ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapState('web3', ['recordContract']),
 
     formattedBalance() {
-      return formatTokenAmount(this.balance)
+      return formatTokenAmount(this.user.codxBalance)
     },
 
     nextRequestIn() {

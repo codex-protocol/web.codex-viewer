@@ -11,7 +11,6 @@ if (cachedAuthToken) {
 export default () => {
   return {
     user: null,
-    balance: new BigNumber(0),
     authToken: cachedAuthToken,
     creditBalance: new BigNumber(0),
     personalStakes: [],

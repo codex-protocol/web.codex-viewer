@@ -27,14 +27,8 @@ export default {
 
   data() {
     return {
-      dripAmount: 100,
       modalVisible: false,
     }
-  },
-
-  computed: {
-    ...mapState('auth', ['balance']),
-    ...mapState('web3', ['instance']),
   },
 
   methods: {

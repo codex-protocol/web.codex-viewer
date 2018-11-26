@@ -114,23 +114,9 @@ export default {
     logger('UPDATE_CONTRACT_STATE action being executed')
 
     return Promise.all([
-      dispatch('FETCH_TOKEN_BALANCE'),
       dispatch('FETCH_STAKE_BALANCES'),
       dispatch('FETCH_APPROVAL_STATUSES'),
     ])
-  },
-
-  FETCH_TOKEN_BALANCE({ commit, rootState, state }) {
-    logger('FETCH_TOKEN_BALANCE action being executed')
-
-    const { tokenContract } = rootState.web3
-    const { address } = state.user
-
-    return tokenContract.methods.balanceOf(address)
-      .call()
-      .then((balance) => {
-        commit('SET_TOKEN_BALANCE', { balance })
-      })
   },
 
   FETCH_STAKE_BALANCES({ commit, rootState, state }) {

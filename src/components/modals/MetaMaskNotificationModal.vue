@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js'
 import { mapState, mapGetters } from 'vuex'
 
 import config from '../../util/config'
@@ -129,7 +130,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapGetters('auth', ['isSimpleUser']),
 
     isDisabled() {
@@ -140,8 +141,10 @@ export default {
       return this.size || ''
     },
 
+    // @TODO: instead of checking for a balance of 0, this should really check
+    //  for a balance "gte" the cost of the transaction
     willTransactionFail() {
-      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
+      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
     },
 
     shouldShowMainSlot() {

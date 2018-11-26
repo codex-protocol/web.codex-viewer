@@ -89,10 +89,7 @@ export default {
 
     this.$store.dispatch('app/FETCH_VERIFIED_USERS')
 
-    // @TODO: sometimes this doesn't update the balance with the latest
-    //  balance... almost as if web3 or infura is caching the balanceOf call
     EventBus.$on('socket:codex-coin:transferred', (codxCost) => {
-      this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
       this.$store.commit('auth/REFUND_CODX', { codxCost })
     })
 

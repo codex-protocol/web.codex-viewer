@@ -50,12 +50,6 @@ export default {
     currentState.authToken = null
   },
 
-  SET_TOKEN_BALANCE(currentState, { balance }) {
-    logMutation('SET_TOKEN_BALANCE', balance)
-
-    currentState.balance = new BigNumber(balance)
-  },
-
   SET_PERSONAL_STAKES(currentState, { personalStakes }) {
     logMutation('SET_PERSONAL_STAKES', personalStakes)
 
