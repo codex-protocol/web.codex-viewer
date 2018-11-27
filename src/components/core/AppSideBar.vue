@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl v-if="user.type !== 'savvy'" />
+        <CODXBalanceControl v-if="showCODXBalance" />
       </footer>
     </div>
   </nav>
@@ -80,6 +80,10 @@ export default {
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
+    },
+
+    showCODXBalance() {
+      return config.showFaucet || (this.user && this.user.type !== 'savvy')
     },
 
     navItems() {
