@@ -48,13 +48,6 @@ export default {
     GalleryListItem,
   },
 
-  created() {
-    // Only fetch galleries once per app-load
-    if (this.galleries.length === 0) {
-      this.$store.dispatch('app/FETCH_GALLERIES')
-    }
-  },
-
   computed: {
     ...mapState('app', ['galleries']),
   },

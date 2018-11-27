@@ -49,13 +49,6 @@ export default {
     }
   },
 
-  created() {
-    // only fetch event emails once per app-load
-    if (this.eventEmails.length === 0) {
-      this.$store.dispatch('app/FETCH_EVENT_EMAILS')
-    }
-  },
-
   methods: {
     isBlacklisted(eventEmail) {
       return this.user.eventEmailBlacklist.includes(eventEmail.eventName)

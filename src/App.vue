@@ -88,7 +88,7 @@ export default {
   created() {
     this.initializeApi()
 
-    this.$store.dispatch('app/FETCH_VERIFIED_USERS')
+    this.$store.dispatch('app/FETCH_BOOTSTRAP_DATA')
 
     EventBus.$on('socket:codex-coin:savvy-spend', this.spendCODX)
     EventBus.$on('socket:codex-coin:transferred', this.refundCODX)
