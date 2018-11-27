@@ -90,6 +90,7 @@ export default {
 
     this.$store.dispatch('app/FETCH_VERIFIED_USERS')
 
+    EventBus.$on('socket:codex-coin:savvy-spend', this.spendCODX)
     EventBus.$on('socket:codex-coin:transferred', this.refundCODX)
     EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
@@ -107,6 +108,7 @@ export default {
   },
 
   beforeDestroy() {
+    EventBus.$off('socket:codex-coin:savvy-spend', this.spendCODX)
     EventBus.$off('socket:codex-coin:transferred', this.refundCODX)
     EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
@@ -235,6 +237,10 @@ export default {
 
     refundCODX(codxCost) {
       this.$store.commit('auth/REFUND_CODX', { codxCost })
+    },
+
+    spendCODX(codxCost) {
+      this.$store.commit('auth/SPEND_CODX', { codxCost })
     },
 
     useBackgroundImage() {
