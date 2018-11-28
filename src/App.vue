@@ -2,7 +2,7 @@
   <div>
     <div
       id="app"
-      @click="topLevelClick($event)"
+      @mousedown="topLevelClick($event)"
       :class="{
         'show-nav': showNav,
         'with-background': this.useBackgroundImage(),
