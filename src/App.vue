@@ -278,7 +278,7 @@ export default {
         event &&
         event.target &&
         event.target.closest &&
-        event.target.closest('.popover')
+        event.target.closest('.popover') !== null
       ) {
         return
       }
