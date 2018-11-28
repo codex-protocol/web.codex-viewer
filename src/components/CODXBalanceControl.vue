@@ -63,12 +63,6 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('app', ['codxCosts']),
   },
-
-  methods: {
-    alert() {
-      console.warn('YEAH!')
-    },
-  }
 }
 </script>
 
