@@ -73,4 +73,10 @@ export default {
 
     currentState.eventEmails = eventEmails
   },
+
+  SET_CODX_COSTS(currentState, codxCosts = {}) {
+    logMutation('SET_CODX_COSTS', codxCosts)
+
+    currentState.codxCosts = codxCosts
+  },
 }

@@ -1,51 +1,79 @@
 <template>
   <div class="codx-balance-container">
-    <div>
+    <div class="balance-wrapper">
       <h4>Credit Balance</h4>
       <div>{{ user.codxBalance | formatCODXBalance }}</div>
     </div>
-    <!-- <img id="codx-balance-info" src="../assets/icons/info.svg">
+    <img
+      @click.stop
+      src="../assets/icons/info.svg"
+      id="codx-balance-popover-trigger"
+    >
 
     <b-popover
-      @click.stop
+      container="app"
+      triggers="click"
       boundary="viewport"
-      class="popover-theme"
-      triggers="hover click"
-      target="codx-balance-info"
-      :placement="popoverPlacement"
+      placement="righttop"
+      title="What is CODX?"
+      target="codx-balance-popover-trigger"
     >
-      <div class="popover-theme">
-        <p>@TODO: fill in popover here</p>
+      <!-- @TODO: make sure we can call CODX a digital currency -->
+      <p>CODX is the digital currency used to interact with The Codex Protocol.</p>
+      <div
+        :key="methodName"
+        v-for="(description, methodName) in orderedMethodDescriptions"
+      >
+        <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXBalance }}
       </div>
-    </b-popover> -->
+
+      <!--
+        @TODO: add a button here that takes them to a "get codx" page (i.e. the
+        faucet page after it's reworked)
+      -->
+    </b-popover>
   </div>
 </template>
 
 <script>
 
-import is from 'is_js'
 import { mapState } from 'vuex'
 
 export default {
   name: 'CODXBalanceControl',
 
+  data() {
+    return {
+      // originally, the v-for above was looping over codxCosts.CodexRecord
+      //  directly, but there wasn't a good way to sort that list in a logical
+      //  way (e.g. grouping mint & modifyMetadataHashes together), so instead
+      //  we'll define the order here and loop over this object instead
+      //
+      // as a bonus, we can also define descriptions for each method here
+      orderedMethodDescriptions: {
+        approve: 'Send a Transfer',
+        safeTransferFrom: 'Accept a Transfer',
+        mint: 'Create a Codex Record',
+        modifyMetadataHashes: 'Modify a Codex Record',
+      },
+    }
+  },
+
   computed: {
     ...mapState('auth', ['user']),
-
-    popoverPlacement() {
-      return is.mobile() ? 'top' : 'right'
-    },
+    ...mapState('app', ['codxCosts']),
   },
+
+  methods: {
+    alert() {
+      console.warn('YEAH!')
+    },
+  }
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import "../assets/variables.styl"
-
-#codx-balance-info
-  width: 1.2em
-  height: @width
-  vertical-align: text-bottom
 
 .codx-balance-container
   width: 100%
@@ -53,13 +81,21 @@ export default {
   align-items: center
   word-break: break-all
 
-  > div
+  .balance-wrapper
     flex-grow: 1
 
-  img
+  strong
+    font-weight: normal
+    text-decoration: underline
+
+  #codx-balance-popover-trigger
     opacity: .8
+    width: 1.5em
+    height: @width
+    vertical-align: text-bottom
 
     &:hover
-      opacity: .9
+      opacity: 1
+      cursor: pointer
 
 </style>

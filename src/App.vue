@@ -1,9 +1,13 @@
 <template>
   <div>
-    <div id="app" :class="{
-      'with-background': this.useBackgroundImage(),
-      'show-nav': showNav,
-    }">
+    <div
+      id="app"
+      @click="topLevelClick($event)"
+      :class="{
+        'show-nav': showNav,
+        'with-background': this.useBackgroundImage(),
+      }"
+    >
       <AppWarningBanner v-if="showWarningBanner" />
       <div class="app-wrapper">
         <template v-if="!hideSideBar">
@@ -253,6 +257,32 @@ export default {
 
     hideNav() {
       this.showNav = false
+    },
+
+    // here we capture all events that bubble up to the top level "app"
+    //  component as a way to close popovers that have clickable content inside
+    //  of them
+    //
+    // the idea is to check if the clicked element (event.target) is a child of
+    //  an element with the .popover class... if so, do nothing to keep the
+    //  popover open, otherwise close all popovers
+    //
+    // ideally you'd do this with some sort of directive that dynamically adds
+    //  and removes a click handler on the body element when the popover opens,
+    //  but this method was a lot easier
+    //
+    // @NOTE: this has one caveat - you need to add @click.stop to popover
+    //  triggering elements, otherwise the popover closes as soon as it opens
+    topLevelClick(event) {
+      if (
+        event &&
+        event.target &&
+        event.target.closest &&
+        event.target.closest('.popover')
+      ) {
+        return
+      }
+      this.$root.$emit('bv::hide::popover')
     },
   },
 }

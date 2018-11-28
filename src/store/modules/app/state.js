@@ -10,5 +10,6 @@ export default () => {
     giveaway: null,
     galleries: [],
     eventEmails: [],
+    codxCosts: null,
   }
 }
