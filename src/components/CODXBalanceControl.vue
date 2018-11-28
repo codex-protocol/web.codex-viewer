@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
 .codx-balance-container
@@ -76,10 +76,6 @@ export default {
 
   .balance-wrapper
     flex-grow: 1
-
-  strong
-    font-weight: normal
-    text-decoration: underline
 
   #codx-balance-popover-trigger
     opacity: .8
