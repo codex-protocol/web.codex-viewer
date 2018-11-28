@@ -51,10 +51,9 @@ export default {
       //
       // as a bonus, we can also define descriptions for each method here
       orderedMethodDescriptions: {
-        approve: 'Send a Transfer',
-        safeTransferFrom: 'Accept a Transfer',
         mint: 'Create a Codex Record',
         modifyMetadataHashes: 'Modify a Codex Record',
+        safeTransferFrom: 'Accept a Transfer',
       },
     }
   },
