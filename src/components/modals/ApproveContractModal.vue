@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     :id="id"
     title="Approve contract"
     ok-title="Approve"
@@ -13,7 +13,7 @@
     <p class="mt-5">
       <a :href="getAddressUrl()" target="_blank">View contract on Etherscan</a>
     </p>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="stakeTokensModal"
     title="Stake tokens"
     ok-title="Stake"
@@ -27,7 +27,7 @@
         v-model="stakeAmount"
       />
     </b-form-group>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>

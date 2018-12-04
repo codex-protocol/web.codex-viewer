@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="recordManageModal"
     title="Modify Record"
     ok-title="Save"
@@ -109,7 +109,7 @@
         v-on:vdropzone-queue-complete="onQueueComplete"
       />
     </b-form-group>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
@@ -89,7 +89,7 @@
         </b-form-group>
       </div>
     </div>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>
