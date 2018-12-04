@@ -18,15 +18,7 @@
     :no-close-on-backdrop="preventClose"
   >
 
-    <!--
-      @NOTE: we use v-show here instead of v-if so that scoped styles from
-      parent components will still be applied
-
-      since there are some calculations to be done before showing the slot, the
-      time it takes to do so prevents webpack from being able to apply the
-      scoped styles if you use a v-if
-    -->
-    <div v-show="shouldShowMainSlot">
+    <div v-if="shouldShowMainSlot">
       <p v-if="errors.length">
         <b-alert variant="danger" :show="errors.length !== 0">
           Please fix these error(s):
@@ -38,7 +30,7 @@
       <slot></slot>
     </div>
 
-    <div class="text-center" v-show="!shouldShowMainSlot">
+    <div class="text-center" v-else>
 
       <div v-if="!isSimpleUser">
         <img class="icon" src="../../assets/images/metamask.png" />
