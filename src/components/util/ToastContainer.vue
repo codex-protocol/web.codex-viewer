@@ -11,7 +11,7 @@
         typeof toast.clickHandler === 'function' ? 'clickable' : undefined
       ]"
     >
-      <span class="toast-text">{{toast.text}}</span>
+      <span class="toast-text">{{ toast.text }}</span>
       <button
         type="button"
         class="close"

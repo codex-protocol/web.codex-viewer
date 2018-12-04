@@ -40,7 +40,7 @@
         <p>
           There was a problem sending your transaction:
         </p>
-        <pre class="metamask-error">{{metamaskError}}</pre>
+        <pre class="metamask-error">{{ metamaskError }}</pre>
       </div>
 
       <div v-else-if="willTransactionFail">
