@@ -194,7 +194,7 @@ export default {
     },
 
     scrollToTop() {
-      // annoyling enough, the element that Vue Bootstrap attaches the b-modal
+      // annoyingly enough, the element that Vue Bootstrap attaches the b-modal
       //  $ref to isn't the actual body of the modal, but the container that
       //  holds the backdrop and everything else so we need to look up the child
       //  element we really want to scroll
