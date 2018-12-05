@@ -6,7 +6,7 @@
     cancel-variant="outline-primary"
     size="lg"
     :on-shown="focusModal"
-    :ok-disabled="!canSubmit"
+    :ok-disabled="disableButton"
     :ok-method="updateMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
@@ -166,8 +166,8 @@ export default {
     ...mapState('auth', ['authToken']),
     ...mapState('web3', ['instance']),
 
-    canSubmit() {
-      return !this.isFileProcessing
+    disableButton() {
+      return this.isFileProcessing || (this.progressVisible && !this.uploadMainImageSuccess)
     },
 
     progressVariant() {

@@ -9,6 +9,7 @@
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :ok-disabled="disableButton"
     :checkout-cost="codxCosts.CodexRecord.mint"
     checkout-title="Create Codex Record"
   >
@@ -254,6 +255,10 @@ export default {
       }
 
       return 'danger'
+    },
+
+    disableButton() {
+      return this.uploadComplete === false
     },
 
     isPublic: {
