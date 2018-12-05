@@ -284,7 +284,9 @@ export default {
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
 
-      this.$refs.dropzone.removeAllFiles()
+      if (this.$refs.dropzone) {
+        this.$refs.dropzone.removeAllFiles()
+      }
     },
 
     validate() {
