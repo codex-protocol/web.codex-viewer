@@ -215,7 +215,6 @@ section + section
       font-size: small
 
       .bonus-amount
-        font-size: .8rem
         font-weight: 700
         font-style: italic
 
