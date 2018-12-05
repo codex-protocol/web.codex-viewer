@@ -22,7 +22,7 @@
           <span class="current-balance">{{ user.codxBalance | formatCODXAmount }}</span>
         </div>
 
-        <div class="insufficient-codx-notice"  v-if="insufficientCODX">
+        <div class="insufficient-codx-notice" v-if="insufficientCODX">
           <p>You need more CODX to continue.</p>
           <b-button variant="primary" to="/get-codx">
             Get More CODX
