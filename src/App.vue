@@ -400,6 +400,23 @@ img
 .spacer
   flex-grow: 1
 
+.image-container
+  display: flex
+  margin: 1rem 0
+  padding: .5rem
+  align-items: center
+  justify-content: center
+  background-color: rgba(white, .01)
+  border: 1px solid rgba($color-primary, .1)
+
+  &.no-image
+    display: none
+
+  img
+    max-width: 100%
+    max-height: 40vh
+    object-fit: contain
+
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
 // https://danklammer.com/articles/simple-css-toggle-switch/

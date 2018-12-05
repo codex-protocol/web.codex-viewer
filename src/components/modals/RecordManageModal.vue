@@ -14,10 +14,10 @@
     :checkout-cost="codxCosts.CodexRecord.modifyMetadataHashes"
     checkout-title="Modify Codex Record"
   >
-    <template slot="checkout">
-      <h3>New title: {{ name }}</h3>
-      <h5>New description:</h5>
-      <div>{{ description }}</div>
+    <template slot="checkout" v-if="codexRecord">
+      <h3>{{ name }}</h3>
+      <div class="image-container"><img :src="imageStreamUri || mainImage.uri"></div>
+      <div class="description">{{ description }}</div>
     </template>
 
     <b-form-group

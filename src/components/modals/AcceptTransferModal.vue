@@ -11,11 +11,10 @@
   >
     <template slot="checkout" v-if="codexRecord">
       <h3>{{ codexRecord.metadata.name }}</h3>
-      <h5>Description:</h5>
-      <div>{{ codexRecord.metadata.description }}</div>
       <div class="image-container">
         <img :src="codexRecord.metadata | getMainImageUri" />
       </div>
+      <div class="description">{{ codexRecord.metadata.description }}</div>
     </template>
 
     <p>
