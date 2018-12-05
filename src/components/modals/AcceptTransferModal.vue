@@ -20,7 +20,7 @@
 
     <p>
       Accepting this Codex Record will add it to your collection.
-      As soon as it is added to your collection it will become private for others.
+      As soon as it is added to your collection it will become private.
     </p>
 
     <p>You have full control over what you can do with the Codex Record after it's added to your collection.</p>

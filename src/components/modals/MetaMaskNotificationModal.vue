@@ -180,7 +180,7 @@ export default {
 
     buttonTitle() {
       if (this.isSimpleUser && this.currentStep === 0 && this.requiresTokens) {
-        return 'Proceed to checkout'
+        return 'Proceed to Checkout'
       }
 
       return this.okTitle
