@@ -193,16 +193,23 @@ export default {
       if (typeof this.onClear === 'function') this.onClear()
     },
 
+    scrollToTop() {
+      // annoyling enough, the element that Vue Bootstrap attaches the b-modal
+      //  $ref to isn't the actual body of the modal, but the container that
+      //  holds the backdrop and everything else so we need to look up the child
+      //  element we really want to scroll
+      this.$refs[this.id].$el.querySelector(`#${this.id}`).scrollTop = 0
+    },
+
     nextStep() {
+
+      // always scroll back up to the top when navigating through steps, because
+      //  there could be new content up there
+      this.scrollToTop()
+
       if (this.validate) {
         this.errors = this.validate()
-
-        if (this.errors.length) {
-          // rudimentary, but refocuses at the top if we need to scroll
-          this.shown()
-
-          return
-        }
+        return
       }
 
       if (this.isSimpleUser) {
