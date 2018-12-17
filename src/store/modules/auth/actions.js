@@ -213,7 +213,6 @@ export default {
   LOGOUT_USER({ commit }) {
     logger('LOGOUT_USER action being executed')
 
-    commit('app/RESET_STATE', null, { root: true })
     commit('auth/RESET_STATE', null, { root: true })
     commit('records/RESET_STATE', null, { root: true })
 
