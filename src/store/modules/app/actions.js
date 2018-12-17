@@ -48,7 +48,7 @@ export default {
         commit(param.mutationName, query[key], param.mutationConfiguration)
 
         if (param.clearUserState) {
-          commit('auth/CLEAR_USER_STATE', null, { root: true })
+          commit('auth/RESET_STATE', null, { root: true })
         }
       }
     })

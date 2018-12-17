@@ -1,11 +1,19 @@
 import debug from 'debug'
 
+import getInitialState from './state'
+
 const logger = debug('app:store:app:mutations')
 const logMutation = (mutationName, ...args) => {
   logger(`${mutationName} mutation being executed`, ...args)
 }
 
 export default {
+
+  RESET_STATE(currentState) {
+    logMutation('app/RESET_STATE')
+    Object.assign(currentState, getInitialState(), { isLoaded: currentState.isLoaded })
+  },
+
   SET_VERIFIED_USERS(currentState, users) {
     logMutation('SET_VERIFIED_USERS', users)
 

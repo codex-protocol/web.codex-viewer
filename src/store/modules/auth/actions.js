@@ -213,7 +213,9 @@ export default {
   LOGOUT_USER({ commit }) {
     logger('LOGOUT_USER action being executed')
 
-    commit('CLEAR_USER_STATE')
+    commit('app/RESET_STATE', null, { root: true })
+    commit('auth/RESET_STATE', null, { root: true })
+    commit('records/RESET_STATE', null, { root: true })
 
     // if this is an unauthenticated route, clear their auth token (i.e. log
     //  the user out), but do not redirect them to the login page

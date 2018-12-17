@@ -1,5 +1,7 @@
-import debug from 'debug'
 import Vue from 'vue'
+import debug from 'debug'
+
+import getInitialState from './state'
 
 const logger = debug('app:store:records:mutations')
 const logMutation = (mutationName, ...args) => {
@@ -7,6 +9,12 @@ const logMutation = (mutationName, ...args) => {
 }
 
 export default {
+
+  RESET_STATE(currentState) {
+    logMutation('records/RESET_STATE')
+    Object.assign(currentState, getInitialState())
+  },
+
   SET_RECORDS(currentState, { listName, records }) {
     logMutation('SET_RECORDS', listName, records)
 

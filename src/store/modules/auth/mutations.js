@@ -36,8 +36,8 @@ export default {
     currentState.user = Object.assign({}, currentState.user, newProperties)
   },
 
-  CLEAR_USER_STATE(currentState) {
-    logMutation('CLEAR_USER_STATE')
+  RESET_STATE(currentState) {
+    logMutation('auth/RESET_STATE')
 
     SocketService.disconnect()
     window.localStorage.removeItem('authToken')
