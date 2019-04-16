@@ -113,19 +113,17 @@ export default {
 .card
   card()
 
-  &.is-loading
-    opacity: .5
-
   .accepted-overlay
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    position: absolute
-    width: 100%
-    height: 100%
     top: 0
     left: 0
+    z-index: 1
+    width: 100%
+    height: 100%
+    display: flex
+    position: absolute
+    align-items: center
+    flex-direction: column
+    justify-content: center
     background-color: $color-primary
 
     p

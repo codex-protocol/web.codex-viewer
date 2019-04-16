@@ -265,7 +265,7 @@ export default {
               this.nextStep()
             })
             .catch((error) => {
-              this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
+              this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error: ?(.*?)("})?$/, '$1')
               this.goToStep(this.currentStep - 1)
             })
 
