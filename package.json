@@ -11,7 +11,7 @@
     "install-and-link": "rm -rf node_modules && npm install && npm run link-all"
   },
   "dependencies": {
-    "@codex-protocol/ethereum-service": "^2.0.0",
+    "@codex-protocol/ethereum-service": "latest",
     "axios": "^0.18.0",
     "bignumber.js": "^8.1.1",
     "bootstrap": "^4.3.1",
@@ -33,7 +33,7 @@
     "web3": "1.0.0-beta.52"
   },
   "devDependencies": {
-    "@codex-protocol/eslint-config-vue": "^2.0.0",
+    "@codex-protocol/eslint-config-vue": "latest",
     "@vue/cli-plugin-babel": "^3.5.5",
     "@vue/cli-plugin-eslint": "^3.5.1",
     "@vue/cli-service": "^3.5.3",
