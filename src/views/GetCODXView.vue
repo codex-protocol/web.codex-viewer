@@ -7,7 +7,7 @@
         <div class="content">
 
           <p>
-            <a :href="etherscanHelper.getTokenUrl(tokenContract._address, user.address)" target="_blank">CodexCoin (CODX)</a>
+            <a :href="etherscanHelper.getTokenUrl(tokenContract.address, user.address)" target="_blank">CodexCoin (CODX)</a>
             is the ERC-20 utility token used to interact with The Codex
             Protocol. You must have CODX to create, edit, and transfer Codex
             Records.

@@ -20,7 +20,7 @@ const registerWalletProvider = () => {
     if (window.ethereum) {
       window.ethereum.enable()
         .then(() => {
-          walletProvider = new Web3(window.ethereum)
+          walletProvider = new Web3(window.ethereum, null, config.web3Options)
           resolve(walletProvider)
         })
         .catch((error) => {
@@ -32,7 +32,7 @@ const registerWalletProvider = () => {
       reject(new Error(Web3Errors.Missing))
 
     } else {
-      walletProvider = new Web3(window.web3.currentProvider)
+      walletProvider = new Web3(window.web3.currentProvider, null, config.web3Options)
       resolve(walletProvider)
     }
   })
@@ -64,7 +64,7 @@ export default {
     logger('REGISTER_INFURA_PROVIDER action being executed')
 
     commit('SET_WEB3', {
-      web3: new Web3(process.env.VUE_APP_ETHEREUM_RPC_URL),
+      web3: new Web3(process.env.VUE_APP_ETHEREUM_RPC_URL, null, config.web3Options),
     })
 
     return dispatch('REGISTER_ALL_CONTRACTS')
@@ -93,28 +93,26 @@ export default {
     logger('PROMPT_FOR_SIGNED_DATA action being executed')
 
     const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-    const sendAsyncOptions = {
-      method: 'personal_sign',
-      params: [
-        state.instance.utils.toHex(personalMessageToSign),
-        state.providerAccount,
-      ],
-    }
 
-    return new Promise((resolve, reject) => {
-      state.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-        if (error) {
-          reject(new Error(Web3Errors.Unknown))
-        } else if (result.error) {
-          reject(new Error(Web3Errors.UserDeniedSignature))
-        } else {
-          resolve({
-            userAddress: state.providerAccount,
-            signedData: result.result.substr(2),
-          })
+    return state.instance.eth.personal.sign(personalMessageToSign, state.providerAccount, null)
+      .then((result) => {
+
+        if (!result) {
+          throw new Error(Web3Errors.Unknown)
         }
+
+        return {
+          userAddress: state.providerAccount,
+          signedData: result.substr(2),
+        }
+
       })
-    })
+      .catch((error) => {
+        if (error.toString().inlcudes('User denied message signature')) {
+          throw new Error(Web3Errors.UserDeniedSignature)
+        }
+        throw new Error(Web3Errors.Unknown)
+      })
   },
 
   POLL_WEB3({ commit, dispatch, state }) {
@@ -145,6 +143,7 @@ export default {
     const interfaces = contractsByNetwork[config.expectedNetworkId]
 
     const recordContract = new state.instance.eth.Contract(interfaces.CodexRecord.abi, interfaces.CodexRecord.address)
+
     commit('SET_CONTRACT', {
       propertyName: 'recordContract',
       contract: recordContract,

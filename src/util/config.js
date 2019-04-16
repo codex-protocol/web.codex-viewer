@@ -43,6 +43,16 @@ const feesEnabled = (() => {
   }
 })()
 
+const web3Options = (() => {
+  switch (expectedNetworkName) {
+    case 'ganache': return { transactionConfirmationBlocks: 1 }
+    case 'ropsten': return { transactionConfirmationBlocks: 1 }
+    case 'rinkeby': return { transactionConfirmationBlocks: 1 }
+    case 'mainnet': return { transactionConfirmationBlocks: 2 }
+    default: return false
+  }
+})()
+
 const targetEnv = process.env.VUE_APP_TARGET_ENV
 
 export default {
@@ -56,6 +66,7 @@ export default {
   apiUrl,
   feesEnabled,
   etherScanUrl,
+  web3Options,
   expectedNetworkId,
   expectedNetworkName,
 }

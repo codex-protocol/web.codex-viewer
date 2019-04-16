@@ -45,7 +45,7 @@ export default {
   methods: {
     approveTokens() {
       const amount = new BigNumber(2).pow(255)
-      const input = [this.contract._address, amount.toFixed()]
+      const input = [this.contract.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.tokenContract.methods.approve(...input))
@@ -59,7 +59,7 @@ export default {
     },
 
     getAddressUrl() {
-      return etherscanHelper.getAddressUrl(this.contract._address)
+      return etherscanHelper.getAddressUrl(this.contract.address)
     },
   },
 }

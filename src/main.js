@@ -6,8 +6,11 @@ import VueAnalytics from 'vue-analytics'
 import VueGoogleTagManager from 'vue-gtm'
 import RavenVue from 'raven-js/plugins/vue'
 
+
+import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/custom-bootstrap.scss'
+
 import './filters'
 
 import App from './App'

@@ -42,11 +42,11 @@ export default {
 
     // Reset web3 state
     currentState.instance = null
-    currentState.recordContract = null
+    currentState.isPolling = false
     currentState.tokenContract = null
     currentState.stakeContract = null
+    currentState.recordContract = null
     currentState.providerAccount = null
-    currentState.isPolling = false
   },
 
   SET_IS_POLLING(currentState, { isPolling }) {

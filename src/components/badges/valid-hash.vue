@@ -19,7 +19,7 @@
 
 <script>
 
-import Web3 from 'web3'
+import { mapState } from 'vuex'
 
 export default {
 
@@ -37,11 +37,14 @@ export default {
   },
 
   computed: {
+
+    ...mapState('web3', ['instance']),
+
     isValid() {
       if (this.string === null || this.string === '') {
         return this.hash === '0x0000000000000000000000000000000000000000000000000000000000000000'
       }
-      return this.hash === Web3.utils.soliditySha3(this.string || '')
+      return this.hash === this.instance.utils.soliditySha3(this.string || '')
     },
   },
 }

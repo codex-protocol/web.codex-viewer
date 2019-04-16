@@ -70,7 +70,7 @@ export default {
     //  approval has taken place.
     // If somehow the user has used so many tokens that their allowance is now low,
     //  they'll need to re-approve the contract for more.
-    currentState[stateProperty] = new BigNumber(allowance).greaterThan(new BigNumber('10e18'))
+    currentState[stateProperty] = new BigNumber(allowance).gt(new BigNumber('10e18'))
   },
 
   SET_HIDE_SETUP(currentState) {

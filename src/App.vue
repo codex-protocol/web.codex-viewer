@@ -29,7 +29,7 @@
           <AppFooter />
         </div>
         <ToastContainer />
-        <VueCookieAcceptDecline disableDecline>
+        <VueCookieAcceptDecline position="bottom" type="bar" elementId="1" disableDecline>
           <div slot="message">
             This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://codexprotocol.com/privacy-policy" target="_blank">Privacy Policy.</a>
           </div>
@@ -402,6 +402,6 @@ img
     color: $color-secondary
 
   button
-    background-color: lighten($color-secondary, 25%) !important
+    background: lighten($color-secondary, 25%) !important
 
 </style>
